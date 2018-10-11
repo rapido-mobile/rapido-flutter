@@ -21,8 +21,8 @@ class PersistedModel extends Model {
 
   void _loadLocalData() async {
     getApplicationDocumentsDirectory().then((Directory appDir){
-    appDir.listSync(recursive: false,
-     followLinks: false).forEach(( FileSystemEntity f) {
+    appDir.listSync(recursive: true,
+     followLinks: true).forEach(( FileSystemEntity f) {
         if(f.path.endsWith('.json')) {
             String j = new File(f.path).readAsStringSync();
             Map newData = json.decode(j);
@@ -34,18 +34,23 @@ class PersistedModel extends Model {
 
   void add(Map<String,dynamic> map) {
       map["docType"] = documentType;
-      map["_id"] = _randomString(16);
+      map["_id"] = randomFileSafeId(24);
       map["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
       data.add(map);
       writeMap(map);
   }
 
-String _randomString(int length) {
+static String randomFileSafeId(int length) {
    var rand = new Random();
    var codeUnits = new List.generate(
       length, 
       (index){
-         return rand.nextInt(33)+89;
+         List<int> illegalChars = [34, 39, 44, 96];
+         int randChar = rand.nextInt(33)+89;
+         while( illegalChars.contains(randChar)) {
+            randChar = rand.nextInt(33)+89;
+         }
+         return randChar;
       }
    );
    
@@ -66,7 +71,8 @@ Future<File> _localFile(String id) async {
 
 Future<String> get _localPath async {
   final directory = await getApplicationDocumentsDirectory();
-  return directory.path;
+  String path = directory.path;
+  return path;
 }
 
 
