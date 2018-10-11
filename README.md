@@ -18,8 +18,9 @@ To add persistent data to the model:
   });
 ```
 
-```
+
 To read persistent data, use the onLoadComplete parameter if you want to wait until data is loaded. 
+```
   test('reads existing PersistedModel from disk', () {
     PersistedModel("testDocumentType",
         onLoadComplete: (List<Map<String, dynamic>> data) {
