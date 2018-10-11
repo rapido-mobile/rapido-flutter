@@ -9,9 +9,9 @@ void main() {
   test('creates a PersistedModel', () {
     PersistedModel persistedModel = PersistedModel("testDocumentType");
     persistedModel
-        .add({"count": 0, "rating": 5, "price": "0.5", "name": "Pickle Rick"});
+        .add({"count": 0, "rating": 5, "price": 1.5, "name": "Pickle Rick"});
     persistedModel
-        .add({"count": 1, "rating": 4, "price": "1.5", "name": "Rick Sanchez"});
+        .add({"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"});
     expect(persistedModel.data.length, 2);
   });
   test('reads existing PersistedModel from disk', () {
@@ -22,6 +22,7 @@ void main() {
       expect(name.contains("Rick"), true);
       name = data[1]["name"];
       expect(name.contains("Rick"), true);
+      expect(data[0]["price"],1.5 );
     });
   });
   test('unit test for randomFileSafeId', () {
