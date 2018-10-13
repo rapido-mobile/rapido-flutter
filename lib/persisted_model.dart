@@ -29,6 +29,7 @@ class PersistedModel extends Model {
             data.add(newData);
         }
     });
+    notifyListeners();
     if(onLoadComplete != null) onLoadComplete(data);
   });}
 
