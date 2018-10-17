@@ -1,8 +1,6 @@
 import 'package:test/test.dart';
-
 import 'dart:io';
 import 'package:flutter/services.dart';
-
 import 'package:a2s_widgets/persisted_model.dart';
 
 void main() {
@@ -16,15 +14,26 @@ void main() {
   });
   test('reads existing PersistedModel from disk', () {
     PersistedModel("testDocumentType",
-        onLoadComplete: (List<Map<String, dynamic>> data) {
-      expect(data.length, 2);
-      String name = data[0]["name"];
+        onLoadComplete: (PersistedModel model) {
+      expect(model.data.length, 2);
+      String name = model.data[0]["name"];
       expect(name.contains("Rick"), true);
-      name = data[1]["name"];
+      name = model.data[1]["name"];
       expect(name.contains("Rick"), true);
-      expect(data[0]["price"],1.5 );
+      expect(model.data[0]["price"],1.5 );
     });
   });
+  test('deletes maps from the model', () {
+    PersistedModel("testDocumentType",
+        onLoadComplete: (PersistedModel model) {
+            model.delete(0);
+            PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model){
+              expect(model.data.length, 1);
+            });
+        });
+  });
+  
+
   test('unit test for randomFileSafeId', () {
     String rnd = PersistedModel.randomFileSafeId(8);
     expect(rnd.length, 8);

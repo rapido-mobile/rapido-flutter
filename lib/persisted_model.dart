@@ -30,7 +30,7 @@ class PersistedModel extends Model {
         }
     });
     notifyListeners();
-    if(onLoadComplete != null) onLoadComplete(data);
+    if(onLoadComplete != null) onLoadComplete(this);
   });}
 
   void add(Map<String,dynamic> map) {
@@ -38,9 +38,16 @@ class PersistedModel extends Model {
       map["_id"] = randomFileSafeId(24);
       map["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
       data.add(map);
-      writeMap(map);
+      _writeMap(map);
+      notifyListeners();
   }
 
+void delete(int index) {
+  _deleteMap(data[index]["_id"]);
+  data.removeAt(index);
+  notifyListeners();
+
+}
 static String randomFileSafeId(int length) {
    var rand = new Random();
    var codeUnits = new List.generate(
@@ -58,7 +65,14 @@ static String randomFileSafeId(int length) {
    return new String.fromCharCodes(codeUnits);
 }
 
-Future<File> writeMap(Map<String,dynamic> map) async {
+void _deleteMap(String id) async {
+  final file = await _localFile(id);
+
+  print("Deleting " + id);
+  file.delete();
+}
+
+Future<File> _writeMap(Map<String,dynamic> map) async {
   final file = await _localFile(map["_id"]);
   // Write the file
   String mapString = json.encode(map);
