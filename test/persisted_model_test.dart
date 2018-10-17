@@ -13,30 +13,48 @@ void main() {
     expect(persistedModel.data.length, 2);
   });
   test('reads existing PersistedModel from disk', () {
-    PersistedModel("testDocumentType",
-        onLoadComplete: (PersistedModel model) {
+    PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model) {
       expect(model.data.length, 2);
       String name = model.data[0]["name"];
       expect(name.contains("Rick"), true);
       name = model.data[1]["name"];
       expect(name.contains("Rick"), true);
-      expect(model.data[0]["price"],1.5 );
+      expect(model.data[0]["price"], 1.5);
     });
   });
   test('deletes maps from the model', () {
-    PersistedModel("testDocumentType",
-        onLoadComplete: (PersistedModel model) {
-            model.delete(0);
-            PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model){
-              expect(model.data.length, 1);
-            });
-        });
+    PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model) {
+      model.delete(0);
+      PersistedModel("testDocumentType",
+          onLoadComplete: (PersistedModel model) {
+        expect(model.data.length, 1);
+      });
+    });
   });
-  
 
   test('unit test for randomFileSafeId', () {
     String rnd = PersistedModel.randomFileSafeId(8);
     expect(rnd.length, 8);
+  });
+
+  test('set ui labels in constructor', () {
+    PersistedModel model = PersistedModel("a", labels: {"a": "A", "b": "B"});
+    expect(model.labels["a"], "A");
+    expect(model.labels["b"], "B");
+  });
+
+  test('infer ui labels', () {
+    PersistedModel model = PersistedModel("abc");
+    model.add({"a": "A", "b": "B", "c": "C"});
+    expect(model.labels["a"], "a");
+    expect(model.labels["b"], "b");
+    expect(model.labels["c"], "c");
+    expect(model.labels.length, 3);
+  });
+
+  test('unset labels should return null', () {
+    PersistedModel model = PersistedModel("def");
+    expect(model.labels, null);
   });
 
   setUpAll(() async {
