@@ -32,3 +32,26 @@ To read persistent data, use the onLoadComplete parameter if you want to wait un
     });
   });
 ```
+There is also a convenience widget, persistedlistviewwidget which does some of the work of displaying data for you:
+
+```
+class _MyHomePageState extends State<MyHomePage> {
+  PersistedModel model =  PersistedModel("test_doc_type",
+            onLoadComplete: (PersistedModel model) {
+              if (model.data.length == 0) {
+                model.add({"a": "A String"});
+                model.add({"a": "B String"});
+                model.add({"a": "C String"}); 
+              }});
+            
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body:  PersistedModelListView(model, titleKey: "a")
+      );
+  }
+}
+```
