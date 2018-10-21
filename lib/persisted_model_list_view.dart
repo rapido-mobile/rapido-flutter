@@ -4,38 +4,51 @@ import 'package:a2s_widgets/persisted_model.dart';
 
 class PersistedModelListView extends StatelessWidget {
   final PersistedModel model;
-  final String titleKey;
-  PersistedModelListView(this.model, {@required this.titleKey});
+  final List<String> titleKeys;
+  final String subtitleKey;
+  PersistedModelListView(this.model,
+      {@required this.titleKeys, this.subtitleKey});
 
-  String _getTitle(Map<String, dynamic> map) {
-    if (map.containsKey(titleKey)) {
-      return map[titleKey];
-    }
-    print("$titleKey not found in map, returning empty string");
-    return "";
+  List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
+    List<Widget> cells = [];
+    titleKeys.forEach((String key) {
+      cells.add(Text(map[key].toString()));
+    });
+    return cells;
+  }
+
+  Widget _buildSubtitle(Map<String, dynamic> map) {
+    if(subtitleKey == null) return null;
+    if(!map.containsKey(subtitleKey)) return null;
+    return Text(map[subtitleKey]);
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModel(
-      child: ScopedModelDescendant<PersistedModel>(
-          builder: (context, child, model) {
-        return ListView.builder(
-            itemCount: model.data.length + 1,
-            itemBuilder: (context, index) {
-              if (index < model.data.length) {
-                return Dismissible(
-                    child: ListTile(title: Text(_getTitle(model.data[index]))),
+        child: ScopedModelDescendant<PersistedModel>(
+            builder: (context, child, model) {
+          return ListView.builder(
+              itemCount: model.data.length + 1,
+              itemBuilder: (context, index) {
+                if (index < model.data.length) {
+                  return Dismissible(
+                    child: ListTile(
+                      title: Row(
+                        children: _buildTitleRowChildren(model.data[index]),
+                      ),
+                      subtitle:  _buildSubtitle((model.data[index])),
+                    ),
                     onDismissed: (direction) {
                       model.delete(index);
                     },
-                    key: Key(model.data[index]["_id"]));
-              } else {
-                return RaisedButton(child: Text("Add"), onPressed: () {});
-              }
-            });
-      }),
-      model: model
-    );
+                    key: Key(model.data[index]["_id"]),
+                  );
+                } else {
+                  return RaisedButton(child: Text("Add"), onPressed: () {});
+                }
+              });
+        }),
+        model: model);
   }
 }

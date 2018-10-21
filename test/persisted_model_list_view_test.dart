@@ -1,9 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-// import 'package:test/test.dart';
 import 'package:a2s_widgets/persisted_model_list_view.dart';
 import 'package:a2s_widgets/persisted_model.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
@@ -11,19 +9,21 @@ void main() {
   testWidgets('Can display string as title', (WidgetTester tester) async {
     PersistedModel testModel = PersistedModel("testDocumentType");
     for (int i = 0; i < 10; i++) {
-      testModel.add({"field A": i, "field B": "${i.toString()}"});
+      testModel.add({ "field B": "${i.toString()}"});
     }
     await tester.pumpWidget(
       MaterialApp (
         home: Scaffold(
         body: PersistedModelListView(
             testModel,
-            titleKey: "field B",
+            titleKeys: ["field B"],
           ),
         ),
       ),
     );
     expect(find.text("2"),findsOneWidget );
+    expect(find.text("0"),findsOneWidget );
+    expect(find.text("aaa"), findsNothing);
   }
 
   );
