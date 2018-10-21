@@ -12,14 +12,16 @@ class PersistedModelListView extends StatelessWidget {
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
     List<Widget> cells = [];
     titleKeys.forEach((String key) {
-      cells.add(Text(map[key].toString()));
+      if (map.containsKey(key)) {
+        cells.add(Text(map[key].toString()));
+      }
     });
     return cells;
   }
 
   Widget _buildSubtitle(Map<String, dynamic> map) {
-    if(subtitleKey == null) return null;
-    if(!map.containsKey(subtitleKey)) return null;
+    if (subtitleKey == null) return null;
+    if (!map.containsKey(subtitleKey)) return null;
     return Text(map[subtitleKey]);
   }
 
@@ -37,7 +39,7 @@ class PersistedModelListView extends StatelessWidget {
                       title: Row(
                         children: _buildTitleRowChildren(model.data[index]),
                       ),
-                      subtitle:  _buildSubtitle((model.data[index])),
+                      subtitle: _buildSubtitle((model.data[index])),
                     ),
                     onDismissed: (direction) {
                       model.delete(index);

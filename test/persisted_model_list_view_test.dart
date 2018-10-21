@@ -6,24 +6,31 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 void main() {
-  testWidgets('Can display string as title', (WidgetTester tester) async {
+  testWidgets('Can display fields as title and subtitle', (WidgetTester tester) async {
     PersistedModel testModel = PersistedModel("testDocumentType");
     for (int i = 0; i < 10; i++) {
-      testModel.add({ "field B": "${i.toString()}"});
+      if(i == 1) {
+      testModel.add({ "field B": "${i.toString()}", "field C":"subtitle"});
+      }
+      else {
+        testModel.add({ "field B": "${i.toString()}"});
+      }
     }
     await tester.pumpWidget(
       MaterialApp (
         home: Scaffold(
         body: PersistedModelListView(
             testModel,
-            titleKeys: ["field B"],
+            titleKeys: ["field B", "field A"],
+            subtitleKey: "field C",
           ),
         ),
       ),
     );
     expect(find.text("2"),findsOneWidget );
-    expect(find.text("0"),findsOneWidget );
+    expect(find.text("subtitle"),findsOneWidget );
     expect(find.text("aaa"), findsNothing);
+    expect(find.text("null"), findsNothing);
   }
 
   );
