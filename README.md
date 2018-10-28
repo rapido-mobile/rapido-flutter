@@ -1,12 +1,13 @@
 # a2s_widgets
+## Mental Model
+The App to Store widget collection has two fundamental concepts:
+1. Persistent Models
+2. UI that renders itself based on the models
 
-A set of widgets to make flutter programming more RAD, easy and fun.
+### PersistentModel
+Persistent model is a class that encapsulates a map of objects keyed with strings. This map is accessed via the models data property. However, you only read from the data property, in order to add, delete, or update the data, you use the models build in properties. That is because the model manages persistence for you automatically! If users 
 
-First class is a PersistentModel that automatically saves and loads objects in the form of Map<String, dynamic>, assuming it can be converted to JSON.
-
-See the test directory for usage. The data is written and read asyncronously. I will add widgets to easy the async programming by including a visual indicator when doing the async operations.
-
-To add persistent data to the model:
+The following code creates a model and adds to entries to it:
 ```
   test('creates a PersistedModel', () {
     PersistedModel persistedModel = PersistedModel("testDocumentType");
@@ -18,40 +19,11 @@ To add persistent data to the model:
   });
 ```
 
-
-To read persistent data, use the onLoadComplete parameter if you want to wait until data is loaded. 
-```
-  test('reads existing PersistedModel from disk', () {
-    PersistedModel("testDocumentType",
-        onLoadComplete: (List<Map<String, dynamic>> data) {
-      expect(data.length, 2);
-      String name = data[0]["name"];
-      expect(name.contains("Rick"), true);
-      name = data[1]["name"];
-      expect(name.contains("Rick"), true);
-    });
-  });
-```
-There is also a convenience widget, persistedlistviewwidget which does some of the work of displaying data for you:
+You can retrive the data by indexing into the data property:
 
 ```
-class _MyHomePageState extends State<MyHomePage> {
-  PersistedModel model =  PersistedModel("test_doc_type",
-            onLoadComplete: (PersistedModel model) {
-              if (model.data.length == 0) {
-                model.add({"a": "A String"});
-                model.add({"a": "B String"});
-                model.add({"a": "C String"}); 
-              }});
-            
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body:  PersistedModelListView(model, titleKey: "a")
-      );
-  }
-}
+print(model.data[1]["name"]) => "Rick Sanchez";
 ```
+
+### UI Elements
+Once you have create a model, you can easily add it to your application by passing the model into PersistentModel UI classes. Those UI classes will do their best to render a UI with minimal configuration. For example, the following test app creates a ListView.

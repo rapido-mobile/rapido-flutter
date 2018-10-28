@@ -31,9 +31,8 @@ class PersistedModelListView extends StatelessWidget {
         child: ScopedModelDescendant<PersistedModel>(
             builder: (context, child, model) {
           return ListView.builder(
-              itemCount: model.data.length + 1,
+              itemCount: model.data.length,
               itemBuilder: (context, index) {
-                if (index < model.data.length) {
                   return Dismissible(
                     child: ListTile(
                       title: Row(
@@ -46,9 +45,7 @@ class PersistedModelListView extends StatelessWidget {
                     },
                     key: Key(model.data[index]["_id"]),
                   );
-                } else {
-                  return RaisedButton(child: Text("Add"), onPressed: () {});
-                }
+                
               });
         }),
         model: model);
