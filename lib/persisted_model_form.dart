@@ -4,19 +4,20 @@ import 'typed_input_field.dart';
 
 class PersistedModelForm extends StatelessWidget {
   final PersistedModel model;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey;
   final Map<String, dynamic> _newData = {};
 
-  PersistedModelForm(this.model);
+  PersistedModelForm(this.model, {@required this.formKey });
 
   List<Widget> _buildFormFields(BuildContext context) {
+    print("Global Key: " + formKey.toString());
     List<Widget> fields = [];
     model.labels.keys.forEach((String label) {
       fields.add(
           TypedInputField(
               model.labels[label],
               label: label,
-              onSaved: (String value) {
+              onSaved: (dynamic value) {
                 _newData[model.labels[label]] = value;
               }),
       );
@@ -27,7 +28,7 @@ class PersistedModelForm extends StatelessWidget {
           child: RaisedButton(
           child: Text("Add"),
           onPressed: () {
-            _formKey.currentState.save();
+            formKey.currentState.save();
             model.add(_newData);
             Navigator.pop(context);
           }),
@@ -40,7 +41,7 @@ class PersistedModelForm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Add Form")),
       body: Form(
-        key: _formKey,
+        key: formKey,
         child: ListView(
           children: _buildFormFields(context),
         ),

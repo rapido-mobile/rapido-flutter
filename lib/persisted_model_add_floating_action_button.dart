@@ -4,18 +4,20 @@ import 'package:a2s_widgets/persisted_model_form.dart';
 
 class PersistedModelAddFloatingActionButton extends StatelessWidget {
   final PersistedModel model;
-
+  final GlobalKey<FormState> k = GlobalKey<FormState>();
   PersistedModelAddFloatingActionButton(this.model);
 
   @override
   Widget build(BuildContext context) {
+
+    print("Generated FormKey: " + k.toString());
     return FloatingActionButton(
       child: Icon(Icons.add),
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (BuildContext context) {
-            return PersistedModelForm(model);
+            return PersistedModelForm(model, formKey: k);
           }),
         );
       },
