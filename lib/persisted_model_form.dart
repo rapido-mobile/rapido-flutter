@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/persisted_model.dart';
+import 'typed_input_field.dart';
 
 class PersistedModelForm extends StatelessWidget {
   final PersistedModel model;
@@ -12,13 +13,15 @@ class PersistedModelForm extends StatelessWidget {
     List<Widget> fields = [];
     model.labels.keys.forEach((String label) {
       fields.add(
-        TextFormField(
-            decoration: InputDecoration(labelText: label),
-            onSaved: (String value) {
-              _newData[model.labels[label]] = value;
-            }),
+          TypedInputField(
+              model.labels[label],
+              label: label,
+              onSaved: (String value) {
+                _newData[model.labels[label]] = value;
+              }),
       );
     });
+
     fields.add(Container(
           padding: EdgeInsets.only(left: 100.0, right: 100.0),
           child: RaisedButton(
