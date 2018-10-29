@@ -14,7 +14,7 @@ class PersistedModelAddFloatingActionButton extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (BuildContext contexet) {
+          MaterialPageRoute(builder: (BuildContext context) {
             return PersistedModelForm(model);
           }),
         );
