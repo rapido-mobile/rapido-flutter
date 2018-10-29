@@ -19,13 +19,16 @@ class PersistedModelForm extends StatelessWidget {
             }),
       );
     });
-    fields.add(RaisedButton(
-        child: Text("Add"),
-        onPressed: () {
-          _formKey.currentState.save();
-          model.add(_newData);
-          Navigator.pop(context);
-        }));
+    fields.add(Container(
+          padding: EdgeInsets.only(left: 100.0, right: 100.0),
+          child: RaisedButton(
+          child: Text("Add"),
+          onPressed: () {
+            _formKey.currentState.save();
+            model.add(_newData);
+            Navigator.pop(context);
+          }),
+    ));
     return fields;
   }
 
@@ -35,7 +38,9 @@ class PersistedModelForm extends StatelessWidget {
       appBar: AppBar(title: Text("Add Form")),
       body: Form(
         key: _formKey,
-        child: ListView(children: _buildFormFields(context)),
+        child: ListView(
+          children: _buildFormFields(context),
+        ),
       ),
     );
   }
