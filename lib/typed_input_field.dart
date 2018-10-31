@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
 
 class TypedInputField extends StatelessWidget {
   final String fieldName;
@@ -17,6 +19,12 @@ class TypedInputField extends StatelessWidget {
           IntegerFormField(onSaved: onSaved),
         ],
       );
+    }
+    if(fieldName.toLowerCase().endsWith("date")) {
+      return DateTimePickerFormField(
+        format: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
+        decoration: InputDecoration(labelText: label),
+        );
     }
     return TextFormField(
         decoration: InputDecoration(labelText: label),

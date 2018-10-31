@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   scoped_model: ^0.3.0
   path_provider: ^0.4.1
+  datetime_picker_formfield: ^0.1.4
+
 
 dev_dependencies:
   flutter_test:
