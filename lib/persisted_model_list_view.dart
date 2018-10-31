@@ -6,8 +6,10 @@ class PersistedModelListView extends StatelessWidget {
   final PersistedModel model;
   final List<String> titleKeys;
   final String subtitleKey;
+  final Function onItemTap;
+
   PersistedModelListView(this.model,
-      {@required this.titleKeys, this.subtitleKey});
+      {@required this.titleKeys, this.subtitleKey, this.onItemTap});
 
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
     List<Widget> cells = [];
@@ -33,19 +35,23 @@ class PersistedModelListView extends StatelessWidget {
           return ListView.builder(
               itemCount: model.data.length,
               itemBuilder: (context, index) {
-                  return Dismissible(
-                    child: ListTile(
-                      title: Row(
-                        children: _buildTitleRowChildren(model.data[index]),
-                      ),
-                      subtitle: _buildSubtitle((model.data[index])),
-                    ),
-                    onDismissed: (direction) {
-                      model.delete(index);
+                return Dismissible(
+                  child: ListTile(
+                    onTap: () {
+                      if (onItemTap != null) {
+                        onItemTap(index);
+                      }
                     },
-                    key: Key(model.data[index]["_id"]),
-                  );
-                
+                    title: Row(
+                      children: _buildTitleRowChildren(model.data[index]),
+                    ),
+                    subtitle: _buildSubtitle((model.data[index])),
+                  ),
+                  onDismissed: (direction) {
+                    model.delete(index);
+                  },
+                  key: Key(model.data[index]["_id"]),
+                );
               });
         }),
         model: model);

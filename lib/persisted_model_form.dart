@@ -10,7 +10,6 @@ class PersistedModelForm extends StatelessWidget {
   PersistedModelForm(this.model, {@required this.formKey });
 
   List<Widget> _buildFormFields(BuildContext context) {
-    print("Global Key: " + formKey.toString());
     List<Widget> fields = [];
     model.labels.keys.forEach((String label) {
       fields.add(
