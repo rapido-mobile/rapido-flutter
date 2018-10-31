@@ -22,8 +22,9 @@ class TypedInputField extends StatelessWidget {
     }
     if(fieldName.toLowerCase().endsWith("date")) {
       return DateTimePickerFormField(
-        format: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
+        format: DateFormat("EEEE, MMMM d, yyyy "),
         decoration: InputDecoration(labelText: label),
+         dateOnly: true ,
         );
     }
     return TextFormField(
