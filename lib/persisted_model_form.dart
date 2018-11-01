@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:a2s_widgets/persisted_model.dart';
 import 'typed_input_field.dart';
 
+
 class PersistedModelForm extends StatelessWidget {
   final PersistedModel model;
   final GlobalKey<FormState> formKey;
-  final Map<String, dynamic> _newData = {};
+  final Map<String, dynamic> newData;
 
-  PersistedModelForm(this.model, {@required this.formKey });
+  PersistedModelForm(this.model, {@required this.formKey, @required this.newData }){
+    print("Form Created");
+  }
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
@@ -17,7 +20,10 @@ class PersistedModelForm extends StatelessWidget {
               model.labels[label],
               label: label,
               onSaved: (dynamic value) {
-                _newData[model.labels[label]] = value;
+                print("Received from field $value");
+                newData[model.labels[label]] = value;
+                print("Key: $formKey");
+                print("_newData: $newData");
               }),
       );
     });
@@ -28,7 +34,8 @@ class PersistedModelForm extends StatelessWidget {
           child: Text("Add"),
           onPressed: () {
             formKey.currentState.save();
-            model.add(_newData);
+            print("Adding: $newData");
+            model.add(newData);
             Navigator.pop(context);
           }),
     ));

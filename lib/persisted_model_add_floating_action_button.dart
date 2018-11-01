@@ -5,6 +5,7 @@ import 'package:a2s_widgets/persisted_model_form.dart';
 class PersistedModelAddFloatingActionButton extends StatelessWidget {
   final PersistedModel model;
   final GlobalKey<FormState> k = GlobalKey<FormState>();
+  final Map<String, dynamic> newData = {};
   PersistedModelAddFloatingActionButton(this.model);
 
   @override
@@ -16,7 +17,7 @@ class PersistedModelAddFloatingActionButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (BuildContext context) {
-            return PersistedModelForm(model, formKey: k);
+            return PersistedModelForm(model, formKey: k, newData: newData,);
           }),
         );
       },

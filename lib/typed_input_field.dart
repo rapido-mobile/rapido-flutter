@@ -20,12 +20,18 @@ class TypedInputField extends StatelessWidget {
         ],
       );
     }
-    if(fieldName.toLowerCase().endsWith("date")) {
+    if (fieldName.toLowerCase().endsWith("date")) {
       return DateTimePickerFormField(
         format: DateFormat("EEEE, MMMM d, yyyy "),
         decoration: InputDecoration(labelText: label),
-         dateOnly: true ,
-        );
+        dateOnly: true,
+        onSaved: (DateTime value) {
+          DateFormat formatter = DateFormat.yMd();
+          String v= formatter.format(value);
+          print("Date string:  $v");
+          this.onSaved(v);
+        },
+      );
     }
     return TextFormField(
         decoration: InputDecoration(labelText: label),

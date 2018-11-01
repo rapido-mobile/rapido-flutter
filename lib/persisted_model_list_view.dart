@@ -14,6 +14,7 @@ class PersistedModelListView extends StatelessWidget {
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
     List<Widget> cells = [];
     titleKeys.forEach((String key) {
+      print("$key : ${map[key].toString()}");
       if (map.containsKey(key)) {
         cells.add(Text(map[key].toString()));
       }
