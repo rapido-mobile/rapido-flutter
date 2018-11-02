@@ -51,7 +51,9 @@ class PersistedModel extends Model {
         if (f.path.endsWith('.json')) {
           String j = new File(f.path).readAsStringSync();
           Map newData = json.decode(j);
-          data.add(newData);
+          if (newData["_docType"].toString() == documentType) {
+            data.add(newData);
+          }
         }
       });
       notifyListeners();
@@ -64,8 +66,11 @@ class PersistedModel extends Model {
     map["_id"] = randomFileSafeId(24);
     map["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
     data.add(map);
-    _writeMapLocal(map);
+    print("Data added, notifying listeners");
     notifyListeners();
+    print("Listeners notified, writing file");
+    _writeMapLocal(map);
+    print("file written");
   }
 
   void delete(int index) {
