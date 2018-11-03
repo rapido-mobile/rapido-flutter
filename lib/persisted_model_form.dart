@@ -9,7 +9,6 @@ class PersistedModelForm extends StatelessWidget {
   final Map<String, dynamic> newData;
 
   PersistedModelForm(this.model, {@required this.formKey, @required this.newData }){
-    print("Form Created");
   }
 
   List<Widget> _buildFormFields(BuildContext context) {
@@ -20,10 +19,7 @@ class PersistedModelForm extends StatelessWidget {
               model.labels[label],
               label: label,
               onSaved: (dynamic value) {
-                print("Received from field $value");
                 newData[model.labels[label]] = value;
-                print("Key: $formKey");
-                print("_newData: $newData");
               }),
       );
     });
@@ -34,7 +30,6 @@ class PersistedModelForm extends StatelessWidget {
           child: Text("Add"),
           onPressed: () {
             formKey.currentState.save();
-            print("Adding: $newData");
             model.add(newData);
             Navigator.pop(context);
           }),

@@ -28,7 +28,6 @@ class TypedInputField extends StatelessWidget {
         onSaved: (DateTime value) {
           DateFormat formatter = DateFormat.yMd();
           String v= formatter.format(value);
-          print("Date string:  $v");
           this.onSaved(v);
         },
       );

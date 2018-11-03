@@ -6,17 +6,17 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:scoped_model/scoped_model.dart';
-
-class PersistedModel extends Model {
+class PersistedModel {
   final String documentType;
   Function onLoadComplete;
   Map<String, String> _labels;
-
   List<Map<String, dynamic>> data;
+  Function onChanged;
 
   PersistedModel(this.documentType,
-      {this.onLoadComplete, Map<String, String> labels}) {
+      {this.onLoadComplete,
+      Map<String, String> labels,
+      this.onChanged}) {
     _labels = labels;
     data = [];
     _loadLocalData();
@@ -43,6 +43,12 @@ class PersistedModel extends Model {
     return _labels;
   }
 
+  void _notifyListener() {
+    if (onChanged != null) {
+      onChanged(data);
+    }
+  }
+
   void _loadLocalData() async {
     getApplicationDocumentsDirectory().then((Directory appDir) {
       appDir
@@ -56,8 +62,8 @@ class PersistedModel extends Model {
           }
         }
       });
-      notifyListeners();
       if (onLoadComplete != null) onLoadComplete(this);
+      _notifyListener();
     });
   }
 
@@ -66,17 +72,14 @@ class PersistedModel extends Model {
     map["_id"] = randomFileSafeId(24);
     map["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
     data.add(map);
-    print("Data added, notifying listeners");
-    notifyListeners();
-    print("Listeners notified, writing file");
     _writeMapLocal(map);
-    print("file written");
+    _notifyListener();
   }
 
   void delete(int index) {
     _deleteMapLocal(data[index]["_id"]);
     data.removeAt(index);
-    notifyListeners();
+    _notifyListener();
   }
 
   static String randomFileSafeId(int length) {
@@ -95,8 +98,6 @@ class PersistedModel extends Model {
 
   void _deleteMapLocal(String id) async {
     final file = await _localFile(id);
-
-    print("Deleting " + id);
     file.delete();
   }
 
