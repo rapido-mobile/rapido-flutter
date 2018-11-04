@@ -45,25 +45,36 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
         data = newData;
       });
     };
+
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
-          return Dismissible(
-            child: ListTile(
-              onTap: () {
-                if (widget.onItemTap != null) {
-                  widget.onItemTap(index);
-                }
-              },
-              title: Row(
-                children: _buildTitleRowChildren(data[index]),
-              ),
-              subtitle: _buildSubtitle((data[index])),
-            ),
-            onDismissed: (direction) {
-              widget.model.delete(index);
+          return ListTile(
+            onTap: () {
+              if (widget.onItemTap != null) {
+                widget.onItemTap(index);
+              }
             },
-            key: Key(data[index]["_id"]),
+            title: Row(
+              children: _buildTitleRowChildren(data[index]),
+            ),
+            subtitle: _buildSubtitle((data[index])),
+            trailing: PopupMenuButton<Function>(
+              onSelected: (Function action) {
+                print("action received: $action");
+                action(index);
+              },
+                itemBuilder: (BuildContext context) =>
+                    <PopupMenuItem<Function>>[
+                      PopupMenuItem<Function>(
+                        value: null,
+                        child: Icon(Icons.edit),
+                      ),
+                      PopupMenuItem<Function>(
+                        value: widget.model.delete,
+                        child: Icon(Icons.delete),
+                      ),
+                    ]),
           );
         });
   }
