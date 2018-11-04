@@ -6,9 +6,10 @@ class TypedInputField extends StatelessWidget {
   final String fieldName;
   final String label;
   final Function onSaved;
+  final dynamic initialValue;
 
   TypedInputField(this.fieldName,
-      {@required this.label, @required this.onSaved});
+      {@required this.label, @required this.onSaved, this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,9 @@ class TypedInputField extends StatelessWidget {
       return Row(
         children: [
           Text(label),
-          IntegerFormField(onSaved: onSaved),
+          IntegerFormField(
+              onSaved: onSaved,
+              initialValue: initialValue == null ? 0 : initialValue),
         ],
       );
     }
@@ -27,13 +30,14 @@ class TypedInputField extends StatelessWidget {
         dateOnly: true,
         onSaved: (DateTime value) {
           DateFormat formatter = DateFormat.yMd();
-          String v= formatter.format(value);
+          String v = formatter.format(value);
           this.onSaved(v);
         },
       );
     }
     return TextFormField(
         decoration: InputDecoration(labelText: label),
+        initialValue: initialValue,
         onSaved: (String value) {
           this.onSaved(value);
         });

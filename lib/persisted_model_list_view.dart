@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/persisted_model.dart';
+import 'package:a2s_widgets/persisted_model_form.dart';
 
 class PersistedModelListView extends StatefulWidget {
   final PersistedModel model;
@@ -38,6 +39,17 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
     return Text(map[widget.subtitleKey].toString());
   }
 
+  void _createEditForm(int index) {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return PersistedModelForm(
+        widget.model,
+        formKey: GlobalKey<FormState>(),
+        newData: {},
+        index: index,
+      );
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     widget.model.onChanged = (List<Map<String, dynamic>> newData) {
@@ -60,14 +72,13 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
             ),
             subtitle: _buildSubtitle((data[index])),
             trailing: PopupMenuButton<Function>(
-              onSelected: (Function action) {
-                print("action received: $action");
-                action(index);
-              },
+                onSelected: (Function action) {
+                  action(index);
+                },
                 itemBuilder: (BuildContext context) =>
                     <PopupMenuItem<Function>>[
                       PopupMenuItem<Function>(
-                        value: null,
+                        value: _createEditForm,
                         child: Icon(Icons.edit),
                       ),
                       PopupMenuItem<Function>(

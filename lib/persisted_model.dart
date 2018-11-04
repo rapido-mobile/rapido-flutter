@@ -67,6 +67,12 @@ class PersistedModel {
     });
   }
 
+  void update(int index, Map<String, dynamic> map) {
+    data[index] = map;
+    _writeMapLocal(map);
+    _notifyListener();
+  }
+
   void add(Map<String, dynamic> map) {
     map["_docType"] = documentType;
     map["_id"] = randomFileSafeId(24);
