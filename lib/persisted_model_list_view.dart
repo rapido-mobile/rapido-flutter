@@ -20,11 +20,6 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
   initState() {
     super.initState();
     data = widget.model.data;
-    widget.model.onChanged = (List<Map<String, dynamic>> newData) {
-      setState(() {
-        data = newData;
-      });
-    };
   }
 
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
@@ -45,6 +40,11 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
 
   @override
   Widget build(BuildContext context) {
+    widget.model.onChanged = (List<Map<String, dynamic>> newData) {
+      setState(() {
+        data = newData;
+      });
+    };
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
