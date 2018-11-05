@@ -22,6 +22,39 @@ void main() {
       expect(model.data[0]["price"], 1.5);
     });
   });
+
+  test('updates a map', () {
+    PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model) {
+      Map<String, dynamic> updatedMap = {
+        "count": 1,
+        "rating": 1,
+        "price": 2.5,
+        "name": "Pickle Rick"
+      };
+      model.update(0, updatedMap);
+      expect(model.data[0]["count"], 1);
+      expect(model.data[0]["rating"], 1);
+      expect(model.data[0]["price"], 2.5);
+      expect(model.data[0]["name"], "Pickle Rick");
+    });
+  });
+
+  test('checks that updates persist on disk', () {
+    PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model) {
+      bool testMapFound = false;
+      model.data.forEach((Map<String, dynamic> map) {
+        if (map["name"] == "Pickle Rick") {
+          expect(map["count"], 1);
+          expect(map["rating"], 1);
+          expect(map["price"], 2.5);
+          expect(map["name"], "Pickle Rick");
+          testMapFound = true;
+        }
+      });
+      expect(testMapFound, true);
+    });
+  });
+
   test('deletes maps from the model', () {
     PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model) {
       model.delete(0);

@@ -68,8 +68,10 @@ class PersistedModel {
   }
 
   void update(int index, Map<String, dynamic> map) {
-    data[index] = map;
-    _writeMapLocal(map);
+    map.keys.forEach((String key){
+      data[index][key] = map[key];
+    });
+    _writeMapLocal(data[index]);
     _notifyListener();
   }
 
