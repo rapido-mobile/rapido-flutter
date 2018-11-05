@@ -71,6 +71,8 @@ class PersistedModel {
     map.keys.forEach((String key){
       data[index][key] = map[key];
     });
+    data[index]["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+  
     _writeMapLocal(data[index]);
     _notifyListener();
   }

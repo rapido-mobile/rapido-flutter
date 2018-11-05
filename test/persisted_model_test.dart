@@ -23,31 +23,33 @@ void main() {
     });
   });
 
-  test('updates a map', () {
+  test('test maps get updated and timestamp is changed', () {
     PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model) {
       Map<String, dynamic> updatedMap = {
         "count": 1,
         "rating": 1,
         "price": 2.5,
-        "name": "Pickle Rick"
+        "name": "Edited Name"
       };
+      int oldTimeStamp = model.data[0]["_time_stamp"];
       model.update(0, updatedMap);
       expect(model.data[0]["count"], 1);
       expect(model.data[0]["rating"], 1);
       expect(model.data[0]["price"], 2.5);
-      expect(model.data[0]["name"], "Pickle Rick");
+      expect(model.data[0]["name"], "Edited Name");
+      expect(model.data[0]["_time_stamp"], greaterThan(oldTimeStamp) );
     });
   });
 
   test('checks that updates persist on disk', () {
+    sleep(Duration(seconds: 1));
     PersistedModel("testDocumentType", onLoadComplete: (PersistedModel model) {
       bool testMapFound = false;
       model.data.forEach((Map<String, dynamic> map) {
-        if (map["name"] == "Pickle Rick") {
+        if (map["name"] == "Edited Name") {
           expect(map["count"], 1);
           expect(map["rating"], 1);
           expect(map["price"], 2.5);
-          expect(map["name"], "Pickle Rick");
           testMapFound = true;
         }
       });
