@@ -27,7 +27,13 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
     List<Widget> cells = [];
     widget.titleKeys.forEach((String key) {
       if (map.containsKey(key)) {
-        cells.add(Text(map[key].toString()));
+        cells.add(
+          Text(
+            map[key].toString(),
+            softWrap: true,
+            style: Theme.of(context).textTheme.subhead,
+          ),
+        );
       }
     });
     return cells;
@@ -43,8 +49,6 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
       return PersistedModelForm(
         widget.model,
-        formKey: GlobalKey<FormState>(),
-        newData: {},
         index: index,
       );
     }));
@@ -69,8 +73,11 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
             },
             title: Row(
               children: _buildTitleRowChildren(data[index]),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              
             ),
-            subtitle: _buildSubtitle((data[index])),
+            subtitle: _buildSubtitle(data[index]),
             trailing: PopupMenuButton<Function>(
                 onSelected: (Function action) {
                   action(index);

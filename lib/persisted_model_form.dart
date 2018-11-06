@@ -2,26 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:a2s_widgets/persisted_model.dart';
 import 'typed_input_field.dart';
 
-class PersistedModelForm extends StatelessWidget {
+class PersistedModelForm extends StatefulWidget {
   final PersistedModel model;
-  final GlobalKey<FormState> formKey;
   final index;
-  final Map<String, dynamic> newData;
 
   PersistedModelForm(this.model,
-      {@required this.formKey, @required this.newData, this.index});
+      {this.index});
+
+  @override
+  _PersistedModelFormState createState() => _PersistedModelFormState();
+}
+
+class _PersistedModelFormState extends State<PersistedModelForm> {
+  
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final Map<String, dynamic> newData = {};
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
-    model.labels.keys.forEach((String label) {
+    widget.model.labels.keys.forEach((String label) {
       dynamic initialValue;
-      if (index != null) {
-        initialValue = model.data[index][model.labels[label]];
+      if (widget.index != null) {
+        initialValue =
+            widget.model.data[widget.index][widget.model.labels[label]];
       }
       fields.add(
-        TypedInputField(model.labels[label],
+        TypedInputField(widget.model.labels[label],
             label: label, initialValue: initialValue, onSaved: (dynamic value) {
-          newData[model.labels[label]] = value;
+          newData[widget.model.labels[label]] = value;
         }),
       );
     });
@@ -29,14 +37,13 @@ class PersistedModelForm extends StatelessWidget {
     fields.add(Container(
       padding: EdgeInsets.only(left: 100.0, right: 100.0),
       child: RaisedButton(
-          child: Text("Add"),
+          child: Text(widget.index == null ? "Add" : "Save"),
           onPressed: () {
             formKey.currentState.save();
-            if (index == null) {
-              model.add(newData);
-            }
-            else {
-              //model.upate
+            if (widget.index == null) {
+              widget.model.add(newData);
+            } else {
+              widget.model.update(widget.index, newData);
             }
             Navigator.pop(context);
           }),
@@ -46,7 +53,7 @@ class PersistedModelForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String titleText = index == null ? "Add" : "Edit";
+    String titleText = widget.index == null ? "Add" : "Edit";
     return Scaffold(
       appBar: AppBar(title: Text(titleText)),
       body: Form(

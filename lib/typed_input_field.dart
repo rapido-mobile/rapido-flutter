@@ -25,7 +25,7 @@ class TypedInputField extends StatelessWidget {
     }
     if (fieldName.toLowerCase().endsWith("date")) {
       return DateTimePickerFormField(
-        format: DateFormat("EEEE, MMMM d, yyyy "),
+        format: DateFormat.yMd(),
         decoration: InputDecoration(labelText: label),
         dateOnly: true,
         onSaved: (DateTime value) {
@@ -33,6 +33,7 @@ class TypedInputField extends StatelessWidget {
           String v = formatter.format(value);
           this.onSaved(v);
         },
+        initialValue: _formatInitialDateTime(),
       );
     }
     return TextFormField(
@@ -41,6 +42,15 @@ class TypedInputField extends StatelessWidget {
         onSaved: (String value) {
           this.onSaved(value);
         });
+  }
+
+  DateTime _formatInitialDateTime() {
+    if (initialValue == null) {
+      return DateTime.now();
+    } else {
+      DateTime dt = DateFormat.yMd().parse(initialValue);
+      return dt;
+    }
   }
 }
 
