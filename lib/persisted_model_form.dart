@@ -6,15 +6,12 @@ class PersistedModelForm extends StatefulWidget {
   final PersistedModel model;
   final index;
 
-  PersistedModelForm(this.model,
-      {this.index});
-
+  PersistedModelForm(this.model, {this.index});
   @override
   _PersistedModelFormState createState() => _PersistedModelFormState();
 }
 
 class _PersistedModelFormState extends State<PersistedModelForm> {
-  
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final Map<String, dynamic> newData = {};
 
@@ -27,10 +24,14 @@ class _PersistedModelFormState extends State<PersistedModelForm> {
             widget.model.data[widget.index][widget.model.labels[label]];
       }
       fields.add(
-        TypedInputField(widget.model.labels[label],
-            label: label, initialValue: initialValue, onSaved: (dynamic value) {
-          newData[widget.model.labels[label]] = value;
-        }),
+        Container(
+          child: TypedInputField(widget.model.labels[label],
+              label: label,
+              initialValue: initialValue, onSaved: (dynamic value) {
+            newData[widget.model.labels[label]] = value;
+          }),
+          margin: EdgeInsets.all(10.0),
+        ),
       );
     });
 

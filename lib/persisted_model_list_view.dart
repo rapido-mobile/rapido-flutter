@@ -65,34 +65,36 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              if (widget.onItemTap != null) {
-                widget.onItemTap(index);
-              }
-            },
-            title: Row(
-              children: _buildTitleRowChildren(data[index]),
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              
+          return Container(
+            decoration: null,
+            child: ListTile(
+              onTap: () {
+                if (widget.onItemTap != null) {
+                  widget.onItemTap(index);
+                }
+              },
+              title: Row(
+                children: _buildTitleRowChildren(data[index]),
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              subtitle: _buildSubtitle(data[index]),
+              trailing: PopupMenuButton<Function>(
+                  onSelected: (Function action) {
+                    action(index);
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuItem<Function>>[
+                        PopupMenuItem<Function>(
+                          value: _createEditForm,
+                          child: Icon(Icons.edit),
+                        ),
+                        PopupMenuItem<Function>(
+                          value: widget.model.delete,
+                          child: Icon(Icons.delete),
+                        ),
+                      ]),
             ),
-            subtitle: _buildSubtitle(data[index]),
-            trailing: PopupMenuButton<Function>(
-                onSelected: (Function action) {
-                  action(index);
-                },
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuItem<Function>>[
-                      PopupMenuItem<Function>(
-                        value: _createEditForm,
-                        child: Icon(Icons.edit),
-                      ),
-                      PopupMenuItem<Function>(
-                        value: widget.model.delete,
-                        child: Icon(Icons.delete),
-                      ),
-                    ]),
           );
         });
   }
