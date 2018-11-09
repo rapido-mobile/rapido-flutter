@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/persisted_model.dart';
-import 'package:a2s_widgets/persisted_model_form.dart';
+import 'package:a2s_widgets/persisted_model_list_item_action_button.dart';
 
 class PersistedModelListView extends StatefulWidget {
   final PersistedModel model;
   final List<String> titleKeys;
   final String subtitleKey;
   final Function onItemTap;
+  final Function customItemBuilder;
 
   PersistedModelListView(this.model,
-      {@required this.titleKeys, this.subtitleKey, this.onItemTap});
+      {@required this.titleKeys, this.subtitleKey, this.onItemTap, this.customItemBuilder});
 
   _PersistedModelListViewState createState() => _PersistedModelListViewState();
 }
@@ -45,14 +46,6 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
     return Text(map[widget.subtitleKey].toString());
   }
 
-  void _createEditForm(int index) {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return PersistedModelForm(
-        widget.model,
-        index: index,
-      );
-    }));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,37 +58,35 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
-          return Container(
-            decoration: null,
-            child: ListTile(
-              onTap: () {
-                if (widget.onItemTap != null) {
-                  widget.onItemTap(index);
-                }
-              },
-              title: Row(
-                children: _buildTitleRowChildren(data[index]),
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              ),
-              subtitle: _buildSubtitle(data[index]),
-              trailing: PopupMenuButton<Function>(
-                  onSelected: (Function action) {
-                    action(index);
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<Function>>[
-                        PopupMenuItem<Function>(
-                          value: _createEditForm,
-                          child: Icon(Icons.edit),
-                        ),
-                        PopupMenuItem<Function>(
-                          value: widget.model.delete,
-                          child: Icon(Icons.delete),
-                        ),
-                      ]),
-            ),
-          );
+          return buildListItem(index);
         });
+  }
+
+  Widget buildListItem(int index){
+    if(widget.customItemBuilder == null) {
+      return _defaultListTile(index);
+    }
+    else {
+      return widget.customItemBuilder(index);
+    }
+  }
+  Container _defaultListTile(int index) {
+    return Container(
+      decoration: null,
+      child: ListTile(
+        onTap: () {
+          if (widget.onItemTap != null) {
+            widget.onItemTap(index);
+          }
+        },
+        title: Row(
+          children: _buildTitleRowChildren(data[index]),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ),
+        subtitle: _buildSubtitle(data[index]),
+        trailing: PersistedModelListItemActionButton(widget.model, index: index)
+      ),
+    );
   }
 }

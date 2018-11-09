@@ -10,13 +10,15 @@ class PersistedModelScaffold extends StatefulWidget {
   final List<String> titleKeys;
   final String subtitleKey;
   final BoxDecoration decoration;
+  final Function customItemBuilder;
 
   PersistedModelScaffold(this.model,
       {@required this.title,
       this.onItemTap,
       @required this.titleKeys,
       this.subtitleKey,
-      this.decoration});
+      this.decoration,
+      this.customItemBuilder});
 
   _PersistedModelScaffoldState createState() => _PersistedModelScaffoldState();
 }
@@ -34,6 +36,7 @@ class _PersistedModelScaffoldState extends State<PersistedModelScaffold> {
           titleKeys: widget.titleKeys,
           subtitleKey: widget.subtitleKey,
           onItemTap: widget.onItemTap,
+          customItemBuilder: widget.customItemBuilder,
         ),
         decoration: widget.decoration,
       ),
