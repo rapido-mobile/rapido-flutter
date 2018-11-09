@@ -63,36 +63,51 @@ class IntegerFormField extends StatefulWidget {
 }
 
 class _IntegerFormFieldState extends State<IntegerFormField> {
- int value;
+  int value;
 
   @override
-  initState(){
+  initState() {
     super.initState();
     value = widget.initialValue;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FormField(
-      onSaved: (int v){
-        print("In value: $v");
-        print("Entered value: $value");
-        widget.onSaved(value);
-      },
-      builder: (FormFieldState<int> state) {
-      return SizedBox(
-        width: 50.0,
-        child: TextField(
-          keyboardType:
-              TextInputType.numberWithOptions(signed: false, decimal: false),
-          controller: TextEditingController(
-            text: value.toString(),
-          ),
-          onChanged: (String v) {
-            value = int.parse(v);
+    return FormField(onSaved: (int v) {
+      widget.onSaved(value);
+    },
+    initialValue: widget.initialValue, 
+    builder: (FormFieldState<int> state) {
+      return Row(children: [
+        IconButton(
+          onPressed: () {
+            state.didChange(state.value -1);
+            value = state.value;
           },
+          icon: Icon(Icons.remove),
         ),
-      );
+        SizedBox(
+          width: 50.0,
+          child: TextField(
+            keyboardType:
+                TextInputType.numberWithOptions(signed: false, decimal: false),
+            controller: TextEditingController(
+              text: state.value.toString(),
+            ),
+            onSubmitted: (String v) {
+              value = int.parse(v);
+              state.didChange(value);
+            },
+          ),
+        ),
+          IconButton(
+          onPressed: () {
+            state.didChange(state.value + 1);
+            value = state.value;
+          },
+          icon: Icon(Icons.add),
+        ),
+      ]);
     });
   }
   // IntegerFormField(
