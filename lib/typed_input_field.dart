@@ -54,35 +54,87 @@ class TypedInputField extends StatelessWidget {
   }
 }
 
-class IntegerFormField extends FormField<int> {
-  IntegerFormField(
-      {FormFieldSetter<int> onSaved,
-      FormFieldValidator<int> validator,
-      int initialValue = 0,
-      bool autovalidate = false})
-      : super(
-            onSaved: onSaved,
-            validator: validator,
-            initialValue: initialValue,
-            autovalidate: autovalidate,
-            builder: (FormFieldState<int> state) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: () {
-                      state.didChange(state.value - 1);
-                    },
-                  ),
-                  Text(state.value.toString()),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      state.didChange(state.value + 1);
-                    },
-                  ),
-                ],
-              );
-            });
+class IntegerFormField extends StatefulWidget {
+  final int initialValue;
+  final Function onSaved;
+  IntegerFormField({this.initialValue, this.onSaved});
+
+  _IntegerFormFieldState createState() => _IntegerFormFieldState();
+}
+
+class _IntegerFormFieldState extends State<IntegerFormField> {
+ int value;
+
+  @override
+  initState(){
+    super.initState();
+    value = widget.initialValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FormField(
+      onSaved: (int v){
+        print("In value: $v");
+        print("Entered value: $value");
+        widget.onSaved(value);
+      },
+      builder: (FormFieldState<int> state) {
+      return SizedBox(
+        width: 50.0,
+        child: TextField(
+          keyboardType:
+              TextInputType.numberWithOptions(signed: false, decimal: false),
+          controller: TextEditingController(
+            text: value.toString(),
+          ),
+          onChanged: (String v) {
+            value = int.parse(v);
+          },
+        ),
+      );
+    });
+  }
+  // IntegerFormField(
+  //     {FormFieldSetter<int> onSaved,
+  //     FormFieldValidator<int> validator,
+  //     int initialValue = 0,
+  //     bool autovalidate = false})
+  //     : super(
+  //           onSaved: onSaved,
+  //           validator: validator,
+  //           initialValue: initialValue,
+  //           autovalidate: autovalidate,
+  //           builder: (FormFieldState<int> state) {
+  //             return Row(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: <Widget>[
+  //                 IconButton(
+  //                   icon: Icon(Icons.remove),
+  //                   onPressed: () {
+  //                     state.didChange(state.value - 1);
+  //                   },
+  //                 ),
+  //                 SizedBox(
+  //                   width: 50.0,
+  //                   child: TextField(
+  //                       keyboardType: TextInputType.numberWithOptions(
+  //                           signed: false, decimal: false),
+  //                       controller: TextEditingController(
+  //                           text: initialValue.toString(),
+  //                           ),
+  //                           onChanged: (String value){
+  //                             state.didChange(int.parse(value));
+  //                           },),
+  //                 ),
+  //                 IconButton(
+  //                   icon: Icon(Icons.add),
+  //                   onPressed: () {
+  //                     state.didChange(state.value + 1);
+  //                   },
+  //                 ),
+  //               ],
+  //             );
+  //           });
+
 }
