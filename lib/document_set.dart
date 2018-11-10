@@ -6,19 +6,19 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 
-class PersistedModel {
+class DocumentSet {
   final String documentType;
   Function onLoadComplete;
   Map<String, String> _labels;
-  List<Map<String, dynamic>> data;
+  List<Map<String, dynamic>> documents;
   Function onChanged;
 
-  PersistedModel(this.documentType,
+  DocumentSet(this.documentType,
       {this.onLoadComplete,
       Map<String, String> labels,
       this.onChanged}) {
     _labels = labels;
-    data = [];
+    documents = [];
     _loadLocalData();
   }
 
@@ -28,10 +28,10 @@ class PersistedModel {
 
   Map<String, String> get labels {
     if (_labels == null) {
-      if (data.length < 1) {
+      if (documents.length < 1) {
         return null;
       }
-      Map<String, dynamic> map = data[0];
+      Map<String, dynamic> map = documents[0];
       Map<String, String> tempLabels = Map<String, String>();
       map.keys.forEach((String k) {
         if (!k.startsWith("_")) {
@@ -45,7 +45,7 @@ class PersistedModel {
 
   void _notifyListener() {
     if (onChanged != null) {
-      onChanged(data);
+      onChanged(documents);
     }
   }
 
@@ -58,7 +58,7 @@ class PersistedModel {
           String j = new File(f.path).readAsStringSync();
           Map newData = json.decode(j);
           if (newData["_docType"].toString() == documentType) {
-            data.add(newData);
+            documents.add(newData);
           }
         }
       });
@@ -67,28 +67,28 @@ class PersistedModel {
     });
   }
 
-  void update(int index, Map<String, dynamic> map) {
+  void updateDocment(int index, Map<String, dynamic> map) {
     map.keys.forEach((String key){
-      data[index][key] = map[key];
+      documents[index][key] = map[key];
     });
-    data[index]["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+    documents[index]["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
   
-    _writeMapLocal(data[index]);
+    _writeMapLocal(documents[index]);
     _notifyListener();
   }
 
-  void add(Map<String, dynamic> map) {
+  void addDocument(Map<String, dynamic> map) {
     map["_docType"] = documentType;
     map["_id"] = randomFileSafeId(24);
     map["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
-    data.add(map);
+    documents.add(map);
     _writeMapLocal(map);
     _notifyListener();
   }
 
-  void delete(int index) {
-    _deleteMapLocal(data[index]["_id"]);
-    data.removeAt(index);
+  void deleteDocument(int index) {
+    _deleteMapLocal(documents[index]["_id"]);
+    documents.removeAt(index);
     _notifyListener();
   }
 

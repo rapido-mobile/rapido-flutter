@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/persisted_model.dart';
+import 'package:a2s_widgets/document_set.dart';
 import 'typed_input_field.dart';
 
 class PersistedModelForm extends StatefulWidget {
-  final PersistedModel model;
+  final DocumentSet model;
   final index;
 
   PersistedModelForm(this.model, {this.index});
@@ -21,7 +21,7 @@ class _PersistedModelFormState extends State<PersistedModelForm> {
       dynamic initialValue;
       if (widget.index != null) {
         initialValue =
-            widget.model.data[widget.index][widget.model.labels[label]];
+            widget.model.documents[widget.index][widget.model.labels[label]];
       }
       fields.add(
         Container(
@@ -43,9 +43,9 @@ class _PersistedModelFormState extends State<PersistedModelForm> {
           onPressed: () {
             formKey.currentState.save();
             if (widget.index == null) {
-              widget.model.add(newData);
+              widget.model.addDocument(newData);
             } else {
-              widget.model.update(widget.index, newData);
+              widget.model.updateDocment(widget.index, newData);
             }
             Navigator.pop(context);
           }),

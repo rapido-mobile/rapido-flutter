@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/persisted_model.dart';
+import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/persisted_model_list_item_action_button.dart';
 
 class PersistedModelListView extends StatefulWidget {
-  final PersistedModel model;
+  final DocumentSet model;
   final List<String> titleKeys;
   final String subtitleKey;
   final Function onItemTap;
@@ -26,7 +26,7 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
   @override
   initState() {
     super.initState();
-    data = widget.model.data;
+    data = widget.model.documents;
   }
 
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
@@ -59,8 +59,8 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
       });
     };
 
-    if (widget.model.data.length == 0 && widget.emptyListWidget != null) {
-      print("${widget.model.data.length} : ${widget.emptyListWidget}");
+    if (widget.model.documents.length == 0 && widget.emptyListWidget != null) {
+      print("${widget.model.documents.length} : ${widget.emptyListWidget}");
         return widget.emptyListWidget;
     }
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/persisted_model.dart';
+import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/persisted_model_list_view.dart';
 import 'package:a2s_widgets/persisted_model_add_floating_action_button.dart';
 
 class PersistedModelScaffold extends StatefulWidget {
-  final PersistedModel model;
+  final DocumentSet model;
   final String title;
   final Function onItemTap;
   final List<String> titleKeys;

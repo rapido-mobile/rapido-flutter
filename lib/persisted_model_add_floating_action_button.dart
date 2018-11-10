@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/persisted_model.dart';
+import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/persisted_model_form.dart';
 
 class PersistedModelAddFloatingActionButton extends StatelessWidget {
-  final PersistedModel model;
+  final DocumentSet model;
   PersistedModelAddFloatingActionButton(this.model);
 
   @override

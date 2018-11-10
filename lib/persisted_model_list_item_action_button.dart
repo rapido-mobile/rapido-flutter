@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/persisted_model.dart';
+import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/persisted_model_form.dart';
 
 class PersistedModelListItemActionButton extends StatelessWidget {
-  final PersistedModel model;
+  final DocumentSet model;
   final int index;
 
   PersistedModelListItemActionButton(this.model, {@required this.index});
@@ -23,7 +23,7 @@ class PersistedModelListItemActionButton extends StatelessWidget {
               }));
               break;
             case 1:
-              model.delete(index);
+              model.deleteDocument(index);
           }
         },
         itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
