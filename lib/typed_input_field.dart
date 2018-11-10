@@ -14,13 +14,13 @@ class TypedInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (fieldName.toLowerCase().endsWith("count")) {
-      return Row(
-        children: [
-          Text(label),
-          IntegerFormField(
-              onSaved: onSaved,
-              initialValue: initialValue == null ? 0 : initialValue),
-        ],
+      return TextFormField(
+        decoration: InputDecoration(labelText: label),
+        initialValue: initialValue.toString(),
+        onSaved: (String value) {
+          this.onSaved(int.parse(value));
+        },
+        keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
       );
     }
     if (fieldName.toLowerCase().endsWith("date")) {
@@ -52,104 +52,4 @@ class TypedInputField extends StatelessWidget {
       return dt;
     }
   }
-}
-
-class IntegerFormField extends StatefulWidget {
-  final int initialValue;
-  final Function onSaved;
-  IntegerFormField({this.initialValue, this.onSaved});
-
-  _IntegerFormFieldState createState() => _IntegerFormFieldState();
-}
-
-class _IntegerFormFieldState extends State<IntegerFormField> {
-  int value;
-
-  @override
-  initState() {
-    super.initState();
-    value = widget.initialValue;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FormField(onSaved: (int v) {
-      widget.onSaved(value);
-    },
-    initialValue: widget.initialValue, 
-    builder: (FormFieldState<int> state) {
-      return Row(children: [
-        IconButton(
-          onPressed: () {
-            state.didChange(state.value -1);
-            value = state.value;
-          },
-          icon: Icon(Icons.remove),
-        ),
-        SizedBox(
-          width: 50.0,
-          child: TextField(
-            keyboardType:
-                TextInputType.numberWithOptions(signed: false, decimal: false),
-            controller: TextEditingController(
-              text: state.value.toString(),
-            ),
-            onSubmitted: (String v) {
-              value = int.parse(v);
-              state.didChange(value);
-            },
-          ),
-        ),
-          IconButton(
-          onPressed: () {
-            state.didChange(state.value + 1);
-            value = state.value;
-          },
-          icon: Icon(Icons.add),
-        ),
-      ]);
-    });
-  }
-  // IntegerFormField(
-  //     {FormFieldSetter<int> onSaved,
-  //     FormFieldValidator<int> validator,
-  //     int initialValue = 0,
-  //     bool autovalidate = false})
-  //     : super(
-  //           onSaved: onSaved,
-  //           validator: validator,
-  //           initialValue: initialValue,
-  //           autovalidate: autovalidate,
-  //           builder: (FormFieldState<int> state) {
-  //             return Row(
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: <Widget>[
-  //                 IconButton(
-  //                   icon: Icon(Icons.remove),
-  //                   onPressed: () {
-  //                     state.didChange(state.value - 1);
-  //                   },
-  //                 ),
-  //                 SizedBox(
-  //                   width: 50.0,
-  //                   child: TextField(
-  //                       keyboardType: TextInputType.numberWithOptions(
-  //                           signed: false, decimal: false),
-  //                       controller: TextEditingController(
-  //                           text: initialValue.toString(),
-  //                           ),
-  //                           onChanged: (String value){
-  //                             state.didChange(int.parse(value));
-  //                           },),
-  //                 ),
-  //                 IconButton(
-  //                   icon: Icon(Icons.add),
-  //                   onPressed: () {
-  //                     state.didChange(state.value + 1);
-  //                   },
-  //                 ),
-  //               ],
-  //             );
-  //           });
-
 }
