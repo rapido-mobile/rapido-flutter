@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_set.dart';
 import 'typed_input_field.dart';
 
-class PersistedModelForm extends StatefulWidget {
+class DocumentForm extends StatefulWidget {
   final DocumentSet model;
   final index;
 
-  PersistedModelForm(this.model, {this.index});
+  DocumentForm(this.model, {this.index});
   @override
-  _PersistedModelFormState createState() => _PersistedModelFormState();
+  _DocumentFormState createState() => _DocumentFormState();
 }
 
-class _PersistedModelFormState extends State<PersistedModelForm> {
+class _DocumentFormState extends State<DocumentForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final Map<String, dynamic> newData = {};
 

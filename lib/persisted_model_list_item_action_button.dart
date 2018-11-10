@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_set.dart';
-import 'package:a2s_widgets/persisted_model_form.dart';
+import 'package:a2s_widgets/document_form.dart';
 
 class PersistedModelListItemActionButton extends StatelessWidget {
   final DocumentSet model;
@@ -16,7 +16,7 @@ class PersistedModelListItemActionButton extends StatelessWidget {
             case 0:
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                return PersistedModelForm(
+                return DocumentForm(
                   model,
                   index: index,
                 );
