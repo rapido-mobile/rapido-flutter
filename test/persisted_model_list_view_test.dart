@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/persisted_model_list_view.dart';
+import 'package:a2s_widgets/document_list_view.dart';
 import 'package:a2s_widgets/document_set.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -19,7 +19,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp (
         home: Scaffold(
-        body: PersistedModelListView(
+        body: DocumentListView(
             testModel,
             titleKeys: ["field B", "field A"],
             subtitleKey: "field C",

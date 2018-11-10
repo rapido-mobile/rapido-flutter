@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_set.dart';
-import 'package:a2s_widgets/persisted_model_list_view.dart';
+import 'package:a2s_widgets/document_list_view.dart';
 import 'package:a2s_widgets/persisted_model_add_floating_action_button.dart';
 
 class PersistedModelScaffold extends StatefulWidget {
@@ -33,7 +33,7 @@ class _PersistedModelScaffoldState extends State<PersistedModelScaffold> {
         title: Text(widget.title),
       ),
       body: Container(
-        child: PersistedModelListView(
+        child: DocumentListView(
           widget.model,
           titleKeys: widget.titleKeys,
           subtitleKey: widget.subtitleKey,

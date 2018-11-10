@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/persisted_model_list_item_action_button.dart';
 
-class PersistedModelListView extends StatefulWidget {
+class DocumentListView extends StatefulWidget {
   final DocumentSet model;
   final List<String> titleKeys;
   final String subtitleKey;
@@ -10,17 +10,17 @@ class PersistedModelListView extends StatefulWidget {
   final Function customItemBuilder;
   final Widget emptyListWidget;
 
-  PersistedModelListView(this.model,
+  DocumentListView(this.model,
       {@required this.titleKeys,
       this.subtitleKey,
       this.onItemTap,
       this.customItemBuilder,
       this.emptyListWidget});
 
-  _PersistedModelListViewState createState() => _PersistedModelListViewState();
+  _DocumentListViewState createState() => _DocumentListViewState();
 }
 
-class _PersistedModelListViewState extends State<PersistedModelListView> {
+class _DocumentListViewState extends State<DocumentListView> {
   List<Map<String, dynamic>> data;
 
   @override
