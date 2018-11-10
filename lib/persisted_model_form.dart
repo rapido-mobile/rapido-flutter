@@ -25,6 +25,7 @@ class _PersistedModelFormState extends State<PersistedModelForm> {
       }
       fields.add(
         Container(
+          padding: EdgeInsets.all(10.0),
           child: TypedInputField(widget.model.labels[label],
               label: label,
               initialValue: initialValue, onSaved: (dynamic value) {

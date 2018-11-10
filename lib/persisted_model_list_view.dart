@@ -8,9 +8,14 @@ class PersistedModelListView extends StatefulWidget {
   final String subtitleKey;
   final Function onItemTap;
   final Function customItemBuilder;
+  final Widget emptyListWidget;
 
   PersistedModelListView(this.model,
-      {@required this.titleKeys, this.subtitleKey, this.onItemTap, this.customItemBuilder});
+      {@required this.titleKeys,
+      this.subtitleKey,
+      this.onItemTap,
+      this.customItemBuilder,
+      this.emptyListWidget});
 
   _PersistedModelListViewState createState() => _PersistedModelListViewState();
 }
@@ -46,7 +51,6 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
     return Text(map[widget.subtitleKey].toString());
   }
 
-
   @override
   Widget build(BuildContext context) {
     widget.model.onChanged = (List<Map<String, dynamic>> newData) {
@@ -55,6 +59,11 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
       });
     };
 
+    if (widget.model.data.length == 0 && widget.emptyListWidget != null) {
+      print("${widget.model.data.length} : ${widget.emptyListWidget}");
+        return widget.emptyListWidget;
+    }
+
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
@@ -62,31 +71,31 @@ class _PersistedModelListViewState extends State<PersistedModelListView> {
         });
   }
 
-  Widget buildListItem(int index){
-    if(widget.customItemBuilder == null) {
+  Widget buildListItem(int index) {
+    if (widget.customItemBuilder == null) {
       return _defaultListTile(index);
-    }
-    else {
+    } else {
       return widget.customItemBuilder(index);
     }
   }
+
   Container _defaultListTile(int index) {
     return Container(
       decoration: null,
       child: ListTile(
-        onTap: () {
-          if (widget.onItemTap != null) {
-            widget.onItemTap(index);
-          }
-        },
-        title: Row(
-          children: _buildTitleRowChildren(data[index]),
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        ),
-        subtitle: _buildSubtitle(data[index]),
-        trailing: PersistedModelListItemActionButton(widget.model, index: index)
-      ),
+          onTap: () {
+            if (widget.onItemTap != null) {
+              widget.onItemTap(index);
+            }
+          },
+          title: Row(
+            children: _buildTitleRowChildren(data[index]),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+          subtitle: _buildSubtitle(data[index]),
+          trailing:
+              PersistedModelListItemActionButton(widget.model, index: index)),
     );
   }
 }

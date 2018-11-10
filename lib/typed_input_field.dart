@@ -16,7 +16,7 @@ class TypedInputField extends StatelessWidget {
     if (fieldName.toLowerCase().endsWith("count")) {
       return TextFormField(
         decoration: InputDecoration(labelText: label),
-        initialValue: initialValue.toString(),
+        initialValue: initialValue == null ?  "0" : initialValue.toString(),
         onSaved: (String value) {
           this.onSaved(int.parse(value));
         },
