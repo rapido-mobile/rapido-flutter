@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/document_form.dart';
 
-class PersistedModelListItemActionButton extends StatelessWidget {
+class DocumentActionsButton extends StatelessWidget {
   final DocumentSet model;
   final int index;
 
-  PersistedModelListItemActionButton(this.model, {@required this.index});
+  DocumentActionsButton(this.model, {@required this.index});
 
   @override
   Widget build(BuildContext context) {

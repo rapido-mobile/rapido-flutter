@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_set.dart';
-import 'package:a2s_widgets/persisted_model_list_item_action_button.dart';
+import 'package:a2s_widgets/document_actions_button.dart';
 
 class DocumentListView extends StatefulWidget {
   final DocumentSet model;
@@ -95,7 +95,7 @@ class _DocumentListViewState extends State<DocumentListView> {
           ),
           subtitle: _buildSubtitle(data[index]),
           trailing:
-              PersistedModelListItemActionButton(widget.model, index: index)),
+              DocumentActionsButton(widget.model, index: index)),
     );
   }
 }

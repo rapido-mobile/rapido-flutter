@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/document_list_view.dart';
-import 'package:a2s_widgets/persisted_model_add_floating_action_button.dart';
+import 'package:a2s_widgets/add_document_floating_action_button.dart';
 
-class PersistedModelScaffold extends StatefulWidget {
+class DocumentSetScaffold extends StatefulWidget {
   final DocumentSet model;
   final String title;
   final Function onItemTap;
@@ -13,7 +13,7 @@ class PersistedModelScaffold extends StatefulWidget {
   final Function customItemBuilder;
   final Widget emptyListWidget;
 
-  PersistedModelScaffold(this.model,
+  DocumentSetScaffold(this.model,
       {@required this.title,
       this.onItemTap,
       @required this.titleKeys,
@@ -22,10 +22,10 @@ class PersistedModelScaffold extends StatefulWidget {
       this.customItemBuilder,
       this.emptyListWidget});
 
-  _PersistedModelScaffoldState createState() => _PersistedModelScaffoldState();
+  _DocumentSetScaffoldState createState() => _DocumentSetScaffoldState();
 }
 
-class _PersistedModelScaffoldState extends State<PersistedModelScaffold> {
+class _DocumentSetScaffoldState extends State<DocumentSetScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +43,7 @@ class _PersistedModelScaffoldState extends State<PersistedModelScaffold> {
         ),
         decoration: widget.decoration,
       ),
-      floatingActionButton: PersistedModelAddFloatingActionButton(widget.model),
+      floatingActionButton: AddDocumentFloatingActionButton(widget.model),
     );
   }
 }
