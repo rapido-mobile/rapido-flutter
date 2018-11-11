@@ -92,6 +92,18 @@ void main() {
     expect(model.labels, null);
   });
 
+  test('addAll', () {
+    List<Map<String, dynamic>> all = [{"a": 1},{"a": 2}];
+    DocumentList dl = DocumentList("addAllTest");
+    dl.addAll(all);
+    expect(dl.length, 2);
+  });
+
+  test('checks that using addAll persists data', () {
+    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
+      expect(model.length, 2);
+    });
+  });
   setUpAll(() async {
     // Create a temporary directory to work with
     final directory = await Directory.systemTemp.createTemp();

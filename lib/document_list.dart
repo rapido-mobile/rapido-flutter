@@ -14,15 +14,19 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   List<Map<String, dynamic>> _documents;
   Function onChanged;
 
-  set length(int newLength) { _documents.length = newLength; }
+  //required implementation for ListBase
+  set length(int newLength) {
+    _documents.length = newLength;
+  }
+
   int get length => _documents.length;
   Map<String, dynamic> operator [](int index) => _documents[index];
-  void operator []=(int index, Map<String, dynamic> value) { _updateDocment(index, value);}//documents[index] = value; }
+  void operator []=(int index, Map<String, dynamic> value) {
+    _updateDocment(index, value);
+  } //documents[index] = value; }
 
   DocumentList(this.documentType,
-      {this.onLoadComplete,
-      Map<String, String> labels,
-      this.onChanged}) {
+      {this.onLoadComplete, Map<String, String> labels, this.onChanged}) {
     _labels = labels;
     _documents = [];
     _loadLocalData();
@@ -55,33 +59,17 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     }
   }
 
-  void _loadLocalData() async {
-    getApplicationDocumentsDirectory().then((Directory appDir) {
-      appDir
-          .listSync(recursive: true, followLinks: true)
-          .forEach((FileSystemEntity f) {
-        if (f.path.endsWith('.json')) {
-          String j = new File(f.path).readAsStringSync();
-          Map newData = json.decode(j);
-          if (newData["_docType"].toString() == documentType) {
-            _documents.add(newData);
-          }
-        }
-      });
-      if (onLoadComplete != null) onLoadComplete(this);
-      _notifyListener();
-    });
-  }
-
   void _updateDocment(int index, Map<String, dynamic> map) {
-    map.keys.forEach((String key){
+    map.keys.forEach((String key) {
       _documents[index][key] = map[key];
     });
-    _documents[index]["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
-  
+    _documents[index]["_time_stamp"] =
+        new DateTime.now().millisecondsSinceEpoch.toInt();
+
     _writeMapLocal(_documents[index]);
     _notifyListener();
   }
+
   @override
   void add(Map<String, dynamic> map) {
     map["_docType"] = documentType;
@@ -93,13 +81,20 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   }
 
   @override
+  addAll(Iterable<Map<String, dynamic>> list) {
+    list.forEach((Map<String, dynamic> map) {
+      add(map);
+    });
+  }
+
+  @override
   bool remove(Object value) {
     Map<String, dynamic> map = value;
-    for(int i = 0 ; i < _documents.length ; i++) {
-        if(map == _documents[i]){
-          removeAtIndex(i);
-          return true;
-        }
+    for (int i = 0; i < _documents.length; i++) {
+      if (map == _documents[i]) {
+        removeAtIndex(i);
+        return true;
+      }
     }
     return false;
   }
@@ -134,6 +129,28 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     // Write the file
     String mapString = json.encode(map);
     return file.writeAsString('$mapString');
+  }
+
+  void _loadLocalData() async {
+    getApplicationDocumentsDirectory().then((Directory appDir) {
+      appDir
+          .listSync(recursive: true, followLinks: true)
+          .forEach((FileSystemEntity f) {
+        if (f.path.endsWith('.json')) {
+          String j = new File(f.path).readAsStringSync();
+          Map newData = json.decode(j);
+
+          //because we iterate through every file, this is 
+          //necessary to only add the document when it is of the
+          //desired documentType
+          if (newData["_docType"].toString() == documentType) {
+            _documents.add(newData);
+          }
+        }
+      });
+      if (onLoadComplete != null) onLoadComplete(this);
+      _notifyListener();
+    });
   }
 
   Future<File> _localFile(String id) async {
