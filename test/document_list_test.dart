@@ -22,6 +22,13 @@ void main() {
       expect(model[0]["price"], 1.5);
     });
   });
+  test('tests that any() works', () {
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
+      model.any((Map<String, dynamic> map) {
+        return map.containsValue("Rick");
+      });
+    });
+  });
 
   test('test maps get updated and timestamp is changed', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
@@ -37,7 +44,7 @@ void main() {
       expect(model[0]["rating"], 1);
       expect(model[0]["price"], 2.5);
       expect(model[0]["name"], "Edited Name");
-      expect(model[0]["_time_stamp"], greaterThan(oldTimeStamp) );
+      expect(model[0]["_time_stamp"], greaterThan(oldTimeStamp));
     });
   });
 
@@ -60,8 +67,7 @@ void main() {
   test('deletes maps from the model', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       model.removeAtIndex(0);
-      DocumentList("testDocumentType",
-          onLoadComplete: (DocumentList model) {
+      DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
         expect(model.length, 1);
       });
     });
@@ -93,7 +99,10 @@ void main() {
   });
 
   test('addAll', () {
-    List<Map<String, dynamic>> all = [{"a": 1},{"a": 2}];
+    List<Map<String, dynamic>> all = [
+      {"a": 1},
+      {"a": 2}
+    ];
     DocumentList dl = DocumentList("addAllTest");
     dl.addAll(all);
     expect(dl.length, 2);
