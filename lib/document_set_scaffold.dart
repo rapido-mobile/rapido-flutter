@@ -4,7 +4,7 @@ import 'package:a2s_widgets/document_list_view.dart';
 import 'package:a2s_widgets/add_document_floating_action_button.dart';
 
 class DocumentSetScaffold extends StatefulWidget {
-  final DocumentSet model;
+  final DocumentSet documentSet;
   final String title;
   final Function onItemTap;
   final List<String> titleKeys;
@@ -13,7 +13,7 @@ class DocumentSetScaffold extends StatefulWidget {
   final Function customItemBuilder;
   final Widget emptyListWidget;
 
-  DocumentSetScaffold(this.model,
+  DocumentSetScaffold(this.documentSet,
       {@required this.title,
       this.onItemTap,
       @required this.titleKeys,
@@ -34,7 +34,7 @@ class _DocumentSetScaffoldState extends State<DocumentSetScaffold> {
       ),
       body: Container(
         child: DocumentListView(
-          widget.model,
+          widget.documentSet,
           titleKeys: widget.titleKeys,
           subtitleKey: widget.subtitleKey,
           onItemTap: widget.onItemTap,
@@ -43,7 +43,7 @@ class _DocumentSetScaffoldState extends State<DocumentSetScaffold> {
         ),
         decoration: widget.decoration,
       ),
-      floatingActionButton: AddDocumentFloatingActionButton(widget.model),
+      floatingActionButton: AddDocumentFloatingActionButton(widget.documentSet),
     );
   }
 }

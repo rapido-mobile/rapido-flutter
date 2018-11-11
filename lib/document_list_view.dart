@@ -3,14 +3,14 @@ import 'package:a2s_widgets/document_set.dart';
 import 'package:a2s_widgets/document_actions_button.dart';
 
 class DocumentListView extends StatefulWidget {
-  final DocumentSet model;
+  final DocumentSet documentSet;
   final List<String> titleKeys;
   final String subtitleKey;
   final Function onItemTap;
   final Function customItemBuilder;
   final Widget emptyListWidget;
 
-  DocumentListView(this.model,
+  DocumentListView(this.documentSet,
       {@required this.titleKeys,
       this.subtitleKey,
       this.onItemTap,
@@ -26,7 +26,7 @@ class _DocumentListViewState extends State<DocumentListView> {
   @override
   initState() {
     super.initState();
-    data = widget.model.documents;
+    data = widget.documentSet.documents;
   }
 
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
@@ -53,14 +53,14 @@ class _DocumentListViewState extends State<DocumentListView> {
 
   @override
   Widget build(BuildContext context) {
-    widget.model.onChanged = (List<Map<String, dynamic>> newData) {
+    widget.documentSet.onChanged = (List<Map<String, dynamic>> newData) {
       setState(() {
         data = newData;
       });
     };
 
-    if (widget.model.documents.length == 0 && widget.emptyListWidget != null) {
-      print("${widget.model.documents.length} : ${widget.emptyListWidget}");
+    if (widget.documentSet.documents.length == 0 && widget.emptyListWidget != null) {
+      print("${widget.documentSet.documents.length} : ${widget.emptyListWidget}");
         return widget.emptyListWidget;
     }
 
@@ -95,7 +95,7 @@ class _DocumentListViewState extends State<DocumentListView> {
           ),
           subtitle: _buildSubtitle(data[index]),
           trailing:
-              DocumentActionsButton(widget.model, index: index)),
+              DocumentActionsButton(widget.documentSet, index: index)),
     );
   }
 }
