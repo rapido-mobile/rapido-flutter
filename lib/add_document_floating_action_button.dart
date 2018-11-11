@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_list.dart';
-import 'package:a2s_widgets/document_form.dart';
+import 'package:rapido/document_list.dart';
+import 'package:rapido/document_form.dart';
 
 class AddDocumentFloatingActionButton extends StatelessWidget {
   final DocumentList documentList;

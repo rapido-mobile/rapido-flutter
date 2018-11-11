@@ -1,4 +1,4 @@
-# a2s_widgets
+# rapido
 ## Mental Model
 The App to Store widget collection has two fundamental concepts:
 1. Persistent Models

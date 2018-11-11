@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_list.dart';
-import 'package:a2s_widgets/document_form.dart';
+import 'package:rapido/document_list.dart';
+import 'package:rapido/document_form.dart';
 
 class DocumentActionsButton extends StatelessWidget {
-  final DocumentList documentSet;
+  final DocumentList documentList;
   final int index;
 
-  DocumentActionsButton(this.documentSet, {@required this.index});
+  DocumentActionsButton(this.documentList, {@required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,13 @@ class DocumentActionsButton extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
                 return DocumentForm(
-                  documentSet,
+                  documentList,
                   index: index,
                 );
               }));
               break;
             case 1:
-              documentSet.removeAtIndex(index);
+              documentList.removeAt(index);
           }
         },
         itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[

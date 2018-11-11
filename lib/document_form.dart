@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_list.dart';
+import 'package:rapido/document_list.dart';
 import 'typed_input_field.dart';
 
 class DocumentForm extends StatefulWidget {

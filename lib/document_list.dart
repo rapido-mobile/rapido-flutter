@@ -1,4 +1,4 @@
-library a2s_widgets;
+library rapido;
 
 import 'dart:collection';
 import 'dart:async';
@@ -14,7 +14,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   List<Map<String, dynamic>> _documents;
   Function onChanged;
 
-  //required implementation for ListBase
+  
   set length(int newLength) {
     _documents.length = newLength;
   }
@@ -25,6 +25,11 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     _updateDocment(index, value);
   } //documents[index] = value; }
 
+  /// The documentType parameter should be unique. It is used to persist and retrieve documents.
+  /// Documents are simply maps, in the form of Map<String, dynamic>. Add them 
+  /// using the DocumentList.add(Map<String, dynamic>) function.
+  /// The optional labels paramter maps keys from the documuents to desired strings in UI.
+  /// For example {"Date", "date"} will use "Date" in rendered UI elements.
   DocumentList(this.documentType,
       {this.onLoadComplete, Map<String, String> labels, this.onChanged}) {
     _labels = labels;
@@ -35,7 +40,9 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   set labels(Map<String, String> labels) {
     _labels = labels;
   }
-
+  /// The labels to use in UI elements. If the labels property is not set, the
+  /// DocumentList will simply return any key not starting with "_".
+  /// Returns null if there is no data and no labels provided.
   Map<String, String> get labels {
     if (_labels == null) {
       if (_documents.length < 1) {
@@ -92,7 +99,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     Map<String, dynamic> map = value;
     for (int i = 0; i < _documents.length; i++) {
       if (map == _documents[i]) {
-        removeAtIndex(i);
+        removeAt(i);
         return true;
       }
     }
@@ -106,11 +113,13 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     });
     super.clear();
   }
-
-  void removeAtIndex(int index) {
+  @override
+  Map<String, dynamic> removeAt(int index) {
+    Map<String, dynamic> map = this[index];
     _deleteMapLocal(_documents[index]["_id"]);
     _documents.removeAt(index);
     _notifyListener();
+    return map;
   }
 
   static String randomFileSafeId(int length) {

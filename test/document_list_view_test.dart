@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_list_view.dart';
-import 'package:a2s_widgets/document_list.dart';
+import 'package:rapido/document_list_view.dart';
+import 'package:rapido/document_list.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 

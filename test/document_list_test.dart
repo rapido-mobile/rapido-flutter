@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:a2s_widgets/document_list.dart';
+import 'package:rapido/document_list.dart';
 
 void main() {
   test('creates a PersistedModel', () {
@@ -74,7 +74,7 @@ test('foreach()', (){
 
   test('deletes maps from the model', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      model.removeAtIndex(0);
+      model.removeAt(0);
       DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
         expect(model.length, 1);
       });

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_list.dart';
-import 'package:a2s_widgets/document_actions_button.dart';
+import 'package:rapido/document_list.dart';
+import 'package:rapido/document_actions_button.dart';
 
 class DocumentListView extends StatefulWidget {
   final DocumentList documentList;
