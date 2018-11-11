@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_set.dart';
+import 'package:a2s_widgets/document_list.dart';
 import 'package:a2s_widgets/document_actions_button.dart';
 
 class DocumentListView extends StatefulWidget {
-  final DocumentSet documentSet;
+  final DocumentList documentList;
   final List<String> titleKeys;
   final String subtitleKey;
   final Function onItemTap;
   final Function customItemBuilder;
   final Widget emptyListWidget;
 
-  DocumentListView(this.documentSet,
+  DocumentListView(this.documentList,
       {@required this.titleKeys,
       this.subtitleKey,
       this.onItemTap,
@@ -21,12 +21,12 @@ class DocumentListView extends StatefulWidget {
 }
 
 class _DocumentListViewState extends State<DocumentListView> {
-  List<Map<String, dynamic>> data;
+  DocumentList data;
 
   @override
   initState() {
     super.initState();
-    data = widget.documentSet.documents;
+    data = widget.documentList;
   }
 
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
@@ -53,14 +53,13 @@ class _DocumentListViewState extends State<DocumentListView> {
 
   @override
   Widget build(BuildContext context) {
-    widget.documentSet.onChanged = (List<Map<String, dynamic>> newData) {
+    widget.documentList.onChanged = (DocumentList newData) {
       setState(() {
         data = newData;
       });
     };
 
-    if (widget.documentSet.documents.length == 0 && widget.emptyListWidget != null) {
-      print("${widget.documentSet.documents.length} : ${widget.emptyListWidget}");
+    if (widget.documentList.length == 0 && widget.emptyListWidget != null) {
         return widget.emptyListWidget;
     }
 
@@ -95,7 +94,7 @@ class _DocumentListViewState extends State<DocumentListView> {
           ),
           subtitle: _buildSubtitle(data[index]),
           trailing:
-              DocumentActionsButton(widget.documentSet, index: index)),
+              DocumentActionsButton(widget.documentList, index: index)),
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_set.dart';
+import 'package:a2s_widgets/document_list.dart';
 import 'package:a2s_widgets/document_list_view.dart';
 import 'package:a2s_widgets/add_document_floating_action_button.dart';
 
-class DocumentSetScaffold extends StatefulWidget {
-  final DocumentSet documentSet;
+class DocumentListScaffold extends StatefulWidget {
+  final DocumentList documentList;
   final String title;
   final Function onItemTap;
   final List<String> titleKeys;
@@ -13,7 +13,7 @@ class DocumentSetScaffold extends StatefulWidget {
   final Function customItemBuilder;
   final Widget emptyListWidget;
 
-  DocumentSetScaffold(this.documentSet,
+  DocumentListScaffold(this.documentList,
       {@required this.title,
       this.onItemTap,
       @required this.titleKeys,
@@ -22,10 +22,10 @@ class DocumentSetScaffold extends StatefulWidget {
       this.customItemBuilder,
       this.emptyListWidget});
 
-  _DocumentSetScaffoldState createState() => _DocumentSetScaffoldState();
+  _DocumentListScaffoldState createState() => _DocumentListScaffoldState();
 }
 
-class _DocumentSetScaffoldState extends State<DocumentSetScaffold> {
+class _DocumentListScaffoldState extends State<DocumentListScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +34,7 @@ class _DocumentSetScaffoldState extends State<DocumentSetScaffold> {
       ),
       body: Container(
         child: DocumentListView(
-          widget.documentSet,
+          widget.documentList,
           titleKeys: widget.titleKeys,
           subtitleKey: widget.subtitleKey,
           onItemTap: widget.onItemTap,
@@ -43,7 +43,7 @@ class _DocumentSetScaffoldState extends State<DocumentSetScaffold> {
         ),
         decoration: widget.decoration,
       ),
-      floatingActionButton: AddDocumentFloatingActionButton(widget.documentSet),
+      floatingActionButton: AddDocumentFloatingActionButton(widget.documentList),
     );
   }
 }

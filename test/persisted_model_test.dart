@@ -1,51 +1,51 @@
 import 'package:test/test.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:a2s_widgets/document_set.dart';
+import 'package:a2s_widgets/document_list.dart';
 
 void main() {
   test('creates a PersistedModel', () {
-    DocumentSet persistedModel = DocumentSet("testDocumentType");
+    DocumentList persistedModel = DocumentList("testDocumentType");
     persistedModel
-        .addDocument({"count": 0, "rating": 5, "price": 1.5, "name": "Pickle Rick"});
+        .add({"count": 0, "rating": 5, "price": 1.5, "name": "Pickle Rick"});
     persistedModel
-        .addDocument({"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"});
-    expect(persistedModel.documents.length, 2);
+        .add({"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"});
+    expect(persistedModel.length, 2);
   });
   test('reads existing PersistedModel from disk', () {
-    DocumentSet("testDocumentType", onLoadComplete: (DocumentSet model) {
-      expect(model.documents.length, 2);
-      String name = model.documents[0]["name"];
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
+      expect(model.length, 2);
+      String name = model[0]["name"];
       expect(name.contains("Rick"), true);
-      name = model.documents[1]["name"];
+      name = model[1]["name"];
       expect(name.contains("Rick"), true);
-      expect(model.documents[0]["price"], 1.5);
+      expect(model[0]["price"], 1.5);
     });
   });
 
   test('test maps get updated and timestamp is changed', () {
-    DocumentSet("testDocumentType", onLoadComplete: (DocumentSet model) {
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       Map<String, dynamic> updatedMap = {
         "count": 1,
         "rating": 1,
         "price": 2.5,
         "name": "Edited Name"
       };
-      int oldTimeStamp = model.documents[0]["_time_stamp"];
-      model.updateDocment(0, updatedMap);
-      expect(model.documents[0]["count"], 1);
-      expect(model.documents[0]["rating"], 1);
-      expect(model.documents[0]["price"], 2.5);
-      expect(model.documents[0]["name"], "Edited Name");
-      expect(model.documents[0]["_time_stamp"], greaterThan(oldTimeStamp) );
+      int oldTimeStamp = model[0]["_time_stamp"];
+      model[0] = updatedMap;
+      expect(model[0]["count"], 1);
+      expect(model[0]["rating"], 1);
+      expect(model[0]["price"], 2.5);
+      expect(model[0]["name"], "Edited Name");
+      expect(model[0]["_time_stamp"], greaterThan(oldTimeStamp) );
     });
   });
 
   test('checks that updates persist on disk', () {
     sleep(Duration(seconds: 1));
-    DocumentSet("testDocumentType", onLoadComplete: (DocumentSet model) {
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       bool testMapFound = false;
-      model.documents.forEach((Map<String, dynamic> map) {
+      model.forEach((Map<String, dynamic> map) {
         if (map["name"] == "Edited Name") {
           expect(map["count"], 1);
           expect(map["rating"], 1);
@@ -58,29 +58,29 @@ void main() {
   });
 
   test('deletes maps from the model', () {
-    DocumentSet("testDocumentType", onLoadComplete: (DocumentSet model) {
-      model.deleteDocument(0);
-      DocumentSet("testDocumentType",
-          onLoadComplete: (DocumentSet model) {
-        expect(model.documents.length, 1);
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
+      model.removeAtIndex(0);
+      DocumentList("testDocumentType",
+          onLoadComplete: (DocumentList model) {
+        expect(model.length, 1);
       });
     });
   });
 
   test('unit test for randomFileSafeId', () {
-    String rnd = DocumentSet.randomFileSafeId(8);
+    String rnd = DocumentList.randomFileSafeId(8);
     expect(rnd.length, 8);
   });
 
   test('set ui labels in constructor', () {
-    DocumentSet model = DocumentSet("a", labels: {"a": "A", "b": "B"});
+    DocumentList model = DocumentList("a", labels: {"a": "A", "b": "B"});
     expect(model.labels["a"], "A");
     expect(model.labels["b"], "B");
   });
 
   test('infer ui labels', () {
-    DocumentSet model = DocumentSet("abc");
-    model.addDocument({"a": "A", "b": "B", "c": "C"});
+    DocumentList model = DocumentList("abc");
+    model.add({"a": "A", "b": "B", "c": "C"});
     expect(model.labels["a"], "a");
     expect(model.labels["b"], "b");
     expect(model.labels["c"], "c");
@@ -88,7 +88,7 @@ void main() {
   });
 
   test('unset labels should return null', () {
-    DocumentSet model = DocumentSet("def");
+    DocumentList model = DocumentList("def");
     expect(model.labels, null);
   });
 

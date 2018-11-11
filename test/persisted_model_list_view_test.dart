@@ -1,19 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:a2s_widgets/document_list_view.dart';
-import 'package:a2s_widgets/document_set.dart';
+import 'package:a2s_widgets/document_list.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
 void main() {
   testWidgets('Can display fields as title and subtitle', (WidgetTester tester) async {
-    DocumentSet testModel = DocumentSet("testDocumentType");
+    DocumentList testModel = DocumentList("testDocumentType");
     for (int i = 0; i < 10; i++) {
       if(i == 1) {
-      testModel.addDocument({ "field B": "${i.toString()}", "field C":"subtitle"});
+      testModel.add({ "field B": "${i.toString()}", "field C":"subtitle"});
       }
       else {
-        testModel.addDocument({ "field B": "${i.toString()}"});
+        testModel.add({ "field B": "${i.toString()}"});
       }
     }
     await tester.pumpWidget(

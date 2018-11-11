@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_set.dart';
+import 'package:a2s_widgets/document_list.dart';
 import 'package:a2s_widgets/document_form.dart';
 
 class DocumentActionsButton extends StatelessWidget {
-  final DocumentSet documentSet;
+  final DocumentList documentSet;
   final int index;
 
   DocumentActionsButton(this.documentSet, {@required this.index});
@@ -23,7 +23,7 @@ class DocumentActionsButton extends StatelessWidget {
               }));
               break;
             case 1:
-              documentSet.deleteDocument(index);
+              documentSet.removeAtIndex(index);
           }
         },
         itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[

@@ -1,24 +1,30 @@
 library a2s_widgets;
 
+import 'dart:collection';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 
-class DocumentSet {
+class DocumentList extends ListBase<Map<String, dynamic>> {
   final String documentType;
   Function onLoadComplete;
   Map<String, String> _labels;
-  List<Map<String, dynamic>> documents;
+  List<Map<String, dynamic>> _documents;
   Function onChanged;
 
-  DocumentSet(this.documentType,
+  set length(int newLength) { _documents.length = newLength; }
+  int get length => _documents.length;
+  Map<String, dynamic> operator [](int index) => _documents[index];
+  void operator []=(int index, Map<String, dynamic> value) { _updateDocment(index, value);}//documents[index] = value; }
+
+  DocumentList(this.documentType,
       {this.onLoadComplete,
       Map<String, String> labels,
       this.onChanged}) {
     _labels = labels;
-    documents = [];
+    _documents = [];
     _loadLocalData();
   }
 
@@ -28,10 +34,10 @@ class DocumentSet {
 
   Map<String, String> get labels {
     if (_labels == null) {
-      if (documents.length < 1) {
+      if (_documents.length < 1) {
         return null;
       }
-      Map<String, dynamic> map = documents[0];
+      Map<String, dynamic> map = _documents[0];
       Map<String, String> tempLabels = Map<String, String>();
       map.keys.forEach((String k) {
         if (!k.startsWith("_")) {
@@ -45,7 +51,7 @@ class DocumentSet {
 
   void _notifyListener() {
     if (onChanged != null) {
-      onChanged(documents);
+      onChanged(this);
     }
   }
 
@@ -58,7 +64,7 @@ class DocumentSet {
           String j = new File(f.path).readAsStringSync();
           Map newData = json.decode(j);
           if (newData["_docType"].toString() == documentType) {
-            documents.add(newData);
+            _documents.add(newData);
           }
         }
       });
@@ -67,28 +73,40 @@ class DocumentSet {
     });
   }
 
-  void updateDocment(int index, Map<String, dynamic> map) {
+  void _updateDocment(int index, Map<String, dynamic> map) {
     map.keys.forEach((String key){
-      documents[index][key] = map[key];
+      _documents[index][key] = map[key];
     });
-    documents[index]["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+    _documents[index]["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
   
-    _writeMapLocal(documents[index]);
+    _writeMapLocal(_documents[index]);
     _notifyListener();
   }
-
-  void addDocument(Map<String, dynamic> map) {
+  @override
+  void add(Map<String, dynamic> map) {
     map["_docType"] = documentType;
     map["_id"] = randomFileSafeId(24);
     map["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
-    documents.add(map);
+    _documents.add(map);
     _writeMapLocal(map);
     _notifyListener();
   }
 
-  void deleteDocument(int index) {
-    _deleteMapLocal(documents[index]["_id"]);
-    documents.removeAt(index);
+  @override
+  bool remove(Object value) {
+    Map<String, dynamic> map = value;
+    for(int i = 0 ; i < _documents.length ; i++) {
+        if(map == _documents[i]){
+          removeAtIndex(i);
+          return true;
+        }
+    }
+    return false;
+  }
+
+  void removeAtIndex(int index) {
+    _deleteMapLocal(_documents[index]["_id"]);
+    _documents.removeAt(index);
     _notifyListener();
   }
 

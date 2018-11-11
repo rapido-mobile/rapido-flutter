@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:a2s_widgets/document_set.dart';
+import 'package:a2s_widgets/document_list.dart';
 import 'typed_input_field.dart';
 
 class DocumentForm extends StatefulWidget {
-  final DocumentSet documentSet;
+  final DocumentList documentList;
   final index;
 
-  DocumentForm(this.documentSet, {this.index});
+  DocumentForm(this.documentList, {this.index});
   @override
   _DocumentFormState createState() => _DocumentFormState();
 }
@@ -17,19 +17,19 @@ class _DocumentFormState extends State<DocumentForm> {
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
-    widget.documentSet.labels.keys.forEach((String label) {
+    widget.documentList.labels.keys.forEach((String label) {
       dynamic initialValue;
       if (widget.index != null) {
         initialValue =
-            widget.documentSet.documents[widget.index][widget.documentSet.labels[label]];
+            widget.documentList[widget.index][widget.documentList.labels[label]];
       }
       fields.add(
         Container(
           padding: EdgeInsets.all(10.0),
-          child: TypedInputField(widget.documentSet.labels[label],
+          child: TypedInputField(widget.documentList.labels[label],
               label: label,
               initialValue: initialValue, onSaved: (dynamic value) {
-            newData[widget.documentSet.labels[label]] = value;
+            newData[widget.documentList.labels[label]] = value;
           }),
           margin: EdgeInsets.all(10.0),
         ),
@@ -43,9 +43,9 @@ class _DocumentFormState extends State<DocumentForm> {
           onPressed: () {
             formKey.currentState.save();
             if (widget.index == null) {
-              widget.documentSet.addDocument(newData);
+              widget.documentList.add(newData);
             } else {
-              widget.documentSet.updateDocment(widget.index, newData);
+              widget.documentList[widget.index] =  newData;
             }
             Navigator.pop(context);
           }),
