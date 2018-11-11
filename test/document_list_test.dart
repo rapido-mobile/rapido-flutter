@@ -24,20 +24,21 @@ void main() {
   });
   test('tests that any() works', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-    bool c = model.any((Map<String, dynamic> map) {
+      bool c = model.any((Map<String, dynamic> map) {
         return map.containsValue("Rick Sanchez");
       });
       expect(c, true);
     });
   });
 
-test('foreach()', (){
+  test('foreach()', () {
     DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
-       model.forEach((Map<String, dynamic> map){
-          expect(map["name"].toString().contains("Rick"), true);
-       });
-    }); 
+      model.forEach((Map<String, dynamic> map) {
+        expect(map["name"].toString().contains("Rick"), true);
+      });
+    });
   });
+
   test('test maps get updated and timestamp is changed', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       Map<String, dynamic> updatedMap = {
@@ -91,6 +92,20 @@ test('foreach()', (){
     expect(model.labels["a"], "A");
     expect(model.labels["b"], "B");
   });
+  test('removeAt() and first', () {
+    DocumentList list = DocumentList("removeAtTeest");
+    for (int i = 0; i < 10; i++) {
+      list.add({"a": i});
+    }
+    list.removeAt(0);
+    expect(list.first["a"], 1);
+  });
+
+  test('removeAt() survives persistence', () {
+    DocumentList("removeAtTeest", onLoadComplete: (DocumentList list) {
+          expect(list.length, 9);
+        });
+  });
 
   test('infer ui labels', () {
     DocumentList model = DocumentList("abc");
@@ -122,20 +137,18 @@ test('foreach()', (){
     });
   });
 
-  test('clear()', (){
+  test('clear()', () {
     DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
-       model.clear();
-       expect(model.length, 0);
-    }); 
+      model.clear();
+      expect(model.length, 0);
+    });
   });
 
-  test('test that clear() works across persistence', (){
+  test('test that clear() works across persistence', () {
     DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
-       expect(model.length, 0);
-    }); 
+      expect(model.length, 0);
+    });
   });
- 
- 
 
   setUpAll(() async {
     // Create a temporary directory to work with
