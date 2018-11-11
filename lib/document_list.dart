@@ -98,6 +98,14 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     }
     return false;
   }
+  
+  @override
+  clear() {
+    _documents.forEach((Map<String, dynamic> map){
+      _deleteMapLocal(map["_id"]);
+    });
+    super.clear();
+  }
 
   void removeAtIndex(int index) {
     _deleteMapLocal(_documents[index]["_id"]);

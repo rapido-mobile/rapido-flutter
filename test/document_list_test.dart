@@ -113,6 +113,20 @@ void main() {
       expect(model.length, 2);
     });
   });
+
+  test('clear()', (){
+    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
+       model.clear();
+       expect(model.length, 0);
+    }); 
+  });
+
+  test('test that clear() works across persistence', (){
+    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
+       expect(model.length, 0);
+    }); 
+  });
+
   setUpAll(() async {
     // Create a temporary directory to work with
     final directory = await Directory.systemTemp.createTemp();
