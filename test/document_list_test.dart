@@ -24,12 +24,20 @@ void main() {
   });
   test('tests that any() works', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      model.any((Map<String, dynamic> map) {
-        return map.containsValue("Rick");
+    bool c = model.any((Map<String, dynamic> map) {
+        return map.containsValue("Rick Sanchez");
       });
+      expect(c, true);
     });
   });
 
+test('foreach()', (){
+    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
+       model.forEach((Map<String, dynamic> map){
+          expect(map["name"].toString().contains("Rick"), true);
+       });
+    }); 
+  });
   test('test maps get updated and timestamp is changed', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       Map<String, dynamic> updatedMap = {
@@ -126,6 +134,8 @@ void main() {
        expect(model.length, 0);
     }); 
   });
+ 
+ 
 
   setUpAll(() async {
     // Create a temporary directory to work with
