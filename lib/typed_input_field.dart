@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
+/// Given a field name, returns an appropriately configured input widget.
+/// Types are inferred from fieldNames. 
+/// Field name ends in | inferred type
+/// ends in "count" -> integer
+/// ends in "date" -> date
+/// All other fields return strings. 
 class TypedInputField extends StatelessWidget {
   final String fieldName;
   final String label;

@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 
+/// 
 class DocumentList extends ListBase<Map<String, dynamic>> {
   final String documentType;
   Function onLoadComplete;
@@ -23,13 +24,14 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   Map<String, dynamic> operator [](int index) => _documents[index];
   void operator []=(int index, Map<String, dynamic> value) {
     _updateDocment(index, value);
-  } //documents[index] = value; }
+  } 
 
   /// The documentType parameter should be unique. It is used to persist and retrieve documents.
   /// Documents are simply maps, in the form of Map<String, dynamic>. Add them 
   /// using the DocumentList.add(Map<String, dynamic>) function.
   /// The optional labels paramter maps keys from the documuents to desired strings in UI.
   /// For example {"Date", "date"} will use "Date" in rendered UI elements.
+  /// When loading from disk, items may be loaded in any order.
   DocumentList(this.documentType,
       {this.onLoadComplete, Map<String, String> labels, this.onChanged}) {
     _labels = labels;
@@ -136,6 +138,10 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     return new String.fromCharCodes(codeUnits);
   }
 
+  // Current persistence implementation is below. It simply persists documents
+  // as json files on disk. Depending on requirements and usage this can/will
+  // be changed to a more scalable method. Such changes should be invisible
+  // to existing users.
   void _deleteMapLocal(String id) async {
     final file = await _localFile(id);
     file.delete();

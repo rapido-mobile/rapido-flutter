@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rapido/document_list.dart';
 import 'package:rapido/document_form.dart';
 
+/// A floating button that invokes a form to add a new 
+/// document to a DocumentList. Typically used in Scaffolds.
 class AddDocumentFloatingActionButton extends StatelessWidget {
   final DocumentList documentList;
   AddDocumentFloatingActionButton(this.documentList);

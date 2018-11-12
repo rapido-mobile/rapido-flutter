@@ -3,6 +3,11 @@ import 'package:rapido/document_list.dart';
 import 'package:rapido/document_list_view.dart';
 import 'package:rapido/add_document_floating_action_button.dart';
 
+/// Convenience UI for creating all create, update, and delete UI
+/// for a given DocumentList. It will generate a default ListView.
+/// Can be customized with a customIemBuilder and/or a decoration.
+/// decoration, customItemBuild, and emptuListWidget, are passed
+/// through to the DocumentListView.
 class DocumentListScaffold extends StatefulWidget {
   final DocumentList documentList;
   final String title;

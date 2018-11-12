@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rapido/document_list.dart';
 import 'package:rapido/document_form.dart';
 
+/// A button that will add editing options UI to a documentList document.
+/// It creates a builder button with a contextial menu, that allows editing
+/// or deleting of the document by passing in the documentList and the index
+/// of the document to edit.
 class DocumentActionsButton extends StatelessWidget {
   final DocumentList documentList;
   final int index;

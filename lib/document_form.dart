@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rapido/document_list.dart';
 import 'typed_input_field.dart';
 
+/// A dynamically generate form that allows creating new documents or
+/// editing existing documents in a DocumentList. Specifying an index
+/// for a document in a DocumentList causes the form to be in edit mode,
+/// otherwise it will create a new document.
 class DocumentForm extends StatefulWidget {
   final DocumentList documentList;
   final index;
