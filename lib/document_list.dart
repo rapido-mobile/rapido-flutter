@@ -7,7 +7,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 
-/// 
+///
 class DocumentList extends ListBase<Map<String, dynamic>> {
   final String documentType;
   Function onLoadComplete;
@@ -15,7 +15,6 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   List<Map<String, dynamic>> _documents;
   Function onChanged;
 
-  
   set length(int newLength) {
     _documents.length = newLength;
   }
@@ -24,10 +23,10 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   Map<String, dynamic> operator [](int index) => _documents[index];
   void operator []=(int index, Map<String, dynamic> value) {
     _updateDocment(index, value);
-  } 
+  }
 
   /// The documentType parameter should be unique. It is used to persist and retrieve documents.
-  /// Documents are simply maps, in the form of Map<String, dynamic>. Add them 
+  /// Documents are simply maps, in the form of Map<String, dynamic>. Add them
   /// using the DocumentList.add(Map<String, dynamic>) function.
   /// The optional labels paramter maps keys from the documuents to desired strings in UI.
   /// For example {"Date", "date"} will use "Date" in rendered UI elements.
@@ -42,6 +41,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   set labels(Map<String, String> labels) {
     _labels = labels;
   }
+
   /// The labels to use in UI elements. If the labels property is not set, the
   /// DocumentList will simply return any key not starting with "_".
   /// Returns null if there is no data and no labels provided.
@@ -107,14 +107,15 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     }
     return false;
   }
-  
+
   @override
   clear() {
-    _documents.forEach((Map<String, dynamic> map){
+    _documents.forEach((Map<String, dynamic> map) {
       _deleteMapLocal(map["_id"]);
     });
     super.clear();
   }
+
   @override
   Map<String, dynamic> removeAt(int index) {
     Map<String, dynamic> map = this[index];
@@ -161,13 +162,19 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
           .forEach((FileSystemEntity f) {
         if (f.path.endsWith('.json')) {
           String j = new File(f.path).readAsStringSync();
-          Map newData = json.decode(j);
-
-          //because we iterate through every file, this is 
-          //necessary to only add the document when it is of the
-          //desired documentType
-          if (newData["_docType"].toString() == documentType) {
-            _documents.add(newData);
+          if (j.length != 0) {
+            Map newData = json.decode(j);
+            //because we iterate through every file, this is
+            //necessary to only add the document when it is of the
+            //desired documentType
+            if (newData["_docType"].toString() == documentType) {
+              _documents.add(newData);
+            }
+          }
+          else{
+            // This only seems to occur during testing, and
+            // seems to be a race condition I have not tracked down
+            print("Warning: ${f.path} file was empty.");
           }
         }
       });

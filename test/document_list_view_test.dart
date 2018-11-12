@@ -6,20 +6,20 @@ import 'package:rapido/document_list.dart';
 import 'package:rapido/document_widgets.dart';
 
 void main() {
-  testWidgets('Can display fields as title and subtitle', (WidgetTester tester) async {
+  testWidgets('Can display fields as title and subtitle',
+      (WidgetTester tester) async {
     DocumentList testModel = DocumentList("testDocumentType");
     for (int i = 0; i < 10; i++) {
-      if(i == 1) {
-      testModel.add({ "field B": "${i.toString()}", "field C":"subtitle"});
-      }
-      else {
-        testModel.add({ "field B": "${i.toString()}"});
+      if (i == 1) {
+        testModel.add({"field B": "${i.toString()}", "field C": "subtitle"});
+      } else {
+        testModel.add({"field B": "${i.toString()}"});
       }
     }
     await tester.pumpWidget(
-      MaterialApp (
+      MaterialApp(
         home: Scaffold(
-        body: DocumentListView(
+          body: DocumentListView(
             testModel,
             titleKeys: ["field B", "field A"],
             subtitleKey: "field C",
@@ -27,13 +27,35 @@ void main() {
         ),
       ),
     );
-    expect(find.text("2"),findsOneWidget );
-    expect(find.text("subtitle"),findsOneWidget );
+    expect(find.text("2"), findsOneWidget);
+    expect(find.text("subtitle"), findsOneWidget);
     expect(find.text("aaa"), findsNothing);
     expect(find.text("null"), findsNothing);
-  }
+  });
 
-  );
+  
+  testWidgets("listview works without titleKeys", (WidgetTester tester) async {
+    DocumentList dl = DocumentList("noTitleKeys");
+    for (int i = 0; i < 10; i++) {
+      if (i == 1) {
+        dl.add({"field B": "${i.toString()}", "field C": "subtitle"});
+      } else {
+        dl.add({"field B": "${i.toString()}"});
+      }
+    }
+    
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: DocumentListView(
+            dl,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text("1"), findsOneWidget);
+  });
 
   setUpAll(() async {
     // Create a temporary directory to work with

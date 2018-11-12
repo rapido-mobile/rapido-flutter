@@ -4,7 +4,7 @@ import 'package:rapido/document_widgets.dart';
 
 /// A ListView that automatically displays the contents of a DocumentList.
 /// By default it includes an action button that allows deletion and
-/// editing of each document. To replace the default ListTile, 
+/// editing of each document. To replace the default ListTile,
 /// supply a customIemBuilder. The look and feel of the ListView
 /// can be customized by providing a decoration. emptyListWidget, if supplied,
 /// will display in the case that the DocumentList is empty.
@@ -17,7 +17,7 @@ class DocumentListView extends StatefulWidget {
   final Widget emptyListWidget;
 
   DocumentListView(this.documentList,
-      {@required this.titleKeys,
+      {this.titleKeys,
       this.subtitleKey,
       this.onItemTap,
       this.customItemBuilder,
@@ -37,7 +37,12 @@ class _DocumentListViewState extends State<DocumentListView> {
 
   List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
     List<Widget> cells = [];
-    widget.titleKeys.forEach((String key) {
+    List<String> titleKeys = widget.titleKeys;
+    if (titleKeys == null) {
+
+      titleKeys = widget.documentList.labels.values.toList();
+    }
+    titleKeys.forEach((String key) {
       if (map.containsKey(key)) {
         cells.add(
           Text(
@@ -66,7 +71,7 @@ class _DocumentListViewState extends State<DocumentListView> {
     };
 
     if (widget.documentList.length == 0 && widget.emptyListWidget != null) {
-        return widget.emptyListWidget;
+      return widget.emptyListWidget;
     }
 
     return ListView.builder(
@@ -99,8 +104,7 @@ class _DocumentListViewState extends State<DocumentListView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
           subtitle: _buildSubtitle(data[index]),
-          trailing:
-              DocumentActionsButton(widget.documentList, index: index)),
+          trailing: DocumentActionsButton(widget.documentList, index: index)),
     );
   }
 }
