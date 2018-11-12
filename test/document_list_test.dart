@@ -103,25 +103,8 @@ void main() {
 
   test('removeAt() survives persistence', () {
     DocumentList("removeAtTeest", onLoadComplete: (DocumentList list) {
-      expect(list.length, 9);
-    });
-  });
-
-  test('remove(object)', () {
-    DocumentList di = DocumentList("removeObjectTest");
-    for (int i = 0; i < 10; i++) {
-      di.add({"a": i});
-    }
-    Map<String, dynamic> map = {"a": 100};
-    di.add(map);
-    expect(di.length, 11);
-    di.remove(map);
-    expect(di.length, 10);
-    bool notFound = true;
-    di.forEach((Map<String, dynamic> m){
-        if(m["a"] == 100){ notFound = false;}
-    });
-    expect(notFound, true);
+          expect(list.length, 9);
+        });
   });
 
   test('infer ui labels', () {

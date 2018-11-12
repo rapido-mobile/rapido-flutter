@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:rapido/document_list_view.dart';
-import 'package:rapido/document_list.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:rapido/document_list.dart';
+import 'package:rapido/document_widgets.dart';
 
 void main() {
   testWidgets('Can display fields as title and subtitle', (WidgetTester tester) async {
