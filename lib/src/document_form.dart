@@ -12,7 +12,7 @@ class DocumentForm extends StatefulWidget {
   /// If set, the index of the document within the DocumentList.
   /// If set, the form will edit the existing document, if null,
   /// the form will create a new document.
-  final index;
+  final int index;
 
   DocumentForm(this.documentList, {this.index});
   @override
