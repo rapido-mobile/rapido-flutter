@@ -7,12 +7,26 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 
-///
+/// A list documents, where a document is any map in the form of
+/// Map<String, dynamic>. DocumentList automatically persists changes 
+/// to the list through, adding, removing, and updating documents that it 
+/// contains. The document_widgets library can render useful UI elements
+/// for a DocumentList.
 class DocumentList extends ListBase<Map<String, dynamic>> {
+
+  /// A unique string identifying the documents organized by the list.
   final String documentType;
+
+  /// A callback function that fires after a DocumentList is finished loading
+  /// persisted data. It passes a reference to itself, 
+  /// onChanged: (DocumentList documentList) {/* do something */}
   Function onLoadComplete;
   Map<String, String> _labels;
   List<Map<String, dynamic>> _documents;
+
+  /// A callback function that is called for any changes in the DocumentList,
+  /// such as adding, removing, or updating documents. It passes a reference
+  /// to itself, onChanged: (DocumentList documentList) {/* do something */}
   Function onChanged;
 
   set length(int newLength) {
@@ -25,12 +39,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     _updateDocment(index, value);
   }
 
-  /// The documentType parameter should be unique. It is used to persist and retrieve documents.
-  /// Documents are simply maps, in the form of Map<String, dynamic>. Add them
-  /// using the DocumentList.add(Map<String, dynamic>) function.
-  /// The optional labels paramter maps keys from the documuents to desired strings in UI.
-  /// For example {"Date", "date"} will use "Date" in rendered UI elements.
-  /// When loading from disk, items may be loaded in any order.
+  /// The documentType parameter should be unique. 
   DocumentList(this.documentType,
       {this.onLoadComplete, Map<String, String> labels, this.onChanged}) {
     _labels = labels;

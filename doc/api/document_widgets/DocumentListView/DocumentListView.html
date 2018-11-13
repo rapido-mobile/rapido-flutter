@@ -80,14 +80,14 @@
 
     <section class="multi-line-signature">
       
-      <span class="name ">DocumentListView</span>(<wbr><span class="parameter" id="-param-documentList"><span class="type-annotation"><a href="rapido/DocumentList-class.html">DocumentList</a></span> <span class="parameter-name">documentList</span>, {</span> <span class="parameter" id="-param-titleKeys"><span>@required</span> <span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span> <span class="parameter-name">titleKeys</span>, </span> <span class="parameter" id="-param-subtitleKey"><span class="type-annotation">String</span> <span class="parameter-name">subtitleKey</span>, </span> <span class="parameter" id="-param-onItemTap"><span class="type-annotation">Function</span> <span class="parameter-name">onItemTap</span>, </span> <span class="parameter" id="-param-customItemBuilder"><span class="type-annotation">Function</span> <span class="parameter-name">customItemBuilder</span>, </span> <span class="parameter" id="-param-emptyListWidget"><span class="type-annotation">Widget</span> <span class="parameter-name">emptyListWidget</span></span> })
+      <span class="name ">DocumentListView</span>(<wbr><span class="parameter" id="-param-documentList"><span class="type-annotation"><a href="rapido/DocumentList-class.html">DocumentList</a></span> <span class="parameter-name">documentList</span>, {</span> <span class="parameter" id="-param-titleKeys"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span> <span class="parameter-name">titleKeys</span>, </span> <span class="parameter" id="-param-subtitleKey"><span class="type-annotation">String</span> <span class="parameter-name">subtitleKey</span>, </span> <span class="parameter" id="-param-onItemTap"><span class="type-annotation">Function</span> <span class="parameter-name">onItemTap</span>, </span> <span class="parameter" id="-param-customItemBuilder"><span class="type-annotation">Function</span> <span class="parameter-name">customItemBuilder</span>, </span> <span class="parameter" id="-param-emptyListWidget"><span class="type-annotation">Widget</span> <span class="parameter-name">emptyListWidget</span></span> })
     </section>
 
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span> </h2>
       <pre class="language-dart"><code class="language-dart">DocumentListView(this.documentList,
-    {@required this.titleKeys,
+    {this.titleKeys,
     this.subtitleKey,
     this.onItemTap,
     this.customItemBuilder,

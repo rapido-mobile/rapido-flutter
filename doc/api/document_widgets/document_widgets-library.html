@@ -92,7 +92,7 @@ through to the DocumentListView.
         <dd>
           A ListView that automatically displays the contents of a DocumentList.
 By default it includes an action button that allows deletion and
-editing of each document. To replace the default ListTile, 
+editing of each document. To replace the default ListTile,
 supply a customIemBuilder. The look and feel of the ListView
 can be customized by providing a decoration. emptyListWidget, if supplied,
 will display in the case that the DocumentList is empty.
@@ -101,7 +101,8 @@ will display in the case that the DocumentList is empty.
           <span class="name "><a href="document_widgets/TypedInputField-class.html">TypedInputField</a></span> 
         </dt>
         <dd>
-          Given a field name, returns an appropriately configured input widget.
+          Given a field name, returns an appropriately configured FormField,
+possibly parented by another widget.
 Types are inferred from fieldNames. 
 Field name ends in | inferred type
 ends in "count" -&gt; integer
@@ -114,31 +115,6 @@ All other fields return strings.
 
 
 
-    <section class="summary offset-anchor" id="functions">
-      <h2>Functions</h2>
-
-      <dl class="callables">
-        <dt id="packagesDirHandler" class="callable">
-          <span class="name"><a href="document_widgets/packagesDirHandler.html">packagesDirHandler</a></span><span class="signature">(<wbr>{<span class="parameter" id="packagesDirHandler-param-resolver"><span class="type-annotation">PackageResolver</span> <span class="parameter-name">resolver</span></span> })
-            <span class="returntype parameter">&#8594; Handler</span>
-          </span>
-          </dt>
-        <dd>
-          A handler that serves virtual <code>packages/</code> directories wherever they're
-requested. <a href="document_widgets/packagesDirHandler.html">[...]</a>
-          
-</dd>
-        <dt id="packagesHandler" class="callable">
-          <span class="name"><a href="document_widgets/packagesHandler.html">packagesHandler</a></span><span class="signature">(<wbr>{<span class="parameter" id="packagesHandler-param-resolver"><span class="type-annotation">PackageResolver</span> <span class="parameter-name">resolver</span></span> })
-            <span class="returntype parameter">&#8594; Handler</span>
-          </span>
-          </dt>
-        <dd>
-          A handler that serves the contents of a virtual packages directory. <a href="document_widgets/packagesHandler.html">[...]</a>
-          
-</dd>
-      </dl>
-    </section>
 
 
 
@@ -159,9 +135,6 @@ requested. <a href="document_widgets/packagesDirHandler.html">[...]</a>
     
     
     
-      <li class="section-title"><a href="document_widgets/document_widgets-library.html#functions">Functions</a></li>
-      <li><a href="document_widgets/packagesDirHandler.html">packagesDirHandler</a></li>
-      <li><a href="document_widgets/packagesHandler.html">packagesHandler</a></li>
     
     
     

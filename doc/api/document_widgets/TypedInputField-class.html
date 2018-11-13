@@ -49,9 +49,6 @@
     
     
     
-      <li class="section-title"><a href="document_widgets/document_widgets-library.html#functions">Functions</a></li>
-      <li><a href="document_widgets/packagesDirHandler.html">packagesDirHandler</a></li>
-      <li><a href="document_widgets/packagesHandler.html">packagesHandler</a></li>
     
     
     
@@ -62,7 +59,8 @@
       <h1>TypedInputField class </h1>
 
     <section class="desc markdown">
-      <p>Given a field name, returns an appropriately configured input widget.
+      <p>Given a field name, returns an appropriately configured FormField,
+possibly parented by another widget.
 Types are inferred from fieldNames. 
 Field name ends in | inferred type
 ends in "count" -&gt; integer
@@ -93,7 +91,7 @@ All other fields return strings.</p>
           <span class="signature">&#8594; String</span> 
         </dt>
         <dd>
-          
+          The name of the field, used to calculate which type of input to return
           <div class="features">final</div>
 </dd>
         <dt id="initialValue" class="property">
@@ -101,7 +99,7 @@ All other fields return strings.</p>
           <span class="signature">&#8594; dynamic</span> 
         </dt>
         <dd>
-          
+          The initial value to display in the FormField.
           <div class="features">final</div>
 </dd>
         <dt id="label" class="property">
@@ -109,7 +107,7 @@ All other fields return strings.</p>
           <span class="signature">&#8594; String</span> 
         </dt>
         <dd>
-          
+          The label to display in the UI for the specified fieldName
           <div class="features">final</div>
 </dd>
         <dt id="onSaved" class="property">
@@ -117,7 +115,8 @@ All other fields return strings.</p>
           <span class="signature">&#8594; Function</span> 
         </dt>
         <dd>
-          
+          Call back function invoked when the Form parent of the FormField is
+saved. The value returned is determined by the type of the field.
           <div class="features">final</div>
 </dd>
         <dt id="hashCode" class="property inherited">

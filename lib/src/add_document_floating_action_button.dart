@@ -5,6 +5,8 @@ import 'package:rapido/document_widgets.dart';
 /// A floating button that invokes a form to add a new 
 /// document to a DocumentList. Typically used in Scaffolds.
 class AddDocumentFloatingActionButton extends StatelessWidget {
+
+  /// The DocumentList on which the button and forms that it invokes act.
   final DocumentList documentList;
   AddDocumentFloatingActionButton(this.documentList);
 

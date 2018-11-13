@@ -149,7 +149,7 @@ is a fixed-length list.</p>
       <h2><span>Implementation</span> </h2>
       <pre class="language-dart"><code class="language-dart">@override
 clear() {
-  _documents.forEach((Map&lt;String, dynamic&gt; map){
+  _documents.forEach((Map&lt;String, dynamic&gt; map) {
     _deleteMapLocal(map[&quot;_id&quot;]);
   });
   super.clear();

@@ -49,9 +49,6 @@
     
     
     
-      <li class="section-title"><a href="document_widgets/document_widgets-library.html#functions">Functions</a></li>
-      <li><a href="document_widgets/packagesDirHandler.html">packagesDirHandler</a></li>
-      <li><a href="document_widgets/packagesHandler.html">packagesHandler</a></li>
     
     
     
@@ -91,7 +88,7 @@ otherwise it will create a new document.</p>
           <span class="signature">&#8594; <a href="rapido/DocumentList-class.html">DocumentList</a></span> 
         </dt>
         <dd>
-          
+          The DocumentList on which the forms acts.
           <div class="features">final</div>
 </dd>
         <dt id="index" class="property">
@@ -99,7 +96,9 @@ otherwise it will create a new document.</p>
           <span class="signature">&#8594; dynamic</span> 
         </dt>
         <dd>
-          
+          If set, the index of the document within the DocumentList.
+If set, the form will edit the existing document, if null,
+the form will create a new document.
           <div class="features">final</div>
 </dd>
         <dt id="hashCode" class="property inherited">

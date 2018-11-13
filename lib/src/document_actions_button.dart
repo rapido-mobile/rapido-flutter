@@ -7,7 +7,11 @@ import 'package:rapido/document_widgets.dart';
 /// or deleting of the document by passing in the documentList and the index
 /// of the document to edit.
 class DocumentActionsButton extends StatelessWidget {
+
+  /// The DocumentList on which the button and forms that it invokes act.
   final DocumentList documentList;
+
+  /// The index of document in documentList on which button acts.
   final int index;
 
   DocumentActionsButton(this.documentList, {@required this.index});

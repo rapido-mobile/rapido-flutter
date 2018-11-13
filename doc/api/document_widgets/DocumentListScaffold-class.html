@@ -49,9 +49,6 @@
     
     
     
-      <li class="section-title"><a href="document_widgets/document_widgets-library.html#functions">Functions</a></li>
-      <li><a href="document_widgets/packagesDirHandler.html">packagesDirHandler</a></li>
-      <li><a href="document_widgets/packagesHandler.html">packagesHandler</a></li>
     
     
     
@@ -92,7 +89,12 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; Function</span> 
         </dt>
         <dd>
-          
+          A call back function for building custom widgets for the DocumentListView,
+rather than the default ListTile. Like a normal builder, it receives a
+integer as an index into the associated DocumentList and should return a
+widget.
+Widget customItemBuilder(int index) {/* create and return a custom widget 
+for documentList<code>index</code>*/}
           <div class="features">final</div>
 </dd>
         <dt id="decoration" class="property">
@@ -100,7 +102,7 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; BoxDecoration</span> 
         </dt>
         <dd>
-          
+          A box decoration, that, if supplied will be applied to the DocumentListView.
           <div class="features">final</div>
 </dd>
         <dt id="documentList" class="property">
@@ -108,7 +110,7 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; <a href="rapido/DocumentList-class.html">DocumentList</a></span> 
         </dt>
         <dd>
-          
+          The DocumentList rendered by the DocumentListScaffold
           <div class="features">final</div>
 </dd>
         <dt id="emptyListWidget" class="property">
@@ -116,7 +118,8 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; Widget</span> 
         </dt>
         <dd>
-          
+          A widget to display when the DocumentListView is empty (when the 
+DocumentList.length == 0)
           <div class="features">final</div>
 </dd>
         <dt id="onItemTap" class="property">
@@ -124,7 +127,9 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; Function</span> 
         </dt>
         <dd>
-          
+          A call back function to call when the default ListTile in the 
+DocumentListView is tapped by the user. 
+Ignored when customItemBuilder is used.
           <div class="features">final</div>
 </dd>
         <dt id="subtitleKey" class="property">
@@ -132,7 +137,8 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; String</span> 
         </dt>
         <dd>
-          
+          The key specifying which value in the documents to use when
+rendering the default ListTiles. Ignored when customItemBuilder is used.
           <div class="features">final</div>
 </dd>
         <dt id="title" class="property">
@@ -140,7 +146,7 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; String</span> 
         </dt>
         <dd>
-          
+          The title to display in the header of the scaffold.
           <div class="features">final</div>
 </dd>
         <dt id="titleKeys" class="property">
@@ -148,7 +154,9 @@ through to the DocumentListView.</p>
           <span class="signature">&#8594; List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span> 
         </dt>
         <dd>
-          
+          A list of keys for spefifying which values to use in the title of the 
+default ListTile in the DocumentListView, and the order in which to 
+show them. Ignored when customItemBuilder is used.
           <div class="features">final</div>
 </dd>
         <dt id="hashCode" class="property inherited">

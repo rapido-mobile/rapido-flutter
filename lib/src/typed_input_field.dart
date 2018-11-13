@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
-/// Given a field name, returns an appropriately configured input widget.
+/// Given a field name, returns an appropriately configured FormField,
+/// possibly parented by another widget.
 /// Types are inferred from fieldNames. 
 /// Field name ends in | inferred type
 /// ends in "count" -> integer
 /// ends in "date" -> date
 /// All other fields return strings. 
 class TypedInputField extends StatelessWidget {
+
+  /// The name of the field, used to calculate which type of input to return
   final String fieldName;
+
+  /// The label to display in the UI for the specified fieldName
   final String label;
+
+  /// Call back function invoked when the Form parent of the FormField is
+  /// saved. The value returned is determined by the type of the field. 
   final Function onSaved;
+
+  /// The initial value to display in the FormField.
   final dynamic initialValue;
 
   TypedInputField(this.fieldName,

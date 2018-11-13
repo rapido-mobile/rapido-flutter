@@ -33,7 +33,6 @@ void main() {
     expect(find.text("null"), findsNothing);
   });
 
-  
   testWidgets("listview works without titleKeys", (WidgetTester tester) async {
     DocumentList dl = DocumentList("noTitleKeys");
     for (int i = 0; i < 10; i++) {
@@ -43,7 +42,7 @@ void main() {
         dl.add({"field B": "${i.toString()}"});
       }
     }
-    
+
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(

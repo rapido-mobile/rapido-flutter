@@ -7,7 +7,13 @@ import 'package:rapido/document_widgets.dart';
 /// for a document in a DocumentList causes the form to be in edit mode,
 /// otherwise it will create a new document.
 class DocumentForm extends StatefulWidget {
+
+  /// The DocumentList on which the forms acts.
   final DocumentList documentList;
+
+  /// If set, the index of the document within the DocumentList.
+  /// If set, the form will edit the existing document, if null,
+  /// the form will create a new document.
   final index;
 
   DocumentForm(this.documentList, {this.index});

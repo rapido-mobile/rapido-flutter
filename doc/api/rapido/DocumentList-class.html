@@ -53,6 +53,13 @@
   <div class="col-xs-12 col-sm-9 col-md-8 main-content">
       <h1>DocumentList class </h1>
 
+    <section class="desc markdown">
+      <p>A list documents, where a document is any map in the form of
+Map&lt;String, dynamic&gt;. DocumentList automatically persists changes 
+to the list through, adding, removing, and updating documents that it 
+contains. The document_widgets library can render useful UI elements
+for a DocumentList.</p>
+    </section>
     
     <section>
       <dl class="dl-horizontal">
@@ -77,12 +84,7 @@
           <span class="name"><a href="rapido/DocumentList/DocumentList.html">DocumentList</a></span><span class="signature">(<span class="parameter" id="-param-documentType"><span class="type-annotation">String</span> <span class="parameter-name">documentType</span>, {</span> <span class="parameter" id="-param-onLoadComplete"><span class="type-annotation">Function</span> <span class="parameter-name">onLoadComplete</span>, </span> <span class="parameter" id="-param-labels"><span class="type-annotation">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">String</span>&gt;</span></span> <span class="parameter-name">labels</span>, </span> <span class="parameter" id="-param-onChanged"><span class="type-annotation">Function</span> <span class="parameter-name">onChanged</span></span> })</span>
         </dt>
         <dd>
-          The documentType parameter should be unique. It is used to persist and retrieve documents.
-Documents are simply maps, in the form of Map&lt;String, dynamic&gt;. Add them 
-using the DocumentList.add(Map&lt;String, dynamic&gt;) function.
-The optional labels paramter maps keys from the documuents to desired strings in UI.
-For example {"Date", "date"} will use "Date" in rendered UI elements.
-When loading from disk, items may be loaded in any order.
+          The documentType parameter should be unique.
         </dd>
       </dl>
     </section>
@@ -96,7 +98,7 @@ When loading from disk, items may be loaded in any order.
           <span class="signature">&#8594; String</span> 
         </dt>
         <dd>
-          
+          A unique string identifying the documents organized by the list.
           <div class="features">final</div>
 </dd>
         <dt id="labels" class="property">
@@ -122,7 +124,9 @@ Returns null if there is no data and no labels provided.
           <span class="signature">&#8596; Function</span> 
         </dt>
         <dd>
-          
+          A callback function that is called for any changes in the DocumentList,
+such as adding, removing, or updating documents. It passes a reference
+to itself, onChanged: (DocumentList documentList) {/* do something */}
           <div class="features">read / write</div>
 </dd>
         <dt id="onLoadComplete" class="property">
@@ -130,7 +134,9 @@ Returns null if there is no data and no labels provided.
           <span class="signature">&#8596; Function</span> 
         </dt>
         <dd>
-          
+          A callback function that fires after a DocumentList is finished loading
+persisted data. It passes a reference to itself, 
+onChanged: (DocumentList documentList) {/* do something */}
           <div class="features">read / write</div>
 </dd>
         <dt id="first" class="property inherited">

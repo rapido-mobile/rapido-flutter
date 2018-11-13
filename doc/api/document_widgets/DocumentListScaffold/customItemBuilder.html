@@ -85,6 +85,14 @@
           <span class="name ">customItemBuilder</span>
           <div class="features">final</div>
         </section>
+        <section class="desc markdown">
+          <p>A call back function for building custom widgets for the DocumentListView,
+rather than the default ListTile. Like a normal builder, it receives a
+integer as an index into the associated DocumentList and should return a
+widget.
+Widget customItemBuilder(int index) {/* create and return a custom widget 
+for documentList<code>index</code>*/}</p>
+        </section>
                 <section class="summary source-code" id="source">
           <h2><span>Implementation</span> </h2>
           <pre class="language-dart"><code class="language-dart">final Function customItemBuilder
