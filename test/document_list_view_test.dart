@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:rapido/document_list.dart';
-import 'package:rapido/document_widgets.dart';
 
 void main() {
   testWidgets('Can display fields as title and subtitle',

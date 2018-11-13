@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rapido/document_list.dart';
-import 'package:rapido/document_widgets.dart';
-
 /// A dynamically generate form that allows creating new documents or
 /// editing existing documents in a DocumentList. Specifying an index
 /// for a document in a DocumentList causes the form to be in edit mode,
