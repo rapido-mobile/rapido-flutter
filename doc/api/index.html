@@ -42,25 +42,51 @@
   <div class="col-xs-12 col-sm-9 col-md-8 main-content">
       <section class="desc markdown">
         <h1 id="rapido">rapido</h1>
-<h2 id="mental-model">Mental Model</h2>
-<p>The App to Store widget collection has two fundamental concepts:</p><ol><li>Persistent Models</li><li>UI that renders itself based on the models</li></ol>
-<h3 id="persistentmodel">PersistentModel</h3>
-<p>Persistent model is a class that encapsulates a map of objects keyed with strings. This map is accessed via the models data property. However, you only read from the data property, in order to add, delete, or update the data, you use the models build in properties. That is because the model manages persistence for you automatically! If users </p>
-<p>The following code creates a model and adds to entries to it:</p>
-<pre class="language-dart"><code>  test('creates a PersistedModel', () {
-    PersistedModel persistedModel = PersistedModel("testDocumentType");
-    persistedModel
-        .add({"count": 0, "rating": 5, "price": "0.5", "name": "Pickle Rick"});
-    persistedModel
-        .add({"count": 1, "rating": 4, "price": "1.5", "name": "Rick Sanchez"});
-    expect(persistedModel.data.length, 2);
-  });
+<p>Rapido brings R.A.D. development principles to mobile development, currently available for Flutter.</p>
+<h2 id="overview-of-using-documentlist">Overview of Using DocumentList</h2>
+<p>DocumentList lies at the core of the R.A.D. experience. By simply using a list, you get:</p><ol><li>Local persistence of objects.</li><li>Default UI that your users can use for displaying, creating, editing, and deleting documents in the list.</li></ol>
+<h2 id="importing">Importing</h2>
+<p>Everything you need is in document_list.dart:</p>
+<pre class="language-dart"><code>import 'package:rapido/document_list.dart';
 </code></pre>
-<p>You can retrive the data by indexing into the data property:</p>
-<pre class="language-dart"><code>print(model.data[1]["name"]) =&gt; "Rick Sanchez";
+<p>This import includes DocumentList itself, and all of the UI elements that work on it.</p>
+<h3 id="documentlist">DocumentList</h3>
+<p>To create a DocumentList, all that is required is to include a "documentType" string. This string is used by DocumentList to organize its documents. Then you can add documents to it by simply passing in maps of type Map&lt;String, dynamic&gt;.</p>
+<pre class="language-dart"><code>DocumentList taskList = DocumentList("tasks");
+taskList.add({"name":"grocery shopping", "priority": 1, "done": false});
 </code></pre>
+<p>Notice that the maps use a string of a key, but the values are dynamic. You can store anything you like in the DocumentList.</p>
+<p>You can modify and delete documents using normal list functionality. </p>
+<pre class="language-dart"><code>taskList[0]  = {"name":"grocery shopping", "priority": 1, "done": true};
+</code></pre>
+<p>You can delete them:</p>
+<pre class="language-dart"><code>taskList.removeAt[0];
+</code></pre>
+<p>Note that all changes to the DocumentList are automatically persisted to the user's phone! The user can close the app, and when they reopen them, the data is still right there.</p>
 <h3 id="ui-elements">UI Elements</h3>
-<p>Once you have create a model, you can easily add it to your application by passing the model into PersistentModel UI classes. Those UI classes will do their best to render a UI with minimal configuration. For example, the following test app creates a ListView.</p>
+<p>After creating a DocumentList, you can use it in a variety of UI elements supplied by Rapido. By simply passing in a DocumentList, the widgets can figure out themselves what functionality to display to users.</p>
+<p>For exampe, if you want to easily create an application that supports adding, removing, and editing documents, you can use the DocumentListScaffold class.</p>
+<pre class="language-dart"><code>DocumentListScaffold(taskList, title:"Task List");
+</code></pre>
+<p>DocumentListView will create a ListView to display and edit the items in the list. It also offers several custimazation options, but the defautls "just work."</p>
+<pre class="language-dart"><code>DocumentListView(taskList);
+</code></pre>
+<p>DocumentForm allows easy creation of new documents, or editing of existing ones.</p>
+<p>To create a new document:</p>
+<pre class="language-dart"><code>DocumentForm(taskList);
+</code></pre>
+<p>To edit an existing one:</p>
+<pre class="language-dart"><code>DocumentForm(taskList, index: 0);
+</code></pre>
+<h2 id="feedback-welcome">Feedback Welcome</h2>
+<p>Rapido is undergoing rapid development. Please visit <a href="https://github.com/rapido-mobile/rapido-flutter">our Github repo</a> to log any issues or features requests. Of course, pull requests are most welcome.</p>
+<h2 id="roadmap">Roadmap</h2>
+<h3 id="more-typedinputfields">More TypedInputFields</h3>
+<p>DocumentForm works by creating input fields based on the name of the field in the document. Our current plan is to add more typed input fields, such as:</p><ul><li>Switches</li><li>Favorite </li><li>Time and DateTime</li><li>Long Text</li></ul>
+<h3 id="cloud-storage-and-syncing">Cloud Storage and Syncing</h3>
+<p>We plan to make storing and syncing documents with DocumentList incredibly easy.</p>
+<h3 id="camera-widget">Camera Widget</h3>
+<p>We need to dramatically simplify using a camera in your application.</p>
       </section>
       
         <section class="summary">

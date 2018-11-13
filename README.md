@@ -1,29 +1,87 @@
 # rapido
-## Mental Model
-The App to Store widget collection has two fundamental concepts:
-1. Persistent Models
-2. UI that renders itself based on the models
+Rapido brings R.A.D. development principles to mobile development, currently available for Flutter.
 
-### PersistentModel
-Persistent model is a class that encapsulates a map of objects keyed with strings. This map is accessed via the models data property. However, you only read from the data property, in order to add, delete, or update the data, you use the models build in properties. That is because the model manages persistence for you automatically! If users 
+## Overview of Using DocumentList
+DocumentList lies at the core of the R.A.D. experience. By simply using a list, you get:
 
-The following code creates a model and adds to entries to it:
-```
-  test('creates a PersistedModel', () {
-    PersistedModel persistedModel = PersistedModel("testDocumentType");
-    persistedModel
-        .add({"count": 0, "rating": 5, "price": "0.5", "name": "Pickle Rick"});
-    persistedModel
-        .add({"count": 1, "rating": 4, "price": "1.5", "name": "Rick Sanchez"});
-    expect(persistedModel.data.length, 2);
-  });
-```
+1. Local persistence of objects.
+2. Default UI that your users can use for displaying, creating, editing, and deleting documents in the list.
 
-You can retrive the data by indexing into the data property:
+## Importing
+Everything you need is in document_list.dart:
 
 ```
-print(model.data[1]["name"]) => "Rick Sanchez";
+import 'package:rapido/document_list.dart';
 ```
+
+This import includes DocumentList itself, and all of the UI elements that work on it.
+
+### DocumentList
+To create a DocumentList, all that is required is to include a "documentType" string. This string is used by DocumentList to organize its documents. Then you can add documents to it by simply passing in maps of type Map<String, dynamic>.
+
+```
+DocumentList taskList = DocumentList("tasks");
+taskList.add({"name":"grocery shopping", "priority": 1, "done": false});
+```
+
+Notice that the maps use a string of a key, but the values are dynamic. You can store anything you like in the DocumentList.
+
+You can modify and delete documents using normal list functionality. 
+
+```
+taskList[0]  = {"name":"grocery shopping", "priority": 1, "done": true};
+```
+
+You can delete them:
+
+```
+taskList.removeAt[0];
+```
+
+Note that all changes to the DocumentList are automatically persisted to the user's phone! The user can close the app, and when they reopen them, the data is still right there.
 
 ### UI Elements
-Once you have create a model, you can easily add it to your application by passing the model into PersistentModel UI classes. Those UI classes will do their best to render a UI with minimal configuration. For example, the following test app creates a ListView.
+After creating a DocumentList, you can use it in a variety of UI elements supplied by Rapido. By simply passing in a DocumentList, the widgets can figure out themselves what functionality to display to users.
+
+For exampe, if you want to easily create an application that supports adding, removing, and editing documents, you can use the DocumentListScaffold class.
+
+```
+DocumentListScaffold(taskList, title:"Task List");
+```
+
+DocumentListView will create a ListView to display and edit the items in the list. It also offers several custimazation options, but the defautls "just work."
+
+```
+DocumentListView(taskList);
+```
+
+DocumentForm allows easy creation of new documents, or editing of existing ones.
+
+To create a new document:
+
+```
+DocumentForm(taskList);
+```
+
+To edit an existing one:
+
+```
+DocumentForm(taskList, index: 0);
+```
+
+## Feedback Welcome
+Rapido is undergoing rapid development. Please visit [our Github repo](https://github.com/rapido-mobile/rapido-flutter) to log any issues or features requests. Of course, pull requests are most welcome.
+
+## Roadmap
+### More TypedInputFields
+DocumentForm works by creating input fields based on the name of the field in the document. Our current plan is to add more typed input fields, such as:
+ * Switches
+ * Favorite 
+ * Time and DateTime
+ * Long Text
+
+### Cloud Storage and Syncing
+We plan to make storing and syncing documents with DocumentList incredibly easy.
+
+### Camera Widget
+We need to dramatically simplify using a camera in your application.
