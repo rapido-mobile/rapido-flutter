@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="made with love by dartdoc 0.24.1">
+  <meta name="description" content="rapido API docs, for the Dart programming language.">
+  <title>rapido - Dart API docs</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://github.com/rapido-mobile">rapido package</a></li>
+  </ol>
+  <div class="self-name">rapido</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5><span class="package-name">rapido</span> <span class="package-kind">package</span></h5>
+    <ol>
+    </ol>
+  </div>
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <section class="desc markdown">
+        <h1 id="rapido">rapido</h1>
+<p>Rapido brings R.A.D. development principles to mobile development, currently available for Flutter.</p>
+<h2 id="overview-of-using-documentlist">Overview of Using DocumentList</h2>
+<p>DocumentList lies at the core of the R.A.D. experience. By simply using a list, you get:</p><ol><li>Local persistence of objects.</li><li>Default UI that your users can use for displaying, creating, editing, and deleting documents in the list.</li></ol>
+<h2 id="importing">Importing</h2>
+<p>Everything you need is in document_list.dart:</p>
+<pre class="language-dart"><code>import 'package:rapido/document_list.dart';
+</code></pre>
+<p>This import includes DocumentList itself, and all of the UI elements that work on it.</p>
+<h3 id="documentlist">DocumentList</h3>
+<p>To create a DocumentList, all that is required is to include a "documentType" string. This string is used by DocumentList to organize its documents. Then you can add documents to it by simply passing in maps of type Map&lt;String, dynamic&gt;.</p>
+<pre class="language-dart"><code>DocumentList taskList = DocumentList("tasks");
+taskList.add({"name":"grocery shopping", "priority": 1, "done": false});
+</code></pre>
+<p>Notice that the maps use a string of a key, but the values are dynamic. You can store anything you like in the DocumentList.</p>
+<p>You can modify and delete documents using normal list functionality. </p>
+<pre class="language-dart"><code>taskList[0]  = {"name":"grocery shopping", "priority": 1, "done": true};
+</code></pre>
+<p>You can delete them:</p>
+<pre class="language-dart"><code>taskList.removeAt[0];
+</code></pre>
+<p>Note that all changes to the DocumentList are automatically persisted to the user's phone! The user can close the app, and when they reopen them, the data is still right there.</p>
+<h3 id="ui-elements">UI Elements</h3>
+<p>After creating a DocumentList, you can use it in a variety of UI elements supplied by Rapido. By simply passing in a DocumentList, the widgets can figure out themselves what functionality to display to users.</p>
+<p>For exampe, if you want to easily create an application that supports adding, removing, and editing documents, you can use the DocumentListScaffold class.</p>
+<pre class="language-dart"><code>DocumentListScaffold(taskList, title:"Task List");
+</code></pre>
+<p>DocumentListView will create a ListView to display and edit the items in the list. It also offers several custimazation options, but the defautls "just work."</p>
+<pre class="language-dart"><code>DocumentListView(taskList);
+</code></pre>
+<p>DocumentForm allows easy creation of new documents, or editing of existing ones.</p>
+<p>To create a new document:</p>
+<pre class="language-dart"><code>DocumentForm(taskList);
+</code></pre>
+<p>To edit an existing one:</p>
+<pre class="language-dart"><code>DocumentForm(taskList, index: 0);
+</code></pre>
+<h2 id="feedback-welcome">Feedback Welcome</h2>
+<p>Rapido is undergoing rapid development. Please visit <a href="https://github.com/rapido-mobile/rapido-flutter">our Github repo</a> to log any issues or features requests. Of course, pull requests are most welcome.</p>
+<h2 id="roadmap">Roadmap</h2>
+<h3 id="more-typedinputfields">More TypedInputFields</h3>
+<p>DocumentForm works by creating input fields based on the name of the field in the document. Our current plan is to add more typed input fields, such as:</p><ul><li>Switches</li><li>Favorite </li><li>Time and DateTime</li><li>Long Text</li></ul>
+<h3 id="cloud-storage-and-syncing">Cloud Storage and Syncing</h3>
+<p>We plan to make storing and syncing documents with DocumentList incredibly easy.</p>
+<h3 id="camera-widget">Camera Widget</h3>
+<p>We need to dramatically simplify using a camera in your application.</p>
+      </section>
+      
+
+  </div> <!-- /.main-content -->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    rapido 0.0.1
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>
