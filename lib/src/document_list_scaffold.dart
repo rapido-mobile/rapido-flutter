@@ -10,20 +10,19 @@ import 'package:rapido/document_list.dart';
 /// decoration, customItemBuild, and emptuListWidget, are passed
 /// through to the DocumentListView.
 class DocumentListScaffold extends StatefulWidget {
-
   /// The DocumentList rendered by the DocumentListScaffold
   final DocumentList documentList;
 
   /// The title to display in the header of the scaffold.
   final String title;
 
-  /// A call back function to call when the default ListTile in the 
-  /// DocumentListView is tapped by the user. 
+  /// A call back function to call when the default ListTile in the
+  /// DocumentListView is tapped by the user.
   /// Ignored when customItemBuilder is used.
   final Function onItemTap;
 
-  /// A list of keys for spefifying which values to use in the title of the 
-  /// default ListTile in the DocumentListView, and the order in which to 
+  /// A list of keys for spefifying which values to use in the title of the
+  /// default ListTile in the DocumentListView, and the order in which to
   /// show them. Ignored when customItemBuilder is used.
   final List<String> titleKeys;
 
@@ -38,11 +37,11 @@ class DocumentListScaffold extends StatefulWidget {
   /// rather than the default ListTile. Like a normal builder, it receives a
   /// integer as an index into the associated DocumentList and should return a
   /// widget.
-  /// Widget customItemBuilder(int index) {/* create and return a custom widget 
+  /// Widget customItemBuilder(int index) {/* create and return a custom widget
   /// for documentList[index]*/}
   final Function customItemBuilder;
 
-  /// A widget to display when the DocumentListView is empty (when the 
+  /// A widget to display when the DocumentListView is empty (when the
   /// DocumentList.length == 0)
   final Widget emptyListWidget;
 
@@ -76,7 +75,8 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
         ),
         decoration: widget.decoration,
       ),
-      floatingActionButton: AddDocumentFloatingActionButton(widget.documentList),
+      floatingActionButton:
+          AddDocumentFloatingActionButton(widget.documentList),
     );
   }
 }

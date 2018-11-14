@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rapido/document_list.dart';
+
 /// A dynamically generate form that allows creating new documents or
 /// editing existing documents in a DocumentList. Specifying an index
 /// for a document in a DocumentList causes the form to be in edit mode,
 /// otherwise it will create a new document.
 class DocumentForm extends StatefulWidget {
-
   /// The DocumentList on which the forms acts.
   final DocumentList documentList;
 
@@ -28,8 +28,8 @@ class _DocumentFormState extends State<DocumentForm> {
     widget.documentList.labels.keys.forEach((String label) {
       dynamic initialValue;
       if (widget.index != null) {
-        initialValue =
-            widget.documentList[widget.index][widget.documentList.labels[label]];
+        initialValue = widget.documentList[widget.index]
+            [widget.documentList.labels[label]];
       }
       fields.add(
         Container(
@@ -53,7 +53,7 @@ class _DocumentFormState extends State<DocumentForm> {
             if (widget.index == null) {
               widget.documentList.add(newData);
             } else {
-              widget.documentList[widget.index] =  newData;
+              widget.documentList[widget.index] = newData;
             }
             Navigator.pop(context);
           }),
