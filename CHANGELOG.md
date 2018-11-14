@@ -1,3 +1,4 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - 2018-11-14
 
-* TODO: Describe initial release.
+* Initial relese with DocumentList and related classes
+* Document persistence handled by writing json files as first implementation
