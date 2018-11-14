@@ -1,5 +1,9 @@
 .DS_Store
 .dart_tool/
+.idea
+.vscode
+*.iml
+doc/
 
 .packages
 .pub/
