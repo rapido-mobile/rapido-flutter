@@ -1,11 +1,11 @@
 # rapido
-Rapido brings R.A.D. development principles to mobile development, currently available for Flutter.
+Rapido brings Rapid Application Development principles to mobile development, currently available for Flutter.
 
 ## Overview of Using DocumentList
 DocumentList lies at the core of the R.A.D. experience. By simply using a list, you get:
 
 1. Local persistence of objects.
-2. Default UI that your users can use for displaying, creating, editing, and deleting documents in the list.
+2. Default CRUD UI that your users can use for displaying, creating, editing, and deleting documents in the list.
 
 ## Importing
 Everything you need is in document_list.dart:
