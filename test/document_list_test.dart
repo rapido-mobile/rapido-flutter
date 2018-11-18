@@ -39,6 +39,17 @@ void main() {
     });
   });
 
+  test('sort()', () {
+    DocumentList list = DocumentList("sortTest");
+    list.add({"a": 3});
+    list.add({"a": 2});
+    list.add({"a": 1});
+    list.sort((a, b) => a["a"] - b["a"]);
+    expect(list[0]["a"], 1);
+    expect(list[1]["a"], 2);
+    expect(list[2]["a"], 3);
+  });
+
   test('test maps get updated and timestamp is changed', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       Map<String, dynamic> updatedMap = {
@@ -103,8 +114,8 @@ void main() {
 
   test('removeAt() survives persistence', () {
     DocumentList("removeAtTeest", onLoadComplete: (DocumentList list) {
-          expect(list.length, 9);
-        });
+      expect(list.length, 9);
+    });
   });
 
   test('infer ui labels', () {
