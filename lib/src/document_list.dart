@@ -133,6 +133,12 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     return map;
   }
 
+  @override
+  void sort([int compare(Map<String, dynamic> a, Map<String, dynamic> b)]){
+    _documents.sort(compare);
+    _notifyListener();
+  }
+
   static String randomFileSafeId(int length) {
     var rand = new Random();
     var codeUnits = new List.generate(length, (index) {
