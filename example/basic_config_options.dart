@@ -31,12 +31,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Labels to use in the UI
     labels: {
-      "Date": "date",
-      "Task": "task",
-      "Priority": "pri count",
-      "Note": "note"
+      "Date": "date", // will create a date field in forms
+      "Task": "task", // will create a text field in forms
+      "Priority": "pri count", // will create an integer field in forms
+      "Note": "note" // will create a text field in forms
     },
-    // Ff there are existing documents on disk, onLoadComplete
+    // If there are existing documents on disk, onLoadComplete
     // will fire after they are all loaded.
     // Loading is async, so UI may be rendered before loading is complete
     onLoadComplete: (DocumentList list) {
@@ -47,7 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     // resort the DocumentList
     docs.sort((t1, t2) => t1["pri count"] - (t2["pri count"]));
 
@@ -71,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       // set a decoration of the default ListView
-      decoration: BoxDecoration(color:Colors.grey),
+      decoration: BoxDecoration(color: Colors.grey),
     );
   }
 }
