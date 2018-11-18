@@ -33,7 +33,8 @@ void main() {
     expect(widgetTest.find.text("null"), widgetTest.findsNothing);
   });
 
-  widgetTest.testWidgets("listview works without titleKeys", (widgetTest.WidgetTester tester) async {
+  widgetTest.testWidgets("listview works without titleKeys",
+      (widgetTest.WidgetTester tester) async {
     DocumentList dl = DocumentList("noTitleKeys");
     for (int i = 0; i < 10; i++) {
       if (i == 1) {
@@ -56,6 +57,31 @@ void main() {
     expect(widgetTest.find.text("1"), widgetTest.findsOneWidget);
   });
 
+  widgetTest.testWidgets('test DocumentList.sort',
+      (widgetTest.WidgetTester tester) async {
+    DocumentList dl = DocumentList("sortListTest");
+    dl.add({"a": 2});
+    dl.add({"a": 1});
+    dl.sort((a,b) => a["a"] - b["a"]);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: DocumentListView(
+            dl,
+            customItemBuilder: (int index) {
+              return ListTile(
+                title: Text("${index.toString()}:${dl[index]["a"].toString()}"),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(widgetTest.find.text("0:1"), widgetTest.findsOneWidget);
+    expect(widgetTest.find.text("1:2"), widgetTest.findsOneWidget);
+  });
 
   setUpAll(() async {
     // Create a temporary directory to work with
