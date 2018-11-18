@@ -134,7 +134,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   }
 
   @override
-  void sort([int compare(Map<String, dynamic> a, Map<String, dynamic> b)]){
+  void sort([int compare(Map<String, dynamic> a, Map<String, dynamic> b)]) {
     _documents.sort(compare);
     _notifyListener();
   }
