@@ -62,7 +62,7 @@ void main() {
     DocumentList dl = DocumentList("sortListTest");
     dl.add({"a": 2});
     dl.add({"a": 1});
-    dl.sort((a,b) => a["a"] - b["a"]);
+    dl.sort((a, b) => a["a"] - b["a"]);
 
     await tester.pumpWidget(
       MaterialApp(

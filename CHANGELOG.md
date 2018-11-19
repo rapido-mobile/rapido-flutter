@@ -8,5 +8,6 @@
 * Updated pubspec.yaml to explicitly reference test.dart after flutter update
 * Fixed https://github.com/rapido-mobile/rapido-flutter/issues/5 which made DocumentList.sort() work
 
-## [0.0.5] - 
+## [0.0.5] - 2018-11-19 
  * Added more examples to example/
+ * added DocumentList.sortByField() to simplify sorting

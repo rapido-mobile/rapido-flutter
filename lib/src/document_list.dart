@@ -144,7 +144,6 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   /// Defaults to ascending order.
   void sortByField(String fieldName,
       {SortOrder sortOrder: SortOrder.ascending}) {
-
     if (sortOrder == SortOrder.ascending) {
       sort((a, b) => a[fieldName].compareTo(b[fieldName]));
     } else {
