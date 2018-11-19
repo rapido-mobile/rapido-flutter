@@ -22,6 +22,16 @@ void main() {
       expect(model[0]["price"], 1.5);
     });
   });
+
+  test('onChanged works', (){
+    DocumentList list = DocumentList("onchange");
+    // TODO: why is onChanged called twice?
+    list.onChanged = (DocumentList l) {
+      expect(l.length, 1);
+    };
+    list.add({"a":1});
+
+  });
   test('tests that any() works', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       bool c = model.any((Map<String, dynamic> map) {
@@ -39,6 +49,13 @@ void main() {
     });
   });
 
+  test('set labels',(){
+       DocumentList list = DocumentList("onchange");
+       list.labels = {"A":"a"};
+       list.add({"a":1});
+       expect(list.labels.length, 1);
+       expect(list.labels.containsKey("A"), true);
+  });
   test('sort()', () {
     DocumentList list = DocumentList("sortTest");
     list.add({"a": 3});
