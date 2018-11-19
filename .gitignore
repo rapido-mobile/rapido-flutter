@@ -8,6 +8,7 @@ doc/
 .packages
 .pub/
 
+coverage/
 build/
 ios/.generated/
 ios/Flutter/Generated.xcconfig
