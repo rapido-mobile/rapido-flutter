@@ -161,6 +161,14 @@ void main() {
     });
   });
 
+  test('remove object', (){
+    DocumentList list = DocumentList("removeTest");
+    Map<String, dynamic> testObj = {"a":1};
+    list.add(testObj);
+    expect(list.length, 1);
+    expect(list.remove(testObj), true);
+    expect(list.length, 0);
+  });
   test('sortByField', () {
     DocumentList list = DocumentList("sortByField");
     for (int i = 0; i < 10; i++) {
