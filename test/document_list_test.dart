@@ -23,14 +23,13 @@ void main() {
     });
   });
 
-  test('onChanged works', (){
+  test('onChanged works', () {
     DocumentList list = DocumentList("onchange");
     // TODO: why is onChanged called twice?
     list.onChanged = (DocumentList l) {
       expect(l.length, 1);
     };
-    list.add({"a":1});
-
+    list.add({"a": 1});
   });
   test('tests that any() works', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
@@ -49,12 +48,12 @@ void main() {
     });
   });
 
-  test('set labels',(){
-       DocumentList list = DocumentList("onchange");
-       list.labels = {"A":"a"};
-       list.add({"a":1});
-       expect(list.labels.length, 1);
-       expect(list.labels.containsKey("A"), true);
+  test('set labels', () {
+    DocumentList list = DocumentList("onchange");
+    list.labels = {"A": "a"};
+    list.add({"a": 1});
+    expect(list.labels.length, 1);
+    expect(list.labels.containsKey("A"), true);
   });
   test('sort()', () {
     DocumentList list = DocumentList("sortTest");
@@ -178,27 +177,51 @@ void main() {
     });
   });
 
-  test('remove object', (){
+  test('remove object', () {
     DocumentList list = DocumentList("removeTest");
-    Map<String, dynamic> testObj = {"a":1};
+    Map<String, dynamic> testObj = {"a": 1};
     list.add(testObj);
     expect(list.length, 1);
     expect(list.remove(testObj), true);
     expect(list.length, 0);
   });
   test('sortByField', () {
+    // TODO: add tests for other field types (date)
     DocumentList list = DocumentList("sortByField");
+    List<String> strings = [
+      "abcd",
+      "bcde",
+      "cdef",
+      "defg",
+      "efgh",
+      "fghi",
+      "ghij",
+      "hijk",
+      "ijkl",
+      "jklm",
+    ];
     for (int i = 0; i < 10; i++) {
-      list.add({"a": i});
+      list.add({"a": i, "b": strings[i]});
     }
-    list.sortByField("a", sortOrder:SortOrder.descending);
+    list.sortByField("a", sortOrder: SortOrder.descending);
     expect(list[0]["a"], 9);
     expect(list[9]["a"], 0);
- 
-    list.sortByField("a", sortOrder:SortOrder.ascending);
+
+    list.sortByField("a", sortOrder: SortOrder.ascending);
     expect(list[0]["a"], 0);
     expect(list[9]["a"], 9);
 
+    list.sortByField("b", sortOrder: SortOrder.descending);
+    expect(list[0]["a"], 9);
+    expect(list[2]["a"], 7);
+    expect(list[4]["a"], 5);
+    expect(list[6]["a"], 3);
+    expect(list[8]["a"], 1);
+    expect(list[9]["a"], 0);
+
+    list.sortByField("b", sortOrder: SortOrder.ascending);
+    expect(list[0]["a"], 0);
+    expect(list[9]["a"], 9);
   });
 
   setUpAll(() async {
