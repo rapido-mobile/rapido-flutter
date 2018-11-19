@@ -161,6 +161,21 @@ void main() {
     });
   });
 
+  test('sortByField', () {
+    DocumentList list = DocumentList("sortByField");
+    for (int i = 0; i < 10; i++) {
+      list.add({"a": i});
+    }
+    list.sortByField("a", sortOrder:SortOrder.descending);
+    expect(list[0]["a"], 9);
+    expect(list[9]["a"], 0);
+ 
+    list.sortByField("a", sortOrder:SortOrder.ascending);
+    expect(list[0]["a"], 0);
+    expect(list[9]["a"], 9);
+
+  });
+
   setUpAll(() async {
     // Create a temporary directory to work with
     final directory = await Directory.systemTemp.createTemp();

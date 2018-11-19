@@ -1,5 +1,6 @@
 library rapido;
 
+import 'package:flutter/material.dart';
 import 'dart:collection';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
@@ -139,6 +140,20 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     _notifyListener();
   }
 
+  /// Sorts by the field specified in the required parameter fieldName.
+  /// Optionally specify sortOrder to sort in ascending or descending order.
+  /// Defaults to ascending order.
+  void sortByField(String fieldName,
+      {SortOrder sortOrder: SortOrder.ascending}) {
+
+    if (sortOrder == SortOrder.ascending) {
+      sort((a, b) => a[fieldName].compareTo(b[fieldName]));
+    } else {
+      sort((a, b) => b[fieldName].compareTo(a[fieldName]));
+    }
+    _notifyListener();
+  }
+
   static String randomFileSafeId(int length) {
     var rand = new Random();
     var codeUnits = new List.generate(length, (index) {
@@ -210,3 +225,5 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     return path;
   }
 }
+
+enum SortOrder { ascending, descending }
