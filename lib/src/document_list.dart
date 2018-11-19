@@ -1,6 +1,5 @@
 library rapido;
 
-import 'package:flutter/material.dart';
 import 'dart:collection';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
