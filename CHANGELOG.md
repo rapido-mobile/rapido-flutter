@@ -11,3 +11,6 @@
 ## [0.0.5] - 2018-11-19 
  * Added more examples to example/
  * added DocumentList.sortByField() to simplify sorting
+
+## [0.0.6] - 2018-11-19
+ * Adding a sorting button widget
