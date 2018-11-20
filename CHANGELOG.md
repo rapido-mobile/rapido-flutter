@@ -17,3 +17,4 @@
 
 ## [0.0.7] - 2018-11-
  * Removed required title parameter from DocumentListScaffold
+ 
