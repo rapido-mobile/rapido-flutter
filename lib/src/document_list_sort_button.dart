@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rapido/document_list.dart';
 
+/// A button that adds sorting to a DocumentList. Useful for adding
+/// sorting functionality to a DocumentListView.
 class DocumentListSortButton extends StatefulWidget {
   final DocumentList documentList;
 
@@ -26,7 +28,8 @@ class _DocumentListSortButtonState extends State<DocumentListSortButton> {
           } else {
             currentSortOrder = SortOrder.ascending;
           }
-          widget.documentList.sortByField(fieldName, sortOrder: currentSortOrder);
+          widget.documentList
+              .sortByField(fieldName, sortOrder: currentSortOrder);
           currentFieldName = fieldName;
         },
         itemBuilder: (BuildContext context) {
