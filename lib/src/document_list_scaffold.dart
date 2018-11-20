@@ -13,9 +13,6 @@ class DocumentListScaffold extends StatefulWidget {
   /// The DocumentList rendered by the DocumentListScaffold
   final DocumentList documentList;
 
-  /// The title to display in the header of the scaffold.
-  final String title;
-
   /// A call back function to call when the default ListTile in the
   /// DocumentListView is tapped by the user.
   /// Ignored when customItemBuilder is used.
@@ -45,8 +42,10 @@ class DocumentListScaffold extends StatefulWidget {
   /// DocumentList.length == 0)
   final Widget emptyListWidget;
 
+  final String title;
+
   DocumentListScaffold(this.documentList,
-      {@required this.title,
+      {this.title,
       this.onItemTap,
       @required this.titleKeys,
       this.subtitleKey,
@@ -60,9 +59,11 @@ class DocumentListScaffold extends StatefulWidget {
 class _DocumentListScaffoldState extends State<DocumentListScaffold> {
   @override
   Widget build(BuildContext context) {
+    String _title =
+        widget.title != null ? widget.title : widget.documentList.documentType;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(_title),
         actions: <Widget>[DocumentListSortButton(widget.documentList)],
       ),
       body: Container(
