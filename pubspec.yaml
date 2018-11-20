@@ -1,6 +1,6 @@
 name: rapido
 description: Rapid Application Development framework for Flutter. Automatically persisting user data, and creates default CRUD UI.
-version: 0.0.5
+version: 0.0.6
 author: Rick Spencer <richard.linger.spencer.3@gmail.com>
 homepage: https://github.com/rapido-mobile
 
