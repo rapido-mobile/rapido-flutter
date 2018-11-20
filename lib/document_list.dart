@@ -5,3 +5,4 @@ export 'src/document_list_view.dart';
 export 'src/typed_input_field.dart';
 export 'src/document_actions_button.dart';
 export 'src/document_list.dart';
+export 'src/document_list_sort_button.dart';

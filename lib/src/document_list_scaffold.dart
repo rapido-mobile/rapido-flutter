@@ -63,6 +63,7 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[DocumentListSortButton(widget.documentList)],
       ),
       body: Container(
         child: DocumentListView(
