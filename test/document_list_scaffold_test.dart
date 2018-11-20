@@ -18,7 +18,7 @@ void main() {
     expect(widgetTest.find.text("No Title"), widgetTest.findsOneWidget);
   });
 
-    widgetTest.testWidgets("DocumentListViewScaffold works with title",
+  widgetTest.testWidgets("DocumentListViewScaffold works with title",
       (widgetTest.WidgetTester tester) async {
     DocumentList dl = DocumentList("No Title");
     await tester.pumpWidget(
@@ -30,6 +30,3 @@ void main() {
     expect(widgetTest.find.text("ABCD"), widgetTest.findsOneWidget);
   });
 }
-
-
-
