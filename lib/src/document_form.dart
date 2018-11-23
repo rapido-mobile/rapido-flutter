@@ -47,7 +47,7 @@ class _DocumentFormState extends State<DocumentForm> {
     fields.add(Container(
       padding: EdgeInsets.only(left: 100.0, right: 100.0),
       child: RaisedButton(
-          child: Text(widget.index == null ? "Add" : "Save"),
+          child: Icon(Icons.save),
           onPressed: () {
             formKey.currentState.save();
             if (widget.index == null) {
@@ -63,9 +63,9 @@ class _DocumentFormState extends State<DocumentForm> {
 
   @override
   Widget build(BuildContext context) {
-    String titleText = widget.index == null ? "Add" : "Edit";
+    IconData titleIconData = widget.index == null ? Icons.add : Icons.edit;
     return Scaffold(
-      appBar: AppBar(title: Text(titleText)),
+      appBar: AppBar(title: Icon(titleIconData)),
       body: Form(
         key: formKey,
         child: ListView(
