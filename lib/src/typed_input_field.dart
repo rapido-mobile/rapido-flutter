@@ -29,35 +29,47 @@ class TypedInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (fieldName.toLowerCase().endsWith("count")) {
-      return TextFormField(
-        decoration: InputDecoration(labelText: label),
-        initialValue: initialValue == null ? "0" : initialValue.toString(),
-        onSaved: (String value) {
-          this.onSaved(int.parse(value));
-        },
-        keyboardType:
-            TextInputType.numberWithOptions(signed: false, decimal: false),
-      );
+      return _getIntegerFormField();
     }
     if (fieldName.toLowerCase().endsWith("date")) {
-      return DateTimePickerFormField(
-        format: DateFormat.yMd(),
-        decoration: InputDecoration(labelText: label),
-        dateOnly: true,
-        onSaved: (DateTime value) {
-          DateFormat formatter = DateFormat.yMd();
-          String v = formatter.format(value);
-          this.onSaved(v);
-        },
-        initialValue: _formatInitialDateTime(),
-      );
+      return _getDateFormField();
     }
+    return _getTextFormField();
+  }
+
+  TextFormField _getTextFormField() {
     return TextFormField(
         decoration: InputDecoration(labelText: label),
         initialValue: initialValue,
         onSaved: (String value) {
           this.onSaved(value);
         });
+  }
+
+  DateTimePickerFormField _getDateFormField() {
+    return DateTimePickerFormField(
+      format: DateFormat.yMd(),
+      decoration: InputDecoration(labelText: label),
+      dateOnly: true,
+      onSaved: (DateTime value) {
+        DateFormat formatter = DateFormat.yMd();
+        String v = formatter.format(value);
+        this.onSaved(v);
+      },
+      initialValue: _formatInitialDateTime(),
+    );
+  }
+
+  TextFormField _getIntegerFormField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: label),
+      initialValue: initialValue == null ? "0" : initialValue.toString(),
+      onSaved: (String value) {
+        this.onSaved(int.parse(value));
+      },
+      keyboardType:
+          TextInputType.numberWithOptions(signed: false, decimal: false),
+    );
   }
 
   DateTime _formatInitialDateTime() {
