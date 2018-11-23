@@ -13,10 +13,11 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(widgetTest.find.byType(FloatingActionButton), widgetTest.findsOneWidget);
+    expect(widgetTest.find.byType(FloatingActionButton),
+        widgetTest.findsOneWidget);
   });
 
-    widgetTest.testWidgets("Fab works with a title",
+  widgetTest.testWidgets("Fab works with a title",
       (widgetTest.WidgetTester tester) async {
     DocumentList dl = DocumentList("FAB Test");
     await tester.pumpWidget(
@@ -25,7 +26,6 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(widgetTest.find.byType(FloatingActionButton), widgetTest.findsOneWidget);
+    expect(widgetTest.find.text("Fab Title"), widgetTest.findsOneWidget);
   });
-
 }

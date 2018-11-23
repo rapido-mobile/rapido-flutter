@@ -27,9 +27,9 @@ The rapido widgets infer what kind data is in each field based on the field name
 You can replace any widget with your own widget, or you can use built in customization hooks to quickly create your own look and feel.
 
 # Rapido Online
- * package
- * github
- * youtube channel
+ * [Get Rapido](https://pub.dartlang.org/packages/rapido)
+ * [Our Github Repo](https://github.com/rapido-mobile/rapido-flutter)
+ * We have some intro videos on our [Youtube Channel](https://www.youtube.com/channel/UCeoRpyhpNJmiMuAEJ4WRljg)
 
 # A Closer Look
 ## Overview of Using DocumentList
