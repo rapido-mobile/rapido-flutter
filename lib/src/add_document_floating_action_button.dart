@@ -6,20 +6,40 @@ import 'package:rapido/document_list.dart';
 class AddDocumentFloatingActionButton extends StatelessWidget {
   /// The DocumentList on which the button and forms that it invokes act.
   final DocumentList documentList;
-  AddDocumentFloatingActionButton(this.documentList);
+
+  /// Optional string to describe the add action.
+  /// If supplied, the fab will use an extended fab, with the label.
+  final String addActionLabel;
+
+  AddDocumentFloatingActionButton(this.documentList, {this.addActionLabel});
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: Icon(Icons.add),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) {
-            return DocumentForm(documentList);
-          }),
-        );
-      },
-    );
+    if (addActionLabel == null) {
+      return FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) {
+              return DocumentForm(documentList);
+            }),
+          );
+        },
+      );
+    } else {
+      return FloatingActionButton.extended(
+        icon: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) {
+              return DocumentForm(documentList);
+            }),
+          );
+        },
+        label: Text(addActionLabel),
+      );
+    }
   }
 }

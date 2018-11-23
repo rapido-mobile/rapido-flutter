@@ -42,7 +42,13 @@ class DocumentListScaffold extends StatefulWidget {
   /// DocumentList.length == 0)
   final Widget emptyListWidget;
 
+  /// Title to display on the scaffold. If not supplied, DocumentListScaffold
+  /// will simply use the documentType property of the DocumentList.
   final String title;
+
+  /// Optional string to pass to pass to the AddDocumentFloatingActionButton.
+  /// If supplied, the fab will use an extended fab, with the label.
+  final String addActionLabel;
 
   DocumentListScaffold(this.documentList,
       {this.title,
@@ -51,7 +57,8 @@ class DocumentListScaffold extends StatefulWidget {
       this.subtitleKey,
       this.decoration,
       this.customItemBuilder,
-      this.emptyListWidget});
+      this.emptyListWidget,
+      this.addActionLabel});
 
   _DocumentListScaffoldState createState() => _DocumentListScaffoldState();
 }
@@ -77,8 +84,10 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
         ),
         decoration: widget.decoration,
       ),
-      floatingActionButton:
-          AddDocumentFloatingActionButton(widget.documentList),
+      floatingActionButton: AddDocumentFloatingActionButton(
+        widget.documentList,
+        addActionLabel: widget.addActionLabel,
+      ),
     );
   }
 }
