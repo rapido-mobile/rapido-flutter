@@ -28,5 +28,6 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(widgetTest.find.text("ABCD"), widgetTest.findsOneWidget);
+    expect(widgetTest.find.text("No Title"), widgetTest.findsNothing);
   });
 }
