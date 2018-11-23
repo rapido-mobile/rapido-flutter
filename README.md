@@ -22,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
 ```
 
 The rapido widgets infer what kind data is in each field based on the field name. You get all of the functionality with no additional coding:
-[add button, forms, listview, edit and delete, sorting](https://rapido-mobile.github.io/assets/UI.png)
+![add button, forms, listview, edit and delete, sorting](https://rapido-mobile.github.io/assets/UI.png)
 
 You can replace any widget with your own widget, or you can use built in customization hooks to quickly create your own look and feel.
 
