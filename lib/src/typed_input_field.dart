@@ -8,8 +8,20 @@ import 'package:intl/intl.dart';
 /// Field name ends in | inferred type
 /// ends in "count" -> integer
 /// ends in "date" -> date
+/// ends in "datetime" -> date and time
 /// All other fields return strings.
 class TypedInputField extends StatelessWidget {
+  /// Optional Custom format string for reading, writing, and
+  /// display DateTime objects which include both date and time
+  final String dateTimeFormat;
+
+  /// Optional Custom format string for reading, writing, and
+  /// display DateTime objects which include only a date
+  final String dateFormat;
+
+  final String _defaultDateTimeFormat = "EEE, MMM d, y H:mm:s";
+  final String _derfaultDateFormat = "yMd";
+
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
 
@@ -24,34 +36,31 @@ class TypedInputField extends StatelessWidget {
   final dynamic initialValue;
 
   TypedInputField(this.fieldName,
-      {@required this.label, @required this.onSaved, this.initialValue});
+      {@required this.label,
+      @required this.onSaved,
+      this.initialValue,
+      this.dateTimeFormat,
+      this.dateFormat});
 
   @override
   Widget build(BuildContext context) {
     if (fieldName.toLowerCase().endsWith("count")) {
-      return TextFormField(
-        decoration: InputDecoration(labelText: label),
-        initialValue: initialValue == null ? "0" : initialValue.toString(),
-        onSaved: (String value) {
-          this.onSaved(int.parse(value));
-        },
-        keyboardType:
-            TextInputType.numberWithOptions(signed: false, decimal: false),
-      );
+      return _getIntegerFormField();
+    }
+    if (fieldName.toLowerCase().endsWith("datetime")) {
+      String f =
+          dateTimeFormat == null ? _defaultDateTimeFormat : dateTimeFormat;
+      return _getDateTimeFormField(f, false, context);
     }
     if (fieldName.toLowerCase().endsWith("date")) {
-      return DateTimePickerFormField(
-        format: DateFormat.yMd(),
-        decoration: InputDecoration(labelText: label),
-        dateOnly: true,
-        onSaved: (DateTime value) {
-          DateFormat formatter = DateFormat.yMd();
-          String v = formatter.format(value);
-          this.onSaved(v);
-        },
-        initialValue: _formatInitialDateTime(),
-      );
+      String f = dateFormat == null ? _derfaultDateFormat : dateFormat;
+      return _getDateTimeFormField(f, true, context);
     }
+
+    return _getTextFormField();
+  }
+
+  TextFormField _getTextFormField() {
     return TextFormField(
         decoration: InputDecoration(labelText: label),
         initialValue: initialValue,
@@ -60,12 +69,39 @@ class TypedInputField extends StatelessWidget {
         });
   }
 
-  DateTime _formatInitialDateTime() {
+  DateTimePickerFormField _getDateTimeFormField(
+      formatString, dateOnly, BuildContext context) {
+    DateFormat format = DateFormat(formatString);
+    return DateTimePickerFormField(
+      format: format,
+      decoration: InputDecoration(labelText: label),
+      dateOnly: dateOnly,
+      onSaved: (DateTime value) {
+        String v = format.format(value);
+        this.onSaved(v);
+      },
+      initialValue: _formatInitialDateTime(format),
+    );
+  }
+
+  DateTime _formatInitialDateTime(DateFormat format) {
     if (initialValue == null) {
       return DateTime.now();
     } else {
-      DateTime dt = DateFormat.yMd().parse(initialValue);
+      DateTime dt = format.parse(initialValue);
       return dt;
     }
+  }
+
+  TextFormField _getIntegerFormField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: label),
+      initialValue: initialValue == null ? "0" : initialValue.toString(),
+      onSaved: (String value) {
+        this.onSaved(int.parse(value));
+      },
+      keyboardType:
+          TextInputType.numberWithOptions(signed: false, decimal: false),
+    );
   }
 }
