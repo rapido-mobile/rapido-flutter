@@ -1,3 +1,6 @@
+## [0.0.9] - 2018-11-24
+ * Added datetime field support in TypedInputField. Requires that the string be in a specific format ("EEE, MMM d, y H:mm:s"). This can be overridden by passing in a custom dateTimeFormat string when creating the TypedInputField. Date field now supports custom date formats as well. More work is required to enhance the usability of this part of the API, but the current API is 
+
 ## [0.0.8] - 2018-11-23
  * Updated README with a more clear explanation of the project
  * Add the ability to include a label with the add document fab
