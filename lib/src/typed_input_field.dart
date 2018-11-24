@@ -19,8 +19,8 @@ class TypedInputField extends StatelessWidget {
   /// display DateTime objects which include only a date
   final String dateFormat;
 
-  final String _defaultDateTimeFormat = "EEE, MMM d, y H:mm:s";
-  final String _derfaultDateFormat = "yMd";
+  final String _dateTimeFormat = "EEE, MMM d, y H:mm:s";
+  final String _dateFormat = "yMd";
 
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
@@ -49,11 +49,11 @@ class TypedInputField extends StatelessWidget {
     }
     if (fieldName.toLowerCase().endsWith("datetime")) {
       String f =
-          dateTimeFormat == null ? _defaultDateTimeFormat : dateTimeFormat;
+          dateTimeFormat == null ? _dateTimeFormat : dateTimeFormat;
       return _getDateTimeFormField(f, false, context);
     }
     if (fieldName.toLowerCase().endsWith("date")) {
-      String f = dateFormat == null ? _derfaultDateFormat : dateFormat;
+      String f = dateFormat == null ? _dateFormat : dateFormat;
       return _getDateTimeFormField(f, true, context);
     }
 
