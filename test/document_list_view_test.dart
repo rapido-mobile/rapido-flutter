@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart' as widgetTest;
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:rapido/document_list.dart';
+import 'package:rapido/documents.dart';
 import "package:test/test.dart";
 
 void main() {
@@ -11,9 +11,9 @@ void main() {
     DocumentList testModel = DocumentList("testDocumentType");
     for (int i = 0; i < 10; i++) {
       if (i == 1) {
-        testModel.add({"field B": "${i.toString()}", "field C": "subtitle"});
+        testModel.add(Document({"field B": "${i.toString()}", "field C": "subtitle"}));
       } else {
-        testModel.add({"field B": "${i.toString()}"});
+        testModel.add(Document({"field B": "${i.toString()}"}));
       }
     }
     await tester.pumpWidget(
@@ -38,9 +38,9 @@ void main() {
     DocumentList dl = DocumentList("noTitleKeys");
     for (int i = 0; i < 10; i++) {
       if (i == 1) {
-        dl.add({"field B": "${i.toString()}", "field C": "subtitle"});
+        dl.add(Document({"field B": "${i.toString()}", "field C": "subtitle"}));
       } else {
-        dl.add({"field B": "${i.toString()}"});
+        dl.add(Document({"field B": "${i.toString()}"}));
       }
     }
 
@@ -60,8 +60,8 @@ void main() {
   widgetTest.testWidgets('test DocumentList.sort',
       (widgetTest.WidgetTester tester) async {
     DocumentList dl = DocumentList("sortListTest");
-    dl.add({"a": 2});
-    dl.add({"a": 1});
+    dl.add(Document({"a": 2}));
+    dl.add(Document({"a": 1}));
     dl.sort((a, b) => a["a"] - b["a"]);
 
     await tester.pumpWidget(

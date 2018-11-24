@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapido/document_list.dart';
+import 'package:rapido/documents.dart';
 
 /// A dynamically generate form that allows creating new documents or
 /// editing existing documents in a DocumentList. Specifying an index
@@ -21,7 +21,7 @@ class DocumentForm extends StatefulWidget {
 
 class _DocumentFormState extends State<DocumentForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> newData = {};
+  final Document newData = Document();
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapido/document_list.dart';
+import 'package:rapido/documents.dart';
 
 /// A ListView that automatically displays the contents of a DocumentList.
 /// By default it includes an action button that allows deletion and

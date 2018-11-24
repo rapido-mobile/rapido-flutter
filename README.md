@@ -42,7 +42,7 @@ DocumentList lies at the core of the R.A.D. experience. By simply using a list, 
 Everything you need is in document_list.dart:
 
 ```
-import 'package:rapido/document_list.dart';
+import 'package:rapido/documents.dart';
 ```
 
 This import includes DocumentList itself, and all of the UI elements that work on it.
