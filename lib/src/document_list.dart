@@ -33,9 +33,11 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   }
 
   int get length => _documents.length;
+
   Map<String, dynamic> operator [](int index) => _documents[index];
+
   void operator []=(int index, Map<String, dynamic> value) {
-    _updateDocment(index, value);
+    _updateDocument(index, value);
   }
 
   /// The documentType parameter should be unique.
@@ -76,7 +78,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     }
   }
 
-  void _updateDocment(int index, Map<String, dynamic> map) {
+  void _updateDocument(int index, Map<String, dynamic> map) {
     map.keys.forEach((String key) {
       _documents[index][key] = map[key];
     });
