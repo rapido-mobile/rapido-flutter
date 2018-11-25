@@ -48,8 +48,7 @@ class TypedInputField extends StatelessWidget {
       return _getIntegerFormField();
     }
     if (fieldName.toLowerCase().endsWith("datetime")) {
-      String f =
-          dateTimeFormat == null ? _dateTimeFormat : dateTimeFormat;
+      String f = dateTimeFormat == null ? _dateTimeFormat : dateTimeFormat;
       return _getDateTimeFormField(f, false, context);
     }
     if (fieldName.toLowerCase().endsWith("date")) {

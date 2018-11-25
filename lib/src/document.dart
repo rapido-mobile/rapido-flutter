@@ -13,12 +13,12 @@ class Document extends MapBase<String, dynamic> {
   /// The Documents type, typically used to organize documents
   /// typically used to organize documents, for example in a DocumentList
   String get documentType => _map["_docType"];
-  set documentType (String v) => _map["docType"] = v;
+  set documentType(String v) => _map["docType"] = v;
 
   /// The documents unique id. Typically used to manage persistence,
   /// such as in Document.save()
-  String get id =>  _map["_id"];
-  set id (String v) => _map["_id"] = v;
+  String get id => _map["_id"];
+  set id(String v) => _map["_id"] = v;
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
@@ -30,7 +30,7 @@ class Document extends MapBase<String, dynamic> {
       });
     }
     // if there is no id yet, create one
-    if(_map["_id"] == null){
+    if (_map["_id"] == null) {
       _map["_id"] = randomFileSafeId(24);
     }
   }
@@ -72,15 +72,14 @@ class Document extends MapBase<String, dynamic> {
     return path;
   }
 
-    void loadFromFilePath(FileSystemEntity f) {
-        String j = new File(f.path).readAsStringSync();
+  void loadFromFilePath(FileSystemEntity f) {
+    String j = new File(f.path).readAsStringSync();
     if (j.length != 0) {
       Map newData = json.decode(j);
-      newData.keys.forEach((dynamic key){
+      newData.keys.forEach((dynamic key) {
         _map[key] = newData[key];
       });
       _map["_id"] = newData["_id"];
-
     } else {
       //TODO: Debug this
       // This only seems to occur during testing, and
@@ -91,7 +90,7 @@ class Document extends MapBase<String, dynamic> {
     }
   }
 
-    static String randomFileSafeId(int length) {
+  static String randomFileSafeId(int length) {
     var rand = new Random();
     var codeUnits = new List.generate(length, (index) {
       List<int> illegalChars = [34, 39, 44, 96];

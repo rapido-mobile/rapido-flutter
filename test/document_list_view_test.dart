@@ -11,7 +11,8 @@ void main() {
     DocumentList testModel = DocumentList("testDocumentType");
     for (int i = 0; i < 10; i++) {
       if (i == 1) {
-        testModel.add(Document({"field B": "${i.toString()}", "field C": "subtitle"}));
+        testModel.add(
+            Document({"field B": "${i.toString()}", "field C": "subtitle"}));
       } else {
         testModel.add(Document({"field B": "${i.toString()}"}));
       }
