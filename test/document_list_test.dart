@@ -1,15 +1,19 @@
 import 'package:test/test.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:rapido/document_list.dart';
+import 'package:rapido/documents.dart';
 
 void main() {
   test('creates a PersistedModel', () {
     DocumentList persistedModel = DocumentList("testDocumentType");
+    persistedModel.add(Document({
+      "count": 0,
+      "rating": 5,
+      "price": 1.5,
+      "name": "Pickle Rick"
+    }));
     persistedModel
-        .add({"count": 0, "rating": 5, "price": 1.5, "name": "Pickle Rick"});
-    persistedModel
-        .add({"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"});
+        .add(Document({"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"}));
     expect(persistedModel.length, 2);
   });
   test('reads existing PersistedModel from disk', () {
@@ -29,7 +33,7 @@ void main() {
     list.onChanged = (DocumentList l) {
       expect(l.length, 1);
     };
-    list.add({"a": 1});
+    list.add(Document({"a": 1}));
   });
   test('tests that any() works', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
@@ -51,15 +55,15 @@ void main() {
   test('set labels', () {
     DocumentList list = DocumentList("onchange");
     list.labels = {"A": "a"};
-    list.add({"a": 1});
+    list.add(Document({"a": 1}));
     expect(list.labels.length, 1);
     expect(list.labels.containsKey("A"), true);
   });
   test('sort()', () {
     DocumentList list = DocumentList("sortTest");
-    list.add({"a": 3});
-    list.add({"a": 2});
-    list.add({"a": 1});
+    list.add(Document({"a": 3}));
+    list.add(Document({"a": 2}));
+    list.add(Document({"a": 1}));
     list.sort((a, b) => a["a"] - b["a"]);
     expect(list[0]["a"], 1);
     expect(list[1]["a"], 2);
@@ -67,20 +71,20 @@ void main() {
   });
 
   test('test maps get updated and timestamp is changed', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      Map<String, dynamic> updatedMap = {
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList documentList) {
+      Document updatedDoc = Document({
         "count": 1,
         "rating": 1,
         "price": 2.5,
         "name": "Edited Name"
-      };
-      int oldTimeStamp = model[0]["_time_stamp"];
-      model[0] = updatedMap;
-      expect(model[0]["count"], 1);
-      expect(model[0]["rating"], 1);
-      expect(model[0]["price"], 2.5);
-      expect(model[0]["name"], "Edited Name");
-      expect(model[0]["_time_stamp"], greaterThan(oldTimeStamp));
+      });
+      int oldTimeStamp = documentList[0]["_time_stamp"];
+      documentList[0] = updatedDoc;
+      expect(documentList[0]["count"], 1);
+      expect(documentList[0]["rating"], 1);
+      expect(documentList[0]["price"], 2.5);
+      expect(documentList[0]["name"], "Edited Name");
+      expect(documentList[0]["_time_stamp"], greaterThan(oldTimeStamp));
     });
   });
 
@@ -88,11 +92,11 @@ void main() {
     sleep(Duration(seconds: 1));
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       bool testMapFound = false;
-      model.forEach((Map<String, dynamic> map) {
-        if (map["name"] == "Edited Name") {
-          expect(map["count"], 1);
-          expect(map["rating"], 1);
-          expect(map["price"], 2.5);
+      model.forEach((Document doc) {
+        if (doc["name"] == "Edited Name") {
+          expect(doc["count"], 1);
+          expect(doc["rating"], 1);
+          expect(doc["price"], 2.5);
           testMapFound = true;
         }
       });
@@ -100,7 +104,7 @@ void main() {
     });
   });
 
-  test('deletes maps from the model', () {
+  test('deletes documents from the list', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       model.removeAt(0);
       DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
@@ -122,7 +126,7 @@ void main() {
   test('removeAt() and first', () {
     DocumentList list = DocumentList("removeAtTeest");
     for (int i = 0; i < 10; i++) {
-      list.add({"a": i});
+      list.add(Document({"a": i}));
     }
     list.removeAt(0);
     expect(list.first["a"], 1);
@@ -136,7 +140,7 @@ void main() {
 
   test('infer ui labels', () {
     DocumentList model = DocumentList("abc");
-    model.add({"a": "A", "b": "B", "c": "C"});
+    model.add(Document({"a": "A", "b": "B", "c": "C"}));
     expect(model.labels["a"], "a");
     expect(model.labels["b"], "b");
     expect(model.labels["c"], "c");
@@ -149,9 +153,9 @@ void main() {
   });
 
   test('addAll', () {
-    List<Map<String, dynamic>> all = [
-      {"a": 1},
-      {"a": 2}
+    List<Document> all = [
+      Document({"a": 1}),
+      Document({"a": 2})
     ];
     DocumentList dl = DocumentList("addAllTest");
     dl.addAll(all);
@@ -179,7 +183,7 @@ void main() {
 
   test('remove object', () {
     DocumentList list = DocumentList("removeTest");
-    Map<String, dynamic> testObj = {"a": 1};
+    Document testObj = Document({"a": 1});
     list.add(testObj);
     expect(list.length, 1);
     expect(list.remove(testObj), true);
@@ -201,7 +205,7 @@ void main() {
       "jklm",
     ];
     for (int i = 0; i < 10; i++) {
-      list.add({"a": i, "b": strings[i]});
+      list.add(Document({"a": i, "b": strings[i]}));
     }
     list.sortByField("a", sortOrder: SortOrder.descending);
     expect(list[0]["a"], 9);

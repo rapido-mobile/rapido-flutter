@@ -6,13 +6,13 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'package:rapido/documents.dart';
 
-/// A list documents, where a document is any map in the form of
-/// Map<String, dynamic>. DocumentList automatically persists changes
+/// A list Documents. DocumentList automatically persists changes
 /// to the list through, adding, removing, and updating documents that it
 /// contains. The document_widgets library can render useful UI elements
 /// for a DocumentList.
-class DocumentList extends ListBase<Map<String, dynamic>> {
+class DocumentList extends ListBase<Document> {
   /// A unique string identifying the documents organized by the list.
   final String documentType;
 
@@ -21,7 +21,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   /// onChanged: (DocumentList documentList) {/* do something */}
   Function onLoadComplete;
   Map<String, String> _labels;
-  List<Map<String, dynamic>> _documents;
+  List<Document> _documents;
 
   /// A callback function that is called for any changes in the DocumentList,
   /// such as adding, removing, or updating documents. It passes a reference
@@ -34,9 +34,9 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
 
   int get length => _documents.length;
 
-  Map<String, dynamic> operator [](int index) => _documents[index];
+  Document operator [](int index) => _documents[index];
 
-  void operator []=(int index, Map<String, dynamic> value) {
+  void operator []=(int index, Document value) {
     _updateDocument(index, value);
   }
 
@@ -60,9 +60,9 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
       if (_documents.length < 1) {
         return null;
       }
-      Map<String, dynamic> map = _documents[0];
+      Document doc = _documents[0];
       Map<String, String> tempLabels = Map<String, String>();
-      map.keys.forEach((String k) {
+      doc.keys.forEach((String k) {
         if (!k.startsWith("_")) {
           tempLabels[k] = k;
         }
@@ -78,9 +78,9 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     }
   }
 
-  void _updateDocument(int index, Map<String, dynamic> map) {
-    map.keys.forEach((String key) {
-      _documents[index][key] = map[key];
+  void _updateDocument(int index, Document doc) {
+    doc.keys.forEach((String key) {
+      _documents[index][key] = doc[key];
     });
     _documents[index]["_time_stamp"] =
         new DateTime.now().millisecondsSinceEpoch.toInt();
@@ -90,19 +90,19 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   }
 
   @override
-  void add(Map<String, dynamic> map) {
-    map["_docType"] = documentType;
-    map["_id"] = randomFileSafeId(24);
-    map["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
-    _documents.add(map);
-    _writeMapLocal(map);
+  void add(Document doc) {
+    doc["_docType"] = documentType;
+    doc["_id"] = randomFileSafeId(24);
+    doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+    _documents.add(doc);
+    _writeMapLocal(doc);
     _notifyListener();
   }
 
   @override
-  addAll(Iterable<Map<String, dynamic>> list) {
-    list.forEach((Map<String, dynamic> map) {
-      add(map);
+  addAll(Iterable<Document> list) {
+    list.forEach((Document doc) {
+      add(doc);
     });
   }
 
@@ -120,14 +120,14 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
 
   @override
   clear() {
-    _documents.forEach((Map<String, dynamic> map) {
-      _deleteMapLocal(map["_id"]);
+    _documents.forEach((Document doc) {
+      _deleteMapLocal(doc["_id"]);
     });
     super.clear();
   }
 
   @override
-  Map<String, dynamic> removeAt(int index) {
+  Document removeAt(int index) {
     Map<String, dynamic> map = this[index];
     _deleteMapLocal(_documents[index]["_id"]);
     _documents.removeAt(index);
@@ -136,7 +136,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
   }
 
   @override
-  void sort([int compare(Map<String, dynamic> a, Map<String, dynamic> b)]) {
+  void sort([int compare(Document a, Document b)]) {
     _documents.sort(compare);
     _notifyListener();
   }
@@ -177,10 +177,10 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
     file.delete();
   }
 
-  Future<File> _writeMapLocal(Map<String, dynamic> map) async {
-    final file = await _localFile(map["_id"]);
+  Future<File> _writeMapLocal(Document doc) async {
+    final file = await _localFile(doc["_id"]);
     // Write the file
-    String mapString = json.encode(map);
+    String mapString = json.encode(doc);
     return file.writeAsString('$mapString');
   }
 
@@ -197,7 +197,7 @@ class DocumentList extends ListBase<Map<String, dynamic>> {
             //necessary to only add the document when it is of the
             //desired documentType
             if (newData["_docType"].toString() == documentType) {
-              _documents.add(newData);
+              _documents.add(Document(newData));
             }
           } else {
             //TODO: Debug this

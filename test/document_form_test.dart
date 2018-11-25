@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart' as widgetTest;
 import 'package:flutter/material.dart';
-import 'package:rapido/document_list.dart';
+import 'package:rapido/documents.dart';
 import "package:test/test.dart";
 
 void main() {
@@ -10,8 +10,11 @@ void main() {
   widgetTest.testWidgets("Datetime and date display",
       (widgetTest.WidgetTester tester) async {
     DocumentList testList = DocumentList("formTest");
+    Document doc = Document();
+    doc["datetime"] = dateTimeString;
+    doc["date"] = dateString;
     testList.addAll([
-      {"datetime": dateTimeString, "date": dateString}
+      doc
     ]);
     await tester.pumpWidget(
       MaterialApp(

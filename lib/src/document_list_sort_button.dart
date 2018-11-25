@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapido/document_list.dart';
+import 'package:rapido/documents.dart';
 
 /// A button that adds sorting to a DocumentList. Useful for adding
 /// sorting functionality to a DocumentListView.
