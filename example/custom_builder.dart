@@ -43,34 +43,34 @@ class _MyHomePageState extends State<MyHomePage> {
       docs,
       title: "Tasks",
       
-      // don't use default ListTiles by supplying a custom
-      //builder
+      // supply a custom builder instead of using the 
+      // default ListTiles in the DocumentListView
       customItemBuilder: customItemBuilder,
     );
   }
 
   // helper function to supply the color
-  Color _calculateColor(index) {
-    final int pri = docs[index]["pri count"];
+  Color _calculateColor(Document doc) {
+    final int pri = doc["pri count"];
     if(pri < 3){return Colors.red;}
     else if(pri < 7){return Colors.yellow;}
     return Colors.green;
   }
 
   // Custom builder creates a cart from the DocumentList
-  Widget customItemBuilder(int index) {
+  Widget customItemBuilder(int index, Document doc, BuildContext context) {
     return Card(
-      color: _calculateColor(index),
+      color: _calculateColor(doc),
       child: Column(children: [
         Center(
           child: Text(
-            docs[index]["task"],
+            doc["task"],
             style: Theme.of(context).textTheme.display1,
           ),
         ),
         Center(
           child: Text(
-            docs[index]["note"].toString(),
+            doc["note"].toString(),
             style: Theme.of(context).textTheme.headline,
           ),
         ),
@@ -78,11 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              docs[index]["date"].toString(),
+              doc["date"].toString(),
               style: Theme.of(context).textTheme.title,
             ),
             Text(
-              docs[index]["pri count"].toString(),
+              doc["pri count"].toString(),
               style: Theme.of(context).textTheme.title,
             ),
 
