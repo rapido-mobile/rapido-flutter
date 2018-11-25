@@ -36,9 +36,10 @@ class Document extends MapBase<String, dynamic> {
   }
 
   dynamic operator [](Object fieldName) => _map[fieldName];
+
   void operator []=(String fieldName, dynamic value) {
     _map[fieldName] = value;
-   // _writeLocal();
+    save();
   }
 
   void clear() {

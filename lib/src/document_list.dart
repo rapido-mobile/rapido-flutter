@@ -85,8 +85,6 @@ class DocumentList extends ListBase<Document> {
     }
   }
 
- 
-
   @override
   void add(Document doc) {
     doc["_docType"] = documentType;
