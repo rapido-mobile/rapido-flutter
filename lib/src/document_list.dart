@@ -37,7 +37,15 @@ class DocumentList extends ListBase<Document> {
   Document operator [](int index) => _documents[index];
 
   void operator []=(int index, Document value) {
-    _updateDocument(index, value);
+    Document oldDoc = _documents[index];
+    _documents[index] = value;
+    _documents[index]["_time_stamp"] =
+        new DateTime.now().millisecondsSinceEpoch.toInt();
+    _documents[index]["_docType"] = documentType;
+
+    _documents[index].save();
+    _deleteMapLocal(oldDoc["_id"]);
+    _notifyListener();
   }
 
   /// The documentType parameter should be unique.
@@ -78,24 +86,15 @@ class DocumentList extends ListBase<Document> {
     }
   }
 
-  void _updateDocument(int index, Document doc) {
-    doc.keys.forEach((String key) {
-      _documents[index][key] = doc[key];
-    });
-    _documents[index]["_time_stamp"] =
-        new DateTime.now().millisecondsSinceEpoch.toInt();
-
-    _writeMapLocal(_documents[index]);
-    _notifyListener();
-  }
+ 
 
   @override
   void add(Document doc) {
     doc["_docType"] = documentType;
-    doc["_id"] = randomFileSafeId(24);
+    //doc["_id"] = randomFileSafeId(24);
     doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
     _documents.add(doc);
-    _writeMapLocal(doc);
+    doc.save();
     _notifyListener();
   }
 
@@ -177,12 +176,6 @@ class DocumentList extends ListBase<Document> {
     file.delete();
   }
 
-  Future<File> _writeMapLocal(Document doc) async {
-    final file = await _localFile(doc["_id"]);
-    // Write the file
-    String mapString = json.encode(doc);
-    return file.writeAsString('$mapString');
-  }
 
   void _loadLocalData() async {
     getApplicationDocumentsDirectory().then((Directory appDir) {
@@ -205,7 +198,7 @@ class DocumentList extends ListBase<Document> {
             // seems to be a race condition I have not tracked down
             // and it's not clear why the _loadLocalData function is
             // even called
-            print("Warning: ${f.path} file was empty.");
+            // print("Warning: ${f.path} file was empty.");
           }
         }
       });
