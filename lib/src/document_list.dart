@@ -4,7 +4,6 @@ import 'dart:collection';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'dart:math';
 import 'package:rapido/documents.dart';
 
@@ -37,7 +36,15 @@ class DocumentList extends ListBase<Document> {
   Document operator [](int index) => _documents[index];
 
   void operator []=(int index, Document value) {
-    _updateDocument(index, value);
+    Document oldDoc = _documents[index];
+    _documents[index] = value;
+    _documents[index]["_time_stamp"] =
+        new DateTime.now().millisecondsSinceEpoch.toInt();
+    _documents[index]["_docType"] = documentType;
+
+    _documents[index].save();
+    _deleteMapLocal(oldDoc["_id"]);
+    _notifyListener();
   }
 
   /// The documentType parameter should be unique.
@@ -78,24 +85,13 @@ class DocumentList extends ListBase<Document> {
     }
   }
 
-  void _updateDocument(int index, Document doc) {
-    doc.keys.forEach((String key) {
-      _documents[index][key] = doc[key];
-    });
-    _documents[index]["_time_stamp"] =
-        new DateTime.now().millisecondsSinceEpoch.toInt();
-
-    _writeMapLocal(_documents[index]);
-    _notifyListener();
-  }
-
   @override
   void add(Document doc) {
     doc["_docType"] = documentType;
-    doc["_id"] = randomFileSafeId(24);
+    //doc["_id"] = randomFileSafeId(24);
     doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
     _documents.add(doc);
-    _writeMapLocal(doc);
+    doc.save();
     _notifyListener();
   }
 
@@ -128,11 +124,11 @@ class DocumentList extends ListBase<Document> {
 
   @override
   Document removeAt(int index) {
-    Map<String, dynamic> map = this[index];
+    Document doc = _documents[index];
     _deleteMapLocal(_documents[index]["_id"]);
     _documents.removeAt(index);
     _notifyListener();
-    return map;
+    return doc;
   }
 
   @override
@@ -177,12 +173,6 @@ class DocumentList extends ListBase<Document> {
     file.delete();
   }
 
-  Future<File> _writeMapLocal(Document doc) async {
-    final file = await _localFile(doc["_id"]);
-    // Write the file
-    String mapString = json.encode(doc);
-    return file.writeAsString('$mapString');
-  }
 
   void _loadLocalData() async {
     getApplicationDocumentsDirectory().then((Directory appDir) {
@@ -190,22 +180,10 @@ class DocumentList extends ListBase<Document> {
           .listSync(recursive: true, followLinks: true)
           .forEach((FileSystemEntity f) {
         if (f.path.endsWith('.json')) {
-          String j = new File(f.path).readAsStringSync();
-          if (j.length != 0) {
-            Map newData = json.decode(j);
-            //because we iterate through every file, this is
-            //necessary to only add the document when it is of the
-            //desired documentType
-            if (newData["_docType"].toString() == documentType) {
-              _documents.add(Document(newData));
-            }
-          } else {
-            //TODO: Debug this
-            // This only seems to occur during testing, and
-            // seems to be a race condition I have not tracked down
-            // and it's not clear why the _loadLocalData function is
-            // even called
-            print("Warning: ${f.path} file was empty.");
+          Document loadedDoc = Document();
+          loadedDoc.loadFromFilePath(f);
+          if(loadedDoc["_docType"] == documentType) {
+            _documents.add(loadedDoc);
           }
         }
       });
@@ -213,6 +191,8 @@ class DocumentList extends ListBase<Document> {
       _notifyListener();
     });
   }
+
+
 
   Future<File> _localFile(String id) async {
     final path = await _localPath;

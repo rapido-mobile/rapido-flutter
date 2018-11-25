@@ -39,7 +39,7 @@ DocumentList lies at the core of the R.A.D. experience. By simply using a list, 
 2. Default CRUD UI that your users can use for displaying, creating, editing, and deleting documents in the list.
 
 ## Importing
-Everything you need is in document_list.dart:
+Everything you need is in documents.dart:
 
 ```
 import 'package:rapido/documents.dart';

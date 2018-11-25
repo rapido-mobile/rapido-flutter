@@ -4,17 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:rapido/documents.dart';
 
 void main() {
-  test('creates a PersistedModel', () {
-    DocumentList persistedModel = DocumentList("testDocumentType");
-    persistedModel.add(Document({
-      "count": 0,
-      "rating": 5,
-      "price": 1.5,
-      "name": "Pickle Rick"
-    }));
-    persistedModel
-        .add(Document({"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"}));
-    expect(persistedModel.length, 2);
+  test('creates a DocumentList', () {
+    DocumentList documentList = DocumentList("testDocumentType");
+    documentList.add(Document(
+        {"count": 0, "rating": 5, "price": 1.5, "name": "Pickle Rick"}));
+    documentList.add(Document(
+        {"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"}));
+    expect(documentList.length, 2);
   });
   test('reads existing PersistedModel from disk', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
@@ -70,32 +66,30 @@ void main() {
     expect(list[2]["a"], 3);
   });
 
-  test('test maps get updated and timestamp is changed', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList documentList) {
-      Document updatedDoc = Document({
-        "count": 1,
-        "rating": 1,
-        "price": 2.5,
-        "name": "Edited Name"
-      });
+  test('test []= operator, document is completely replaced', () {
+    DocumentList("testDocumentType",
+        onLoadComplete: (DocumentList documentList) {
+      Document updatedDoc = Document(
+          {"count": 1, "price": 2.5, "name": "Edited Name"});
       int oldTimeStamp = documentList[0]["_time_stamp"];
+      String oldId = documentList[0]["_id"];
       documentList[0] = updatedDoc;
       expect(documentList[0]["count"], 1);
-      expect(documentList[0]["rating"], 1);
+      expect(documentList[0]["rating"], null);
       expect(documentList[0]["price"], 2.5);
       expect(documentList[0]["name"], "Edited Name");
       expect(documentList[0]["_time_stamp"], greaterThan(oldTimeStamp));
+      expect(oldId == documentList[0]["_id"], false);
     });
   });
 
-  test('checks that updates persist on disk', () {
-    sleep(Duration(seconds: 1));
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
+  test('checks that operator []=  persist on disk', () {
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
       bool testMapFound = false;
-      model.forEach((Document doc) {
+      dl.forEach((Document doc) {
         if (doc["name"] == "Edited Name") {
           expect(doc["count"], 1);
-          expect(doc["rating"], 1);
+          expect(doc["rating"], null);
           expect(doc["price"], 2.5);
           testMapFound = true;
         }
@@ -104,11 +98,16 @@ void main() {
     });
   });
 
-  test('deletes documents from the list', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      model.removeAt(0);
-      DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-        expect(model.length, 1);
+  test('tests removeAt removes documents and returns the removed doc', () async {
+    DocumentList("testDocumentType",
+        onLoadComplete: (DocumentList documentList) {
+      Document zeroDoc = documentList[0];
+      Document removedDoc = documentList.removeAt(0);
+      expect(zeroDoc == removedDoc, true);
+      DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
+        dl.forEach((Document doc){
+          expect(doc["_id"] != zeroDoc["_id"], true);
+        });
       });
     });
   });
@@ -169,14 +168,14 @@ void main() {
   });
 
   test('clear()', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
+    DocumentList("addAllTest", onLoadComplete: (DocumentList model) async {
       model.clear();
       expect(model.length, 0);
     });
   });
 
   test('test that clear() works across persistence', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
+    DocumentList("addAllTest", onLoadComplete: (DocumentList model) async {
       expect(model.length, 0);
     });
   });
