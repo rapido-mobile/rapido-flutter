@@ -119,7 +119,6 @@ class DocumentList extends ListBase<Document> {
   @override
   clear() {
     _documents.forEach((Document doc) {
-      print(" * clear(): $doc");
       _deleteMapLocal(doc["_id"]);
     });
     super.clear();

@@ -66,28 +66,30 @@ void main() {
     expect(list[2]["a"], 3);
   });
 
-  test('test maps get updated and timestamp is changed', () {
+  test('test []= operator, document is completely replaced', () {
     DocumentList("testDocumentType",
         onLoadComplete: (DocumentList documentList) {
       Document updatedDoc = Document(
-          {"count": 1, "rating": 1, "price": 2.5, "name": "Edited Name"});
+          {"count": 1, "price": 2.5, "name": "Edited Name"});
       int oldTimeStamp = documentList[0]["_time_stamp"];
+      String oldId = documentList[0]["_id"];
       documentList[0] = updatedDoc;
       expect(documentList[0]["count"], 1);
-      expect(documentList[0]["rating"], 1);
+      expect(documentList[0]["rating"], null);
       expect(documentList[0]["price"], 2.5);
       expect(documentList[0]["name"], "Edited Name");
       expect(documentList[0]["_time_stamp"], greaterThan(oldTimeStamp));
+      expect(oldId == documentList[0]["_id"], false);
     });
   });
 
-  test('checks that updates persist on disk', () {
+  test('checks that operator []=  persist on disk', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
       bool testMapFound = false;
       dl.forEach((Document doc) {
         if (doc["name"] == "Edited Name") {
           expect(doc["count"], 1);
-          expect(doc["rating"], 1);
+          expect(doc["rating"], null);
           expect(doc["price"], 2.5);
           testMapFound = true;
         }
