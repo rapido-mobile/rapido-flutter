@@ -105,7 +105,7 @@ class _DocumentListViewState extends State<DocumentListView> {
     if (widget.customItemBuilder == null) {
       return _defaultListTile(index);
     } else {
-      return widget.customItemBuilder(index);
+      return widget.customItemBuilder(index, widget.documentList[index], context  );
     }
   }
 

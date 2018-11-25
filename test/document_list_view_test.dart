@@ -57,7 +57,7 @@ void main() {
     expect(widgetTest.find.text("1"), widgetTest.findsOneWidget);
   });
 
-  widgetTest.testWidgets('test DocumentList.sort',
+  widgetTest.testWidgets('test DocumentList.sort and cutomItemBuilder',
       (widgetTest.WidgetTester tester) async {
     DocumentList dl = DocumentList("sortListTest");
     dl.add(Document({"a": 2}));
@@ -69,9 +69,9 @@ void main() {
         home: Scaffold(
           body: DocumentListView(
             dl,
-            customItemBuilder: (int index) {
+            customItemBuilder: (int index, Document doc, BuildContext context) {
               return ListTile(
-                title: Text("${index.toString()}:${dl[index]["a"].toString()}"),
+                title: Text("${index.toString()}:${doc["a"].toString()}"),
               );
             },
           ),
