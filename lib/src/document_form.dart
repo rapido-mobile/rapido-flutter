@@ -47,7 +47,7 @@ class _DocumentFormState extends State<DocumentForm> {
     fields.add(Container(
       padding: EdgeInsets.only(left: 100.0, right: 100.0),
       child: RaisedButton(
-          child: Icon(Icons.save),
+          child: Icon(Icons.check),
           onPressed: () {
             formKey.currentState.save();
             if (widget.index == null) {
