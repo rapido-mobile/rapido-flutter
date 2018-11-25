@@ -4,7 +4,7 @@ import 'package:rapido/documents.dart';
 /// A ListView that automatically displays the contents of a DocumentList.
 /// By default it includes an action button that allows deletion and
 /// editing of each document. To replace the default ListTile,
-/// supply a customIemBuilder. The look and feel of the ListView
+/// supply a customItemBuilder. The look and feel of the ListView
 /// can be customized by providing a decoration. emptyListWidget, if supplied,
 /// will display in the case that the DocumentList is empty.
 class DocumentListView extends StatefulWidget {
