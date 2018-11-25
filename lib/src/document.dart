@@ -9,26 +9,29 @@ import 'dart:math';
 /// It is used by DocumentList amd all related UI widgets.
 class Document extends MapBase<String, dynamic> {
   Map<String, dynamic> _map = {};
-  String documentType;
-  String id;
+
+  /// The Documents type, typically used to organize documents
+  /// typically used to organize documents, for example in a DocumentList
+  String get documentType => _map["_docType"];
+  set documentType (String v) => _map["docType"] = v;
+
+  /// The documents unique id. Typically used to manage persistence,
+  /// such as in Document.save()
+  String get id =>  _map["_id"];
+  set id (String v) => _map["_id"] = v;
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
-  Document([Map<String, dynamic> initialValues, this.id]) {
+  Document([Map<String, dynamic> initialValues]) {
     // initial values if provided
     if (initialValues != null) {
       initialValues.keys.forEach((String key) {
         _map[key] = initialValues[key];
       });
-      // if an id was provided in the initial values, use that
-      if(_map["_id"] != null) {
-        id = _map["_id"];
-      }
     }
     // if there is no id yet, create one
-    if(id == null){
-      id = randomFileSafeId(24);
-      _map["_id"] = id;
+    if(_map["_id"] == null){
+      _map["_id"] = randomFileSafeId(24);
     }
   }
 
@@ -51,7 +54,7 @@ class Document extends MapBase<String, dynamic> {
   }
 
   Future<File> save() async {
-    final file = await _localFile(id);
+    final file = await _localFile(_map["_id"]);
     // Write the file
     String mapString = json.encode(_map);
     return file.writeAsString('$mapString');
@@ -66,6 +69,25 @@ class Document extends MapBase<String, dynamic> {
     final directory = await getApplicationDocumentsDirectory();
     String path = directory.path;
     return path;
+  }
+
+    void loadFromFilePath(FileSystemEntity f) {
+        String j = new File(f.path).readAsStringSync();
+    if (j.length != 0) {
+      Map newData = json.decode(j);
+      newData.keys.forEach((dynamic key){
+        _map[key] = newData[key];
+      });
+      _map["_id"] = newData["_id"];
+
+    } else {
+      //TODO: Debug this
+      // This only seems to occur during testing, and
+      // seems to be a race condition I have not tracked down
+      // and it's not clear why the _loadLocalData function is
+      // even called
+      // print("Warning: ${f.path} file was empty.");
+    }
   }
 
     static String randomFileSafeId(int length) {

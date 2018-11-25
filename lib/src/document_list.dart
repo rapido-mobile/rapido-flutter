@@ -4,7 +4,6 @@ import 'dart:collection';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'dart:math';
 import 'package:rapido/documents.dart';
 
@@ -120,6 +119,7 @@ class DocumentList extends ListBase<Document> {
   @override
   clear() {
     _documents.forEach((Document doc) {
+      print(" * clear(): $doc");
       _deleteMapLocal(doc["_id"]);
     });
     super.clear();
@@ -183,22 +183,10 @@ class DocumentList extends ListBase<Document> {
           .listSync(recursive: true, followLinks: true)
           .forEach((FileSystemEntity f) {
         if (f.path.endsWith('.json')) {
-          String j = new File(f.path).readAsStringSync();
-          if (j.length != 0) {
-            Map newData = json.decode(j);
-            //because we iterate through every file, this is
-            //necessary to only add the document when it is of the
-            //desired documentType
-            if (newData["_docType"].toString() == documentType) {
-              _documents.add(Document(newData));
-            }
-          } else {
-            //TODO: Debug this
-            // This only seems to occur during testing, and
-            // seems to be a race condition I have not tracked down
-            // and it's not clear why the _loadLocalData function is
-            // even called
-            // print("Warning: ${f.path} file was empty.");
+          Document loadedDoc = Document();
+          loadedDoc.loadFromFilePath(f);
+          if(loadedDoc["_docType"] == documentType) {
+            _documents.add(loadedDoc);
           }
         }
       });
@@ -206,6 +194,8 @@ class DocumentList extends ListBase<Document> {
       _notifyListener();
     });
   }
+
+
 
   Future<File> _localFile(String id) async {
     final path = await _localPath;
