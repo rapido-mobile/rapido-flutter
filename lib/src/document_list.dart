@@ -128,11 +128,11 @@ class DocumentList extends ListBase<Document> {
 
   @override
   Document removeAt(int index) {
-    Map<String, dynamic> map = this[index];
+    Document doc = _documents[index];
     _deleteMapLocal(_documents[index]["_id"]);
     _documents.removeAt(index);
     _notifyListener();
-    return map;
+    return doc;
   }
 
   @override

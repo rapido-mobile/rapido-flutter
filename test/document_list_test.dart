@@ -89,7 +89,6 @@ void main() {
   });
 
   test('checks that updates persist on disk', () {
-    sleep(Duration(seconds: 1));
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       bool testMapFound = false;
       model.forEach((Document doc) {
@@ -104,9 +103,12 @@ void main() {
     });
   });
 
-  test('deletes documents from the list', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      model.removeAt(0);
+  test('tests removeAt removes documents and returns the removed doc', () {
+    DocumentList("testDocumentType", onLoadComplete: (DocumentList documentList) {
+      Document zeroDoc = documentList[0];
+      Document removedDoc = documentList.removeAt(0);
+      expect(zeroDoc == removedDoc, true);
+      
       DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
         expect(model.length, 1);
       });
