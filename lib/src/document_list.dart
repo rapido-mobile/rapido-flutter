@@ -143,9 +143,20 @@ class DocumentList extends ListBase<Document> {
   void sortByField(String fieldName,
       {SortOrder sortOrder: SortOrder.ascending}) {
     if (sortOrder == SortOrder.ascending) {
-      sort((a, b) => a[fieldName].compareTo(b[fieldName]));
+      sort((a, b) {
+        //handle null fields
+        if (a[fieldName] == null && b[fieldName] == null) return 0;
+        if (a[fieldName] == null && b[fieldName] != null) return -1;
+        if (a[fieldName] != null && b[fieldName] == null) return 1;
+        return a[fieldName].compareTo(b[fieldName]);
+      });
     } else {
-      sort((a, b) => b[fieldName].compareTo(a[fieldName]));
+      sort((a, b) {
+        if (a[fieldName] == null && b[fieldName] == null) return 0;
+        if (a[fieldName] == null && b[fieldName] != null) return 1;
+        if (a[fieldName] != null && b[fieldName] == null) return -1;
+        return b[fieldName].compareTo(a[fieldName]);
+      });
     }
     _notifyListener();
   }
@@ -173,7 +184,6 @@ class DocumentList extends ListBase<Document> {
     file.delete();
   }
 
-
   void _loadLocalData() async {
     getApplicationDocumentsDirectory().then((Directory appDir) {
       appDir
@@ -182,7 +192,7 @@ class DocumentList extends ListBase<Document> {
         if (f.path.endsWith('.json')) {
           Document loadedDoc = Document();
           loadedDoc.loadFromFilePath(f);
-          if(loadedDoc["_docType"] == documentType) {
+          if (loadedDoc["_docType"] == documentType) {
             _documents.add(loadedDoc);
           }
         }
@@ -191,8 +201,6 @@ class DocumentList extends ListBase<Document> {
       _notifyListener();
     });
   }
-
-
 
   Future<File> _localFile(String id) async {
     final path = await _localPath;

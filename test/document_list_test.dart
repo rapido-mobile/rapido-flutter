@@ -69,8 +69,8 @@ void main() {
   test('test []= operator, document is completely replaced', () {
     DocumentList("testDocumentType",
         onLoadComplete: (DocumentList documentList) {
-      Document updatedDoc = Document(
-          {"count": 1, "price": 2.5, "name": "Edited Name"});
+      Document updatedDoc =
+          Document({"count": 1, "price": 2.5, "name": "Edited Name"});
       int oldTimeStamp = documentList[0]["_time_stamp"];
       String oldId = documentList[0]["_id"];
       documentList[0] = updatedDoc;
@@ -98,14 +98,15 @@ void main() {
     });
   });
 
-  test('tests removeAt removes documents and returns the removed doc', () async {
+  test('tests removeAt removes documents and returns the removed doc',
+      () async {
     DocumentList("testDocumentType",
         onLoadComplete: (DocumentList documentList) {
       Document zeroDoc = documentList[0];
       Document removedDoc = documentList.removeAt(0);
       expect(zeroDoc == removedDoc, true);
       DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
-        dl.forEach((Document doc){
+        dl.forEach((Document doc) {
           expect(doc["_id"] != zeroDoc["_id"], true);
         });
       });
@@ -225,6 +226,18 @@ void main() {
     list.sortByField("b", sortOrder: SortOrder.ascending);
     expect(list[0]["a"], 0);
     expect(list[9]["a"], 9);
+  });
+
+  test('sortByField works when a value is null', () {
+    DocumentList brokenList = DocumentList("broken");
+    brokenList.add(Document({"a": 1}));
+    brokenList.add(Document({"b": 1}));
+    brokenList.sortByField("a", sortOrder: SortOrder.ascending);
+    expect(brokenList[0]["b"] == 1, true);
+    expect(brokenList[1]["a"] == 1, true);
+    brokenList.sortByField("a", sortOrder: SortOrder.descending);
+    expect(brokenList[0]["a"] == 1, true);
+    expect(brokenList[1]["b"] == 1, true);
   });
 
   setUpAll(() async {
