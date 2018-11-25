@@ -8,8 +8,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:rapido/documents.dart';
 
-/// A list documents, where a document is any map in the form of
-/// Map<String, dynamic>. DocumentList automatically persists changes
+/// A list Documents. DocumentList automatically persists changes
 /// to the list through, adding, removing, and updating documents that it
 /// contains. The document_widgets library can render useful UI elements
 /// for a DocumentList.

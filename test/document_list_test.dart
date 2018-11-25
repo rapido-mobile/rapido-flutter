@@ -104,7 +104,7 @@ void main() {
     });
   });
 
-  test('deletes maps from the model', () {
+  test('deletes documents from the list', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       model.removeAt(0);
       DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
