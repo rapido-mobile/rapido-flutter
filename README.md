@@ -52,7 +52,7 @@ To create a DocumentList, all that is required is to include a "documentType" st
 
 ```
 DocumentList taskList = DocumentList("tasks");
-taskList.add(Document({"name":"grocery shopping", "priority": 1, "done": false}));
+taskList.add(Document(initialValues: {"name":"grocery shopping", "priority": 1, "done": false}));
 ```
 
 Notice that the maps use a string of a key, but the values are dynamic. You can store anything you like in the DocumentList.
@@ -60,7 +60,7 @@ Notice that the maps use a string of a key, but the values are dynamic. You can 
 You can modify and delete documents using normal list functionality. 
 
 ```
-taskList[0]  = Document({"name":"grocery shopping", "priority": 1, "done": true});
+taskList[0]  = Document(initialValues: {"name":"grocery shopping", "priority": 1, "done": true});
 ```
 
 You can delete them:

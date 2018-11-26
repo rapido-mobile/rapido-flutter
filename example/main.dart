@@ -22,7 +22,6 @@ class RapidoExample extends StatefulWidget {
 }
 
 class _RapidoExampleState extends State<RapidoExample> {
-
   // Create a Document with a documentType string of your choice.
   // Include a map of lables for the fields in the document type.
   final DocumentList documentList = DocumentList(

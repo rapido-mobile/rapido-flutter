@@ -9,35 +9,51 @@ class DocumentForm extends StatefulWidget {
   /// The DocumentList on which the forms acts.
   final DocumentList documentList;
 
-  /// If set, the index of the document within the DocumentList.
-  /// If set, the form will edit the existing document, if null,
-  /// the form will create a new document.
-  final int index;
+  final Document document;
 
-  DocumentForm(this.documentList, {this.index});
+  DocumentForm(this.documentList, {this.document});
   @override
   _DocumentFormState createState() => _DocumentFormState();
 }
 
 class _DocumentFormState extends State<DocumentForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final Document newData = Document();
+
+  // A document to get updated by the form
+  Document _document;
+
+  @override
+  void initState() {
+    // create a new document if one was not supplied
+    if (widget.document == null)
+      _document = Document();
+    else
+      _document = widget.document;
+    super.initState();
+  }
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
+
+    // creat a form field for each support label
     widget.documentList.labels.keys.forEach((String label) {
+      // Use the labels map to get initial values in the case
+      // where the form is editing an existig document
       dynamic initialValue;
-      if (widget.index != null) {
-        initialValue = widget.documentList[widget.index]
-            [widget.documentList.labels[label]];
+      if (widget.document != null) {
+        initialValue = _document[widget.documentList.labels[label]];
       }
+
+      // add to the array of input fields
       fields.add(
         Container(
           padding: EdgeInsets.all(10.0),
           child: TypedInputField(widget.documentList.labels[label],
               label: label,
               initialValue: initialValue, onSaved: (dynamic value) {
-            newData[widget.documentList.labels[label]] = value;
+            // update the field with whatever data was in the input field
+            // this will cause the Document to autosave
+            _document[widget.documentList.labels[label]] = value;
           }),
           margin: EdgeInsets.all(10.0),
         ),
@@ -49,11 +65,13 @@ class _DocumentFormState extends State<DocumentForm> {
       child: RaisedButton(
           child: Icon(Icons.check),
           onPressed: () {
+            // this will caused onSaved to be called for each input field
+            // which will cause the document to autosave
             formKey.currentState.save();
-            if (widget.index == null) {
-              widget.documentList.add(newData);
-            } else {
-              widget.documentList[widget.index] = newData;
+
+            // add a new form to the documentList
+            if (widget.document == null) {
+              widget.documentList.add(_document);
             }
             Navigator.pop(context);
           }),
@@ -63,7 +81,7 @@ class _DocumentFormState extends State<DocumentForm> {
 
   @override
   Widget build(BuildContext context) {
-    IconData titleIconData = widget.index == null ? Icons.add : Icons.edit;
+    IconData titleIconData = widget.document == null ? Icons.add : Icons.edit;
     return Scaffold(
       appBar: AppBar(title: Icon(titleIconData)),
       body: Form(

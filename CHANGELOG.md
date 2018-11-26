@@ -1,5 +1,5 @@
 ## [0.0.10] - 2018-11-24
- * Add a specific Document class that inherits from MapBase<String, dynamic>. Most code should not be effected by this, but this is a breaking change for many of the functions on DocumentList. For example, DocumentList.add and DocumentList.addAll must be updated to create a Docuent: documentList.add(Document({"field1":"value1})). This change is in preparation to improve the usability of working with Documents and DocumentLists.
+ * Add a specific Document class that inherits from MapBase<String, dynamic>. Most code should not be effected by this, but this is a breaking change for many of the functions on DocumentList. For example, DocumentList.add and DocumentList.addAll must be updated to create a Docuent: documentList.add(Document(initialValues: {"field1":"value1})). This change is in preparation to improve the usability of working with Documents and DocumentLists.
  * Changed "document_list.dart" to just "documents.dart". this is a breaking change. You must now import 'package:rapido/documents.dart' instead of 'package:rapido/document_list.dart'.
  * Changed the interface for DocumentListView.customItemBuilder to include the document itself, and the build context. 
  * Some small bug fixes

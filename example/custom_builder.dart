@@ -26,24 +26,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DocumentList docs = DocumentList("taskList", labels: {
-    "Date": "date", // will create a date field in forms
-    "Task": "task", // will create a text field in forms
-    "Priority": "pri count", // will create an integer field in forms
-    "Note": "note" // will create a text field in forms
-  }, onLoadComplete: (DocumentList list) {
-    list.sort((t1, t2) => t1["pri count"] - (t2["pri count"]));
-  });
+  DocumentList docs = DocumentList("taskList",
+      labels: {
+        "Date": "date", // will create a date field in forms
+        "Task": "task", // will create a text field in forms
+        "Priority": "pri count", // will create an integer field in forms
+        "Note": "note" // will create a text field in forms
+      },
+      onLoadComplete: (DocumentList list) {});
 
   @override
   Widget build(BuildContext context) {
-    docs.sort((t1, t2) => t1["pri count"] - (t2["pri count"]));
-
     return DocumentListScaffold(
       docs,
       title: "Tasks",
-      
-      // supply a custom builder instead of using the 
+
+      // supply a custom builder instead of using the
       // default ListTiles in the DocumentListView
       customItemBuilder: customItemBuilder,
     );
@@ -52,8 +50,11 @@ class _MyHomePageState extends State<MyHomePage> {
   // helper function to supply the color
   Color _calculateColor(Document doc) {
     final int pri = doc["pri count"];
-    if(pri < 3){return Colors.red;}
-    else if(pri < 7){return Colors.yellow;}
+    if (pri < 3) {
+      return Colors.red;
+    } else if (pri < 7) {
+      return Colors.yellow;
+    }
     return Colors.green;
   }
 

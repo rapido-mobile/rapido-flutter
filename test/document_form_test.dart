@@ -16,7 +16,7 @@ void main() {
     testList.addAll([doc]);
     await tester.pumpWidget(
       MaterialApp(
-        home: DocumentForm(testList, index: 0),
+        home: DocumentForm(testList, document: testList[0]),
       ),
     );
     expect(widgetTest.find.text(dateTimeString), widgetTest.findsOneWidget);
