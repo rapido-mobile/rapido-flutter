@@ -24,7 +24,7 @@ class DocumentActionsButton extends StatelessWidget {
                   MaterialPageRoute(builder: (BuildContext context) {
                 return DocumentForm(
                   documentList,
-                  index: index,
+                  document: documentList[index],
                 );
               }));
               break;

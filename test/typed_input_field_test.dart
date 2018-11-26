@@ -11,7 +11,7 @@ void main() {
       (widgetTest.WidgetTester tester) async {
     DocumentList testList = DocumentList("formTest");
     testList.addAll([
-      Document({"datetime": dateTimeString})
+      Document(initialValues: {"datetime": dateTimeString})
     ]);
     await tester.pumpWidget(
       MaterialApp(

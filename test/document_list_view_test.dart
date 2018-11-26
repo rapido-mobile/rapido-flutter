@@ -11,10 +11,12 @@ void main() {
     DocumentList testModel = DocumentList("testDocumentType");
     for (int i = 0; i < 10; i++) {
       if (i == 1) {
-        testModel.add(
-            Document({"field B": "${i.toString()}", "field C": "subtitle"}));
+        testModel.add(Document(initialValues: {
+          "field B": "${i.toString()}",
+          "field C": "subtitle"
+        }));
       } else {
-        testModel.add(Document({"field B": "${i.toString()}"}));
+        testModel.add(Document(initialValues: {"field B": "${i.toString()}"}));
       }
     }
     await tester.pumpWidget(
@@ -39,9 +41,12 @@ void main() {
     DocumentList dl = DocumentList("noTitleKeys");
     for (int i = 0; i < 10; i++) {
       if (i == 1) {
-        dl.add(Document({"field B": "${i.toString()}", "field C": "subtitle"}));
+        dl.add(Document(initialValues: {
+          "field B": "${i.toString()}",
+          "field C": "subtitle"
+        }));
       } else {
-        dl.add(Document({"field B": "${i.toString()}"}));
+        dl.add(Document(initialValues: {"field B": "${i.toString()}"}));
       }
     }
 
@@ -61,8 +66,8 @@ void main() {
   widgetTest.testWidgets('test DocumentList.sort and cutomItemBuilder',
       (widgetTest.WidgetTester tester) async {
     DocumentList dl = DocumentList("sortListTest");
-    dl.add(Document({"a": 2}));
-    dl.add(Document({"a": 1}));
+    dl.add(Document(initialValues: {"a": 2}));
+    dl.add(Document(initialValues: {"a": 1}));
     dl.sort((a, b) => a["a"] - b["a"]);
 
     await tester.pumpWidget(

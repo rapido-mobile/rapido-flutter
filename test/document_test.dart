@@ -7,8 +7,12 @@ void main() {
   String newName = "xxx";
   test('Setup DocumentList', () {
     DocumentList documentList = DocumentList("operator test type");
-    documentList
-        .add(Document({"count": 0, "rating": 5, "price": 1.5, "name": "NAME"}));
+    documentList.add(Document(initialValues: {
+      "count": 0,
+      "rating": 5,
+      "price": 1.5,
+      "name": "NAME"
+    }));
   });
 
   test('Document.[]= operator', () {

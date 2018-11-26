@@ -36,20 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
       "Priority": "pri count", // will create an integer field in forms
       "Note": "note" // will create a text field in forms
     },
-    // If there are existing documents on disk, onLoadComplete
-    // will fire after they are all loaded.
-    // Loading is async, so UI may be rendered before loading is complete
-    onLoadComplete: (DocumentList list) {
-      // sort the DocumentList by the priority field after loading
-      list.sort((t1, t2) => t1["pri count"] - (t2["pri count"]));
-    },
   );
 
   @override
   Widget build(BuildContext context) {
-    // resort the DocumentList
-    docs.sort((t1, t2) => t1["pri count"] - (t2["pri count"]));
-
     return DocumentListScaffold(
       docs,
       title: "Tasks",

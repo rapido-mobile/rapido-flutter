@@ -6,10 +6,18 @@ import 'package:rapido/documents.dart';
 void main() {
   test('creates a DocumentList', () {
     DocumentList documentList = DocumentList("testDocumentType");
-    documentList.add(Document(
-        {"count": 0, "rating": 5, "price": 1.5, "name": "Pickle Rick"}));
-    documentList.add(Document(
-        {"count": 1, "rating": 4, "price": 1.5, "name": "Rick Sanchez"}));
+    documentList.add(Document(initialValues: {
+      "count": 0,
+      "rating": 5,
+      "price": 1.5,
+      "name": "Pickle Rick"
+    }));
+    documentList.add(Document(initialValues: {
+      "count": 1,
+      "rating": 4,
+      "price": 1.5,
+      "name": "Rick Sanchez"
+    }));
     expect(documentList.length, 2);
   });
   test('reads existing PersistedModel from disk', () {
@@ -29,7 +37,7 @@ void main() {
     list.onChanged = (DocumentList l) {
       expect(l.length, 1);
     };
-    list.add(Document({"a": 1}));
+    list.add(Document(initialValues: {"a": 1}));
   });
   test('tests that any() works', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
@@ -51,15 +59,15 @@ void main() {
   test('set labels', () {
     DocumentList list = DocumentList("onchange");
     list.labels = {"A": "a"};
-    list.add(Document({"a": 1}));
+    list.add(Document(initialValues: {"a": 1}));
     expect(list.labels.length, 1);
     expect(list.labels.containsKey("A"), true);
   });
   test('sort()', () {
     DocumentList list = DocumentList("sortTest");
-    list.add(Document({"a": 3}));
-    list.add(Document({"a": 2}));
-    list.add(Document({"a": 1}));
+    list.add(Document(initialValues: {"a": 3}));
+    list.add(Document(initialValues: {"a": 2}));
+    list.add(Document(initialValues: {"a": 1}));
     list.sort((a, b) => a["a"] - b["a"]);
     expect(list[0]["a"], 1);
     expect(list[1]["a"], 2);
@@ -69,8 +77,8 @@ void main() {
   test('test []= operator, document is completely replaced', () {
     DocumentList("testDocumentType",
         onLoadComplete: (DocumentList documentList) {
-      Document updatedDoc =
-          Document({"count": 1, "price": 2.5, "name": "Edited Name"});
+      Document updatedDoc = Document(
+          initialValues: {"count": 1, "price": 2.5, "name": "Edited Name"});
       int oldTimeStamp = documentList[0]["_time_stamp"];
       String oldId = documentList[0]["_id"];
       documentList[0] = updatedDoc;
@@ -126,7 +134,7 @@ void main() {
   test('removeAt() and first', () {
     DocumentList list = DocumentList("removeAtTeest");
     for (int i = 0; i < 10; i++) {
-      list.add(Document({"a": i}));
+      list.add(Document(initialValues: {"a": i}));
     }
     list.removeAt(0);
     expect(list.first["a"], 1);
@@ -140,7 +148,7 @@ void main() {
 
   test('infer ui labels', () {
     DocumentList model = DocumentList("abc");
-    model.add(Document({"a": "A", "b": "B", "c": "C"}));
+    model.add(Document(initialValues: {"a": "A", "b": "B", "c": "C"}));
     expect(model.labels["a"], "a");
     expect(model.labels["b"], "b");
     expect(model.labels["c"], "c");
@@ -154,8 +162,8 @@ void main() {
 
   test('addAll', () {
     List<Document> all = [
-      Document({"a": 1}),
-      Document({"a": 2})
+      Document(initialValues: {"a": 1}),
+      Document(initialValues: {"a": 2})
     ];
     DocumentList dl = DocumentList("addAllTest");
     dl.addAll(all);
@@ -183,7 +191,7 @@ void main() {
 
   test('remove object', () {
     DocumentList list = DocumentList("removeTest");
-    Document testObj = Document({"a": 1});
+    Document testObj = Document(initialValues: {"a": 1});
     list.add(testObj);
     expect(list.length, 1);
     expect(list.remove(testObj), true);
@@ -205,7 +213,7 @@ void main() {
       "jklm",
     ];
     for (int i = 0; i < 10; i++) {
-      list.add(Document({"a": i, "b": strings[i]}));
+      list.add(Document(initialValues: {"a": i, "b": strings[i]}));
     }
     list.sortByField("a", sortOrder: SortOrder.descending);
     expect(list[0]["a"], 9);
@@ -230,8 +238,8 @@ void main() {
 
   test('sortByField works when a value is null', () {
     DocumentList brokenList = DocumentList("broken");
-    brokenList.add(Document({"a": 1}));
-    brokenList.add(Document({"b": 1}));
+    brokenList.add(Document(initialValues: {"a": 1}));
+    brokenList.add(Document(initialValues: {"b": 1}));
     brokenList.sortByField("a", sortOrder: SortOrder.ascending);
     expect(brokenList[0]["b"] == 1, true);
     expect(brokenList[1]["a"] == 1, true);

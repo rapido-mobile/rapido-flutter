@@ -17,7 +17,7 @@ class DocumentList extends ListBase<Document> {
 
   /// A callback function that fires after a DocumentList is finished loading
   /// persisted data. It passes a reference to itself,
-  /// onChanged: (DocumentList documentList) {/* do something */}
+  /// onLoadComplete: (DocumentList documentList) {/* do something */}
   Function onLoadComplete;
   Map<String, String> _labels;
   List<Document> _documents;
@@ -88,9 +88,11 @@ class DocumentList extends ListBase<Document> {
   @override
   void add(Document doc) {
     doc["_docType"] = documentType;
-    //doc["_id"] = randomFileSafeId(24);
     doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
     _documents.add(doc);
+    doc.onChanged = (Document doc) {
+      _notifyListener();
+    };
     doc.save();
     _notifyListener();
   }
