@@ -62,7 +62,7 @@ class _DocumentFormState extends State<DocumentForm> {
 
     fields.add(Container(
       padding: EdgeInsets.only(left: 100.0, right: 100.0),
-      child: RaisedButton(
+      child: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
             // this will caused onSaved to be called for each input field
