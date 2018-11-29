@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:rapido/documents.dart';
 
-/// A dynamically generated page for viewing document contents
+/// Experimental support for auto-generated view of the contents of 
+/// a Document. This is meant to be a read only view, and returns a 
+/// Scaffold, so is mostly meant to be used in page nagivation.
 class DocumentPage extends StatelessWidget {
-  /// The DocumentList on which the forms acts.
+  /// Map the UI labels to include in the DocumentPage to fields
+  /// in the document.
   final Map<String, String> labels;
+
+  /// The Document object to display
   final Document document;
 
   DocumentPage({@required this.labels, @required this.document});
