@@ -87,12 +87,12 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     // see if there is any data to display on the map
     data.forEach((Document doc) {
       // don't try add a marker if the location is going to fail
-      if (doc["location"] != null &&
-          doc["location"]["latitude"] != null &&
-          doc["location"]["longitude"] != null) {
+      if (doc["map_point"] != null &&
+          doc["map_point"]["latitude"] != null &&
+          doc["map_point"]["longitude"] != null) {
         MarkerOptions mo = MarkerOptions(
           position:
-              LatLng(doc["location"]["latitude"], doc["location"]["longitude"]),
+              LatLng(doc["map_point"]["latitude"], doc["map_point"]["longitude"]),
           infoWindowText: InfoWindowText(doc["title"], doc["subtitle"]),
           icon: BitmapDescriptor.defaultMarker,
         );
