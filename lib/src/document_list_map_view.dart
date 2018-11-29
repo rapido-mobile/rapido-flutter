@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rapido/documents.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class DocumentMapView extends StatefulWidget {
+class DocumentListMapView extends StatefulWidget {
   final DocumentList documentList;
   final Function onItemTap;
   final Function customItemBuilder;
@@ -10,22 +10,23 @@ class DocumentMapView extends StatefulWidget {
   final double startingLatitude;
   final double startingLongitude;
 
-  DocumentMapView(this.documentList,
+  DocumentListMapView(this.documentList,
       {this.onItemTap,
       this.customItemBuilder,
       this.startingZoom,
       this.startingLatitude,
       this.startingLongitude});
 
-  _DocumentMapViewState createState() => _DocumentMapViewState();
+  _DocumentListMapViewState createState() => _DocumentListMapViewState();
 }
 
-class _DocumentMapViewState extends State<DocumentMapView> {
+class _DocumentListMapViewState extends State<DocumentListMapView> {
   DocumentList data;
   GoogleMapController mapController;
   double _startingZoom;
   double _startingLatitude;
   double _startingLongitude;
+  Map<Marker, Document> markerHash = {};
 
   @override
   initState() {
@@ -64,12 +65,35 @@ class _DocumentMapViewState extends State<DocumentMapView> {
     );
   }
 
+  Scaffold _getMapDetailsWidget(Document doc) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          doc["title"],
+        ),
+      ),
+      body: ListView(
+        children: _buildFormFields(context, doc),
+      ),
+    );
+  }
+
+  _onMarkerTapped(Marker marker) {
+    Document doc = markerHash[marker];
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return _getMapDetailsWidget(doc);
+    }));
+  }
+
   // called each time the map is rebuilt
   // the main job is to add the mapp markers from the DocumentList
   _onMapCreated(GoogleMapController controller) {
+    markerHash.clear();
+
     mapController = controller;
-    // controller.addMarker(MarkerOptions(position: LatLng(39.1169677,-77.1790329), icon: BitmapDescriptor.defaultMarker, infoWindowText: InfoWindowText("dog", "dog park")));
-    
+    controller.onMarkerTapped.add(_onMarkerTapped);
+
+    // see if there is any data to display on the map
     data.forEach((Document doc) {
       // don't try add a marker if the location is going to fail
       if (doc["location"] != null &&
@@ -81,8 +105,42 @@ class _DocumentMapViewState extends State<DocumentMapView> {
           infoWindowText: InfoWindowText(doc["title"], doc["subtitle"]),
           icon: BitmapDescriptor.defaultMarker,
         );
-        controller.addMarker(mo);
+
+        controller.addMarker(mo).then((Marker m) {
+          markerHash[m] = doc;
+        });
       }
     });
+  }
+
+  List<Widget> _buildFormFields(BuildContext context, Document doc) {
+    List<Widget> fields = [];
+
+    // creat a form field for each support label
+    if (doc["subtitle"] != null) {
+      fields.add(Text(
+        doc["subtitle"].toString(),
+        softWrap: true,
+        style: Theme.of(context).textTheme.headline,
+      ));
+    }
+    widget.documentList.labels.keys.forEach((String label) {
+      String fieldName = widget.documentList.labels[label];
+      if (fieldName != "title" && fieldName != "subtitle") {
+        // add to the array of input fields
+        fields.add(
+          Container(
+            padding: EdgeInsets.all(10.0),
+            child: Row(children: [
+              Text(label),
+              Text(doc[fieldName].toString()),
+            ]),
+            margin: EdgeInsets.all(10.0),
+          ),
+        );
+      }
+    });
+
+    return fields;
   }
 }
