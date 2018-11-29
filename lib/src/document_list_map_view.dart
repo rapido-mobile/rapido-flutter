@@ -66,7 +66,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   }
 
   Widget _getMapDetailsWidget(Document doc) {
-    return DocumentPage(widget.documentList, doc);
+    return DocumentPage(labels: widget.documentList.labels, document: doc);
   }
 
   _onMarkerTapped(Marker marker) {
