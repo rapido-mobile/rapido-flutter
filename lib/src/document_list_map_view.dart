@@ -65,17 +65,8 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     );
   }
 
-  Scaffold _getMapDetailsWidget(Document doc) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          doc["title"],
-        ),
-      ),
-      body: ListView(
-        children: _buildFormFields(context, doc),
-      ),
-    );
+  Widget _getMapDetailsWidget(Document doc) {
+    return DocumentPage(widget.documentList, doc);
   }
 
   _onMarkerTapped(Marker marker) {
@@ -113,34 +104,5 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     });
   }
 
-  List<Widget> _buildFormFields(BuildContext context, Document doc) {
-    List<Widget> fields = [];
-
-    // creat a form field for each support label
-    if (doc["subtitle"] != null) {
-      fields.add(Text(
-        doc["subtitle"].toString(),
-        softWrap: true,
-        style: Theme.of(context).textTheme.headline,
-      ));
-    }
-    widget.documentList.labels.keys.forEach((String label) {
-      String fieldName = widget.documentList.labels[label];
-      if (fieldName != "title" && fieldName != "subtitle") {
-        // add to the array of input fields
-        fields.add(
-          Container(
-            padding: EdgeInsets.all(10.0),
-            child: Row(children: [
-              Text(label),
-              Text(doc[fieldName].toString()),
-            ]),
-            margin: EdgeInsets.all(10.0),
-          ),
-        );
-      }
-    });
-
-    return fields;
-  }
+  
 }
