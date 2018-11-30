@@ -8,3 +8,6 @@ export 'src/document_actions_button.dart';
 export 'src/document_list.dart';
 export 'src/document_list_sort_button.dart';
 export 'src/document.dart';
+export 'src/document_list_map_view.dart';
+export 'src/document_page.dart';
+
