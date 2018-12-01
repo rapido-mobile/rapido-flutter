@@ -15,6 +15,7 @@ class MapPointFormField extends StatefulWidget {
 
   /// The initial value to display in the FormField.
   final Map<String, double> initialValue;
+
   MapPointFormField(this.fieldName,
       {@required this.label, @required this.onSaved, this.initialValue});
 
@@ -22,9 +23,26 @@ class MapPointFormField extends StatefulWidget {
 }
 
 class _MapPointFormFieldState extends State<MapPointFormField> {
+  Map<String, double> _currentValue;
+
+  @override
+  void initState() {
+    if (_currentValue == null) {
+      _currentValue = widget.initialValue;
+    }
+    super.initState();
+  }
+
+  String _formatString(Map<String, double> location){
+      return "${location["latitude"]},${location["longitude"]}";
+  }
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController _textContoller = TextEditingController(
+        text: _formatString(_currentValue));
     return TextFormField(
+        controller: _textContoller,
         decoration: InputDecoration(
           labelText: widget.label,
           suffixIcon: IconButton(
@@ -35,15 +53,21 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
                   builder: (BuildContext context) {
                     return MapPointDialog();
                   }).then((Map<String, double> location) {
-                print(location);
+                _textContoller.text =
+                    _formatString(location);
               });
             },
           ),
         ),
-        initialValue:
-            "${widget.initialValue["longitude"]}:${widget.initialValue["latitude"]}",
         onSaved: (String value) {
-          widget.onSaved(value);
+          List<String> list = value.split(",");
+          Map<String, double> map = {
+            "latitude": double.parse(list[0]),
+            "longitude": double.parse(list[1])
+          };
+          print("-----------");
+          print(map);
+          widget.onSaved(map);
         });
   }
 }
@@ -120,9 +144,7 @@ class _MapPointDialogState extends State<MapPointDialog> {
                       "longitude":
                           mapController.cameraPosition.target.longitude,
                     };
-                    Navigator.pop(
-                      context, mp
-                    );
+                    Navigator.pop(context, mp);
                   },
                 )
               ],

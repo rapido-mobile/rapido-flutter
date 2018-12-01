@@ -58,9 +58,9 @@ class TypedInputField extends StatelessWidget {
       return _getDateTimeFormField(f, true, context);
     }
     if (fieldName.toLowerCase().endsWith("map_point")) {
-      return MapPointFormField(fieldName, label: label,
-      initialValue: initialValue,
-          onSaved: (Map<String, double> value) {
+      return MapPointFormField(fieldName,
+          label: label,
+          initialValue: initialValue, onSaved: (Map<String, double> value) {
         this.onSaved(value);
       });
     }
