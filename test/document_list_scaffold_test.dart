@@ -30,4 +30,15 @@ void main() {
     expect(widgetTest.find.text("ABCD"), widgetTest.findsOneWidget);
     expect(widgetTest.find.text("No Title"), widgetTest.findsNothing);
   });
+
+  widgetTest.testWidgets("test addtional actions",(widgetTest.WidgetTester tester) async {
+ DocumentList dl = DocumentList("Action");
+    await tester.pumpWidget(
+      MaterialApp(
+        home: DocumentListScaffold(dl, additionalActions: <Widget>[Text("XX")],),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(widgetTest.find.text("XX"), widgetTest.findsOneWidget);
+  } );
 }

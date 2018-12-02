@@ -50,6 +50,8 @@ class DocumentListScaffold extends StatefulWidget {
   /// If supplied, the fab will use an extended fab, with the label.
   final String addActionLabel;
 
+  final List<Widget> additionalActions;
+
   DocumentListScaffold(this.documentList,
       {this.title,
       this.onItemTap,
@@ -58,7 +60,8 @@ class DocumentListScaffold extends StatefulWidget {
       this.decoration,
       this.customItemBuilder,
       this.emptyListWidget,
-      this.addActionLabel});
+      this.addActionLabel,
+      this.additionalActions});
 
   _DocumentListScaffoldState createState() => _DocumentListScaffoldState();
 }
@@ -66,12 +69,16 @@ class DocumentListScaffold extends StatefulWidget {
 class _DocumentListScaffoldState extends State<DocumentListScaffold> {
   @override
   Widget build(BuildContext context) {
+    List<Widget> actions = <Widget>[DocumentListSortButton(widget.documentList)];
+    if(widget.additionalActions != null) {
+      actions += widget.additionalActions;
+    }
     String _title =
         widget.title != null ? widget.title : widget.documentList.documentType;
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
-        actions: <Widget>[DocumentListSortButton(widget.documentList)],
+        actions: actions,
       ),
       body: Container(
         child: DocumentListView(
