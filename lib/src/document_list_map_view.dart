@@ -5,7 +5,7 @@ import 'package:location/location.dart';
 
 /// Initial experimental support for presenting a DocumentList on a GoogleMap.
 /// The DocumentListMapView assumes that documents container certain fields.
-/// map-point is a map in the form of {"latitude": double, "longitude: double"}.
+/// map_point is a map in the form of {"latitude": double, "longitude: double"}.
 /// The DocumentListMapView will automatically create points on the map for each.
 /// It further assumes there is a "title" and "subtitle" field that will be used
 /// for the info window on the GoogleMap.
