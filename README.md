@@ -3,8 +3,8 @@ Rapido brings Rapid Application Development principles to mobile development, cu
 
 ## Introduction
 Rapido makes it simple to build document centric applications by:
-1. Providing a DocumentList class that makes it wasy to manage user data, including persistence.
-2. Provides many of the UI elements that you need to work with DocumentList, including ListViews, Forms, and other widgets. They know how to work with DocumentList so provide a ton of functionality with almost no additional coding.
+1. Providing DocumentList and Document classes that makes it wasy to manage user data, including persistence.
+2. Provides many of the UI elements that you need to work with DocumentList, including ListViews, Forms, Maps, and other widgets. They know how to work with DocumentList so provide a ton of functionality with almost no additional coding.
 3. The ability to easily customize the core widgets provided.
 
 ## Show Me
@@ -21,8 +21,12 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 ```
 
-The rapido widgets infer what kind data is in each field based on the field name. You get all of the functionality with no additional coding:
-![add button, forms, listview, edit and delete, sorting](https://rapido-mobile.github.io/assets/UI.png)
+The rapido widgets infer what kind data is in each field based on the field name. Basic CRUD functionality is automatically created:
+![add button, forms, listview, edit and delete, sorting](https://rapido-mobile.github.io/assets/basic-ui.png)
+
+Rapido also handles specialized data types:
+![pickers, and mapss](https://rapido-mobile.github.io/assets/advanced-ui.png)
+
 
 You can replace any widget with your own widget, or you can use built in customization hooks to quickly create your own look and feel.
 
