@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
+import 'map_point_form_field.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
 /// possibly parented by another widget.
@@ -9,6 +10,7 @@ import 'package:intl/intl.dart';
 /// ends in "count" -> integer
 /// ends in "date" -> date
 /// ends in "datetime" -> date and time
+/// ends in "map_point" -> latitude and longitude
 /// All other fields return strings.
 class TypedInputField extends StatelessWidget {
   /// Optional Custom format string for reading, writing, and
@@ -54,6 +56,13 @@ class TypedInputField extends StatelessWidget {
     if (fieldName.toLowerCase().endsWith("date")) {
       String f = dateFormat == null ? _dateFormat : dateFormat;
       return _getDateTimeFormField(f, true, context);
+    }
+    if (fieldName.toLowerCase().endsWith("map_point")) {
+      return MapPointFormField(fieldName,
+          label: label,
+          initialValue: initialValue, onSaved: (Map<String, double> value) {
+        this.onSaved(value);
+      });
     }
 
     return _getTextFormField();
