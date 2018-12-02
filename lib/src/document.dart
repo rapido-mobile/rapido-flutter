@@ -88,6 +88,7 @@ class Document extends MapBase<String, dynamic> {
     String j = new File(f.path).readAsStringSync();
     if (j.length != 0) {
       Map newData = json.decode(j);
+      
       newData.keys.forEach((dynamic key) {
         _map[key] = newData[key];
       });

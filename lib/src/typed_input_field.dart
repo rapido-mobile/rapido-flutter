@@ -58,9 +58,12 @@ class TypedInputField extends StatelessWidget {
       return _getDateTimeFormField(f, true, context);
     }
     if (fieldName.toLowerCase().endsWith("map_point")) {
+      //work around json.decode reading _InternalHashMap<String, dynamic>
+      Map<String, double> v = Map<String, double >.from(initialValue);
       return MapPointFormField(fieldName,
           label: label,
-          initialValue: initialValue, onSaved: (Map<String, double> value) {
+          initialValue: v,
+          onSaved: (Map<String, double> value) {
         this.onSaved(value);
       });
     }

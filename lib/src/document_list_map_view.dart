@@ -101,7 +101,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     markerHash.clear();
 
     mapController = controller;
-    controller.onMarkerTapped.add(_onMarkerTapped);
+    controller.onInfoWindowTapped.add(_onMarkerTapped);
 
     // see if there is any data to display on the map
     data.forEach((Document doc) {
