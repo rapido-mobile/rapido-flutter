@@ -7,7 +7,7 @@ packages:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.33.3+2"
+    version: "0.34.0"
   args:
     dependency: transitive
     description:
@@ -70,7 +70,7 @@ packages:
       name: datetime_picker_formfield
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.6"
+    version: "0.1.7"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -87,7 +87,7 @@ packages:
       name: front_end
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.6+5"
+    version: "0.1.7"
   glob:
     dependency: transitive
     description:
@@ -164,7 +164,7 @@ packages:
       name: kernel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.6+5"
+    version: "0.3.7"
   location:
     dependency: "direct main"
     description:
@@ -358,7 +358,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.1"
+    version: "1.5.1+1"
   test_api:
     dependency: transitive
     description:
@@ -372,7 +372,7 @@ packages:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.0+1"
   typed_data:
     dependency: transitive
     description:
