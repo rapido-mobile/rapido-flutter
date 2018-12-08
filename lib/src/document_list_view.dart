@@ -56,30 +56,52 @@ class _DocumentListViewState extends State<DocumentListView> {
     data = widget.documentList;
   }
 
-  List<Widget> _buildTitleRowChildren(Map<String, dynamic> map) {
+  List<Widget> _buildTitleRowChildren(Document doc) {
     List<Widget> cells = [];
     List<String> titleKeys = widget.titleKeys;
     if (titleKeys == null) {
       titleKeys = widget.documentList.labels.values.toList();
     }
     titleKeys.forEach((String key) {
-      if (map.containsKey(key)) {
-        cells.add(
-          Text(
-            map[key].toString(),
-            softWrap: true,
-            style: Theme.of(context).textTheme.subhead,
-          ),
-        );
+      bool skip = false;
+
+      if (doc.containsKey(key)) {
+        // if the user hasn't defined a subtitle key
+        // then assume they want a field call "subtitle"
+        // to be in the subtitle, and not in the title
+        if (widget.subtitleKey == null) {
+          if (key == "subtitle") {
+            skip = true;
+          }
+        }
+        if (!skip) {
+          cells.add(
+            Text(
+              doc[key].toString(),
+              softWrap: true,
+              style: Theme.of(context).textTheme.subhead,
+            ),
+          );
+        }
       }
     });
     return cells;
   }
 
-  Widget _buildSubtitle(Map<String, dynamic> map) {
-    if (widget.subtitleKey == null) return null;
-    if (!map.containsKey(widget.subtitleKey)) return null;
-    return Text(map[widget.subtitleKey].toString());
+  Widget _buildSubtitle(Document doc) {
+    // check if the a subtitle key was defined
+    if (widget.subtitleKey != null) {
+      // check if this particular doc contains that key,
+      // and if so, return it
+      if (!doc.containsKey(widget.subtitleKey)) return null;
+      return Text(doc[widget.subtitleKey].toString());
+    }
+    // check if there is a subtitle field in the doc
+    // and if so, fall back to using it
+    else if (doc.containsKey("subtitle")) {
+      return Text(doc["subtitle"]);
+    } else
+      return null; // nothing was found to use for a subtitle
   }
 
   @override
