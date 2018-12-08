@@ -90,6 +90,11 @@ DocumentListView will create a ListView to display and edit the items in the lis
 DocumentListView(taskList);
 ```
 
+DocumentListMapView will display any documents with a field called "map_point" on a map:
+```
+DocumentListMapView(taskList);
+```
+
 DocumentForm allows easy creation of new documents, or editing of existing ones.
 
 To create a new document:

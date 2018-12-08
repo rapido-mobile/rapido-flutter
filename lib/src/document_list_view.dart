@@ -18,6 +18,8 @@ class DocumentListView extends StatefulWidget {
 
   /// The key specifying which value in the documents to use when
   /// rendering the default ListTiles. Ignored when customItemBuilder is used.
+  /// By default, a field called "subtitle" will be used as a subtitle, but 
+  /// this property will overwrite that behavior
   final String subtitleKey;
 
   /// A call back function to call when the default ListTile in the

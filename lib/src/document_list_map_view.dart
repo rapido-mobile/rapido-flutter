@@ -3,7 +3,7 @@ import 'package:rapido/documents.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-/// Initial experimental support for presenting a DocumentList on a GoogleMap.
+/// Support for presenting a DocumentList on a GoogleMap.
 /// The DocumentListMapView assumes that documents container certain fields.
 /// map_point is a map in the form of {"latitude": double, "longitude: double"}.
 /// The DocumentListMapView will automatically create points on the map for each.

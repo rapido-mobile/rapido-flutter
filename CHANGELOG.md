@@ -1,4 +1,9 @@
-## [0.0.11] - 2018-10-02
+## [0.0.12] - 2018-12-08
+ * Changed DocumentListView so that a field named "subtitle" is automatically used as a subtitle.
+ * Small updates to API documentation.
+ * Wrote and posted [tutorial documentation](https://rapido-mobile.github.io/).
+
+## [0.0.11] - 2018-12-02
  * Added DocumentListMapView which displays a DocumentList on a map.
  * Added a DocumentPage which renders a readonly pageview of a Document.
 
