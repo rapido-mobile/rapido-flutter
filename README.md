@@ -33,6 +33,7 @@ You can replace any widget with your own widget, or you can use built in customi
 # Rapido Online
  * [Get Rapido](https://pub.dartlang.org/packages/rapido)
  * [Our Github Repo](https://github.com/rapido-mobile/rapido-flutter)
+ * [Rapido Tutorial](https://rapido-mobile.github.io/tutorials/introduction.html)
  * We have some intro videos on our [Youtube Channel](https://www.youtube.com/channel/UCeoRpyhpNJmiMuAEJ4WRljg)
 
 # A Closer Look
