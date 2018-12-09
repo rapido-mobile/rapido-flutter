@@ -66,11 +66,15 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
         ),
         onSaved: (String value) {
           List<String> list = value.split(",");
-          Map<String, double> map = {
-            "latitude": double.parse(list[0]),
-            "longitude": double.parse(list[1])
-          };
-          widget.onSaved(map);
+          if (list.length != 2) {
+            widget.onSaved(null);
+          } else {
+            Map<String, double> map = {
+              "latitude": double.parse(list[0]),
+              "longitude": double.parse(list[1])
+            };
+            widget.onSaved(map);
+          }
         });
   }
 }
