@@ -44,6 +44,9 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
         TextEditingController(text: _formatString(_currentValue));
     return TextFormField(
         controller: _textContoller,
+        keyboardType:
+            TextInputType.numberWithOptions(signed: true, decimal: true),
+
         decoration: InputDecoration(
           labelText: widget.label,
           suffixIcon: IconButton(
