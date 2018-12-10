@@ -1,3 +1,8 @@
+## [0.0.13] - 2018-12-09
+ * Changed DocumentListMapView to set it's starting camera based on the Documents in the list, unless the developer supplied explicit coordinates.
+ * Use numbered keyboard with map points.
+ * Fixed a bug with location form.
+
 ## [0.0.12] - 2018-12-08
  * Changed DocumentListView so that a field named "subtitle" is automatically used as a subtitle.
  * Small updates to API documentation.
