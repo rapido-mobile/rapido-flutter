@@ -36,26 +36,76 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   double _startingZoom;
   double _startingLatitude;
   double _startingLongitude;
+
   Map<Marker, Document> markerHash = {};
 
   @override
   initState() {
-    // Pick a starting location. Priorty order is:
-    // 1. supplied specific coordinates
-    // 2. Current location
+    // set the starting location of the map as best as possible
+    // In priority order:
+    // 1. if the starting coordinates were explicitly set, use that
+    // 2. otherwise, if there are no documents to display, use the current location
+    // 3. otherwise, if there is one document to display, center on that document
+    // 4. otherwise if there are multiple documents to display, fit the map to them
+
+    if (widget.startingLatitude == null || widget.startingLongitude == null) {
+      // starting coordinates were not specifically set
+
+      // find documents that have location
+      List<Document> docsWithLocation = _getDocumentsWithMapPoints();
+
+      if (docsWithLocation.length == 0)
+        _setCurrentLocation(); // no docs to display, use current location
+      else if (docsWithLocation.length == 1) {
+        // one doc to display, center on it
+        setState(() {
+          _startingLatitude = docsWithLocation[0]["map_point"]["latitude"];
+          _startingLongitude = docsWithLocation[0]["map_point"]["longitude"];
+        });
+      } else if (docsWithLocation.length > 1) {
+        // multiple documents to display, fit the map to them
+        List<double> startPoint = _getCenterOfDocs(docsWithLocation);
+        setState(() {
+          _startingLatitude = startPoint[0];
+          _startingLongitude = startPoint[1];      
+        });
+      }
+    }
+
     widget.startingZoom != null
         ? _startingZoom = widget.startingZoom
-        : _startingZoom = 13.0;
-    if (widget.startingLatitude == null || widget.startingLongitude == null) {
-      _setCurrentLocation();
-    }
+        : _startingZoom = 15.0;
 
     data = widget.documentList;
 
     super.initState();
   }
 
-    void _setCurrentLocation() async {
+  List<double> _getCenterOfDocs(List<Document> docs) {
+    double north = -180.0, south = 180.0, east = -180.0, west = 180.0;
+    docs.forEach((Document doc) {
+      double lat = doc["map_point"]["latitude"];
+      double lng = doc["map_point"]["longitude"];
+      if (lat > north) north = lat;
+      if (lat < south) south = lat;
+      if (lng > east) east = lng;
+      if (lng < west) west = lng;
+    });
+
+    double centerLat = ((north - south) / 2) + south;
+    double centerLong = ((west - east) /2) + east;
+    return [centerLat, centerLong];
+  }
+
+  List<Document> _getDocumentsWithMapPoints() {
+    List<Document> matchedDocs = [];
+    widget.documentList.forEach((Document doc) {
+      if (doc["map_point"] != null) matchedDocs.add(doc);
+    });
+    return matchedDocs;
+  }
+
+  void _setCurrentLocation() async {
     Location().getLocation().then((Map<String, double> location) {
       setState(() {
         _startingLatitude = location["latitude"];
@@ -72,12 +122,16 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
       });
     };
     if (_startingLatitude == null || _startingLongitude == null) {
-      return Center(child: CircularProgressIndicator(),);
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     }
+
     return GoogleMap(
-      options: new GoogleMapOptions(
-        cameraPosition: new CameraPosition(
-            target: new LatLng(_startingLatitude, _startingLongitude),
+      options: GoogleMapOptions(
+        myLocationEnabled: true,
+        cameraPosition: CameraPosition(
+            target: LatLng(_startingLatitude, _startingLongitude),
             zoom: _startingZoom),
       ),
       onMapCreated: _onMapCreated,
