@@ -129,6 +129,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
 
     return GoogleMap(
       options: GoogleMapOptions(
+        myLocationEnabled: true,
         cameraPosition: CameraPosition(
             target: LatLng(_startingLatitude, _startingLongitude),
             zoom: _startingZoom),
