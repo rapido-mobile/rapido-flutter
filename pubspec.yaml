@@ -14,7 +14,8 @@ dependencies:
   datetime_picker_formfield: ^0.1.4
   location: ^1.4.1 
   google_maps_flutter: ^0.0.3+3
-
+  image_picker: ^0.4.10
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
