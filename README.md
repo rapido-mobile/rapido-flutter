@@ -3,7 +3,7 @@ Rapido brings Rapid Application Development principles to mobile development, cu
 
 ## Introduction
 Rapido makes it simple to build document centric applications by:
-1. Providing DocumentList and Document classes that makes it wasy to manage user data, including persistence.
+1. Providing DocumentList and Document classes that makes it easy to manage user data, including persistence.
 2. Provides many of the UI elements that you need to work with DocumentList, including ListViews, Forms, Maps, and other widgets. They know how to work with DocumentList so provide a ton of functionality with almost no additional coding.
 3. The ability to easily customize the core widgets provided.
 
