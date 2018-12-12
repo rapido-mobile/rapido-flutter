@@ -29,10 +29,9 @@ class _ImageFormFieldState extends State<ImageFormField> {
   File _imageFile;
   bool _dirty = false;
 
-@override
+  @override
   void initState() {
-    if(widget.initialValue != null) {
-      print(" ********** ${widget.initialValue}");
+    if (widget.initialValue != null) {
       Uri uri = Uri(path: widget.initialValue);
       _imageFile = File.fromUri(uri);
     }
@@ -45,13 +44,19 @@ class _ImageFormFieldState extends State<ImageFormField> {
       builder: (FormFieldState<String> state) {
         return Row(
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: SizedBox(
-                height: 200.0,
-                width: 200.00,
-                child: _buildImageWidget(),
-              ),
+            Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(border: Border.all()),
+                  child: SizedBox(
+                    height: 200.0,
+                    width: 200.00,
+                    child: _ImageThumb(
+                      imageFile: _imageFile,
+                    ),
+                  ),
+                ),
+              ],
             ),
             IconButton(
               icon: Icon(Icons.image),
@@ -68,16 +73,14 @@ class _ImageFormFieldState extends State<ImageFormField> {
           ],
         );
       },
-      onSaved: (String path) async{
-        if(_dirty){
+      onSaved: (String path) async {
+        if (_dirty) {
           Directory dir = await getApplicationDocumentsDirectory();
           String path = dir.path;
           String filename = basename(_imageFile.path);
           File newFile = _imageFile.copySync("$path/$filename");
           widget.onSaved(newFile.path);
-
-        }
-        else {
+        } else {
           widget.onSaved(widget.initialValue);
         }
       },
@@ -85,23 +88,29 @@ class _ImageFormFieldState extends State<ImageFormField> {
   }
 
   void _setImageFile(ImageSource source) async {
-    ImagePicker.pickImage(source: source).then((File file) async {
-      setState(() {
-        _imageFile = file;
-        _dirty = true;
-      });
+    File file = await ImagePicker.pickImage(source: source);
+    setState(() {
+      _imageFile = file;
+      _dirty = true;
     });
   }
+}
 
-  Widget _buildImageWidget() {
-    if (_imageFile == null) {
+class _ImageThumb extends StatelessWidget {
+  final File imageFile;
+
+  _ImageThumb({this.imageFile});
+
+  @override
+  Widget build(BuildContext context) {
+    if (imageFile == null) {
       return Icon(
         Icons.image,
         size: 150.0,
       );
     } else {
       return Image.file(
-        _imageFile,
+        imageFile,
         fit: BoxFit.scaleDown,
       );
     }
