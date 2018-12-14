@@ -78,11 +78,7 @@ class _DocumentListViewState extends State<DocumentListView> {
         }
         if (!skip) {
           cells.add(
-            Text(
-              doc[key].toString(),
-              softWrap: true,
-              style: Theme.of(context).textTheme.subhead,
-            ),
+            TypedDisplayField(document: doc,fieldName: key, boxSize: 100.00,),
           );
         }
       }

@@ -70,6 +70,12 @@ class _ImageFormFieldState extends State<ImageFormField> {
                 _setImageFile(ImageSource.camera);
               },
             ),
+            IconButton(
+              icon: Icon(Icons.insert_link),
+              onPressed: () {
+                _setImageFile(ImageSource.camera);
+              },
+            ),
           ],
         );
       },
