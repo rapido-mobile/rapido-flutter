@@ -27,13 +27,19 @@ class ImageFormField extends StatefulWidget {
 
 class _ImageFormFieldState extends State<ImageFormField> {
   File _imageFile;
+  String _imageUrl;
+
   bool _dirty = false;
 
   @override
   void initState() {
     if (widget.initialValue != null) {
-      Uri uri = Uri(path: widget.initialValue);
-      _imageFile = File.fromUri(uri);
+      if (widget.initialValue.toLowerCase().startsWith("http")) {
+        _imageUrl = widget.initialValue;
+      } else {
+        Uri uri = Uri(path: widget.initialValue);
+        _imageFile = File.fromUri(uri);
+      }
     }
     super.initState();
   }
@@ -72,8 +78,29 @@ class _ImageFormFieldState extends State<ImageFormField> {
             ),
             IconButton(
               icon: Icon(Icons.insert_link),
-              onPressed: () {
-                _setImageFile(ImageSource.camera);
+              onPressed: () async {
+                await showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Icon(Icons.link),
+                      content: TextField(
+                        controller: TextEditingController(
+                          text: _imageUrl,
+                        ),
+                        decoration: InputDecoration(
+                            hintText:
+                                "https://rapido-mobile.github.io/assets/background.jpg"),
+                      ),
+                      actions: <Widget>[
+                        FloatingActionButton(
+                          child: Icon(Icons.check),
+                          onPressed: () {},
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
           ],
@@ -101,6 +128,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
     });
   }
 }
+
 
 class _ImageThumb extends StatelessWidget {
   final File imageFile;
