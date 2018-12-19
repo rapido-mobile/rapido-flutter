@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:validators/validators.dart' as validators;
+import 'typed_display_field.dart';
 
 class ImageFormField extends StatefulWidget {
   /// The name of the field, used to calculate which type of input to return
@@ -28,13 +30,13 @@ class ImageFormField extends StatefulWidget {
 class _ImageFormFieldState extends State<ImageFormField> {
   File _imageFile;
   String _imageUrl;
-
   bool _dirty = false;
+  final double _thumbSize = 200.0;
 
   @override
   void initState() {
     if (widget.initialValue != null) {
-      if (widget.initialValue.toLowerCase().startsWith("http")) {
+      if (validators.isURL(widget.initialValue)) {
         _imageUrl = widget.initialValue;
       } else {
         Uri uri = Uri(path: widget.initialValue);
@@ -46,6 +48,10 @@ class _ImageFormFieldState extends State<ImageFormField> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _textEditingController = TextEditingController(
+      text: _imageUrl,
+    );
+
     return FormField(
       builder: (FormFieldState<String> state) {
         return Row(
@@ -55,11 +61,13 @@ class _ImageFormFieldState extends State<ImageFormField> {
                 Container(
                   decoration: BoxDecoration(border: Border.all()),
                   child: SizedBox(
-                    height: 200.0,
-                    width: 200.00,
-                    child: _ImageThumb(
-                      imageFile: _imageFile,
-                    ),
+                    height: _thumbSize,
+                    width: _thumbSize,
+                    child: _imageFile != null
+                        ? ImageDisplayField(
+                            imageString: _imageFile.path, boxSize: _thumbSize)
+                        : ImageDisplayField(
+                            imageString: _imageUrl, boxSize: _thumbSize),
                   ),
                 ),
               ],
@@ -85,9 +93,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
                     return AlertDialog(
                       title: Icon(Icons.link),
                       content: TextField(
-                        controller: TextEditingController(
-                          text: _imageUrl,
-                        ),
+                        controller: _textEditingController,
                         decoration: InputDecoration(
                             hintText:
                                 "https://rapido-mobile.github.io/assets/background.jpg"),
@@ -95,12 +101,20 @@ class _ImageFormFieldState extends State<ImageFormField> {
                       actions: <Widget>[
                         FloatingActionButton(
                           child: Icon(Icons.check),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context, _textEditingController.text);
+                          },
                         ),
                       ],
                     );
                   },
-                );
+                ).then((String url) {
+                  setState(() {
+                    _imageFile = null;
+                    _imageUrl = url;
+                    _dirty = true;
+                  });
+                });
               },
             ),
           ],
@@ -108,13 +122,17 @@ class _ImageFormFieldState extends State<ImageFormField> {
       },
       onSaved: (String path) async {
         if (_dirty) {
-          Directory dir = await getApplicationDocumentsDirectory();
-          String path = dir.path;
-          String filename = basename(_imageFile.path);
-          File newFile = _imageFile.copySync("$path/$filename");
-          widget.onSaved(newFile.path);
-        } else {
-          widget.onSaved(widget.initialValue);
+          if (_imageFile != null) {
+            Directory dir = await getApplicationDocumentsDirectory();
+            String path = dir.path;
+            String filename = basename(_imageFile.path);
+            File newFile = _imageFile.copySync("$path/$filename");
+            widget.onSaved(newFile.path);
+          } else if (_imageUrl != null) {
+            widget.onSaved(_imageUrl);
+          } else {
+            widget.onSaved(widget.initialValue);
+          }
         }
       },
     );
@@ -123,30 +141,9 @@ class _ImageFormFieldState extends State<ImageFormField> {
   void _setImageFile(ImageSource source) async {
     File file = await ImagePicker.pickImage(source: source);
     setState(() {
+      _imageUrl = null;
       _imageFile = file;
       _dirty = true;
     });
-  }
-}
-
-
-class _ImageThumb extends StatelessWidget {
-  final File imageFile;
-
-  _ImageThumb({this.imageFile});
-
-  @override
-  Widget build(BuildContext context) {
-    if (imageFile == null) {
-      return Icon(
-        Icons.image,
-        size: 150.0,
-      );
-    } else {
-      return Image.file(
-        imageFile,
-        fit: BoxFit.scaleDown,
-      );
-    }
   }
 }

@@ -15,7 +15,8 @@ dependencies:
   location: ^1.4.1 
   google_maps_flutter: ^0.0.3+3
   image_picker: ^0.4.10
-
+  validators: ^1.0.0+1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

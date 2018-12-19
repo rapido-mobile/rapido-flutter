@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:rapido/documents.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:validators/validators.dart' as validators;
 
 class TypedDisplayField extends StatelessWidget {
   /// The name of the field, used to calculate which type of input to return
@@ -85,19 +86,30 @@ class ImageDisplayField extends StatelessWidget {
   final double boxSize;
 
   ImageDisplayField({@required this.imageString, this.boxSize});
+
   @override
   Widget build(BuildContext context) {
+    Widget _image;
     double sz = _getBoxSize(imageString, boxSize: boxSize);
-    return SizedBox(
-      height: sz,
-      width: sz,
-      child: Image.file(
+    if (imageString == null) {
+      _image = Icon(Icons.broken_image, size: sz);
+    } else if (validators.isURL(imageString)) {
+      _image = Image(
+        image: NetworkImage(imageString),
+      );
+    } else {
+      _image = Image.file(
         File.fromUri(
           Uri(
             path: imageString,
           ),
         ),
-      ),
+      );
+    }
+    return SizedBox(
+      height: sz,
+      width: sz,
+      child: _image,
     );
   }
 }
