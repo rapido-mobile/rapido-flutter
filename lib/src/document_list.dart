@@ -101,6 +101,7 @@ class DocumentList extends ListBase<Document> {
   addAll(Iterable<Document> list) {
     list.forEach((Document doc) {
       add(doc);
+      doc.onChanged = _docChanged;
     });
   }
 
@@ -186,6 +187,10 @@ class DocumentList extends ListBase<Document> {
     file.delete();
   }
 
+  void _docChanged(Document doc) {
+    _notifyListener();
+  }
+
   void _loadLocalData() async {
     getApplicationDocumentsDirectory().then((Directory appDir) {
       appDir
@@ -196,6 +201,7 @@ class DocumentList extends ListBase<Document> {
           loadedDoc.loadFromFilePath(f);
           if (loadedDoc["_docType"] == documentType) {
             _documents.add(loadedDoc);
+            loadedDoc.onChanged = _docChanged;
           }
         }
       });
