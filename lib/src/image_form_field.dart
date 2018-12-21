@@ -108,6 +108,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
                         );
                       },
                     ).then((String url) {
+                      if(url == "" || url == null) return;
                       setState(() {
                         _imageFile = null;
                         _imageUrl = url;
@@ -141,6 +142,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
 
   void _setImageFile(ImageSource source) async {
     File file = await ImagePicker.pickImage(source: source);
+    if(file == null) return;
     setState(() {
       _imageUrl = null;
       _imageFile = file;
