@@ -78,7 +78,7 @@ class _DocumentListViewState extends State<DocumentListView> {
         }
         if (!skip) {
           cells.add(
-            TypedDisplayField(document: doc,fieldName: key, boxSize: 100.00,),
+            TypedDisplayField(document: doc, fieldName: key, boxSize: 100.00,),
           );
         }
       }

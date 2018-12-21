@@ -59,6 +59,7 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
                       initialValue: _currentValue,
                     );
                   }).then((Map<String, double> location) {
+                    if(location == null) return;
                 setState(() {
                   _currentValue = location;
                 });

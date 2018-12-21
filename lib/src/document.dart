@@ -86,11 +86,11 @@ class Document extends MapBase<String, dynamic> {
 
   void loadFromFilePath(FileSystemEntity f) {
     String j = new File(f.path).readAsStringSync();
+
     if (j.length != 0) {
       Map newData = json.decode(j);
-
       newData.keys.forEach((dynamic key) {
-        if (key == "map_point") {
+        if (key == "map_point" && newData[key] != null) {
           // convert map_points to the correct type
           newData[key] = Map<String, double>.from(newData[key]);
         }

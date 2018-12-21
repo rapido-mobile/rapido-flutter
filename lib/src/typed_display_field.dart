@@ -56,28 +56,34 @@ class MapDisplayField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double sz = _getBoxSize(mapPoint, boxSize: boxSize);
-    LatLng pos = LatLng(mapPoint["latitude"], mapPoint["longitude"]);
-
-    return SizedBox(
-      height: sz,
-      width: sz,
-      child: GoogleMap(
-        options: GoogleMapOptions(
-          cameraPosition: CameraPosition(
-            target: pos,
-            zoom: 15.0,
+    LatLng pos;
+    if (mapPoint != null) {
+      pos = LatLng(mapPoint["latitude"], mapPoint["longitude"]);
+    }
+    if (mapPoint == null) {
+      return Icon(Icons.map);
+    } else {
+      return SizedBox(
+        height: sz,
+        width: sz,
+        child: GoogleMap(
+          options: GoogleMapOptions(
+            cameraPosition: CameraPosition(
+              target: pos,
+              zoom: 15.0,
+            ),
+            compassEnabled: false,
+            scrollGesturesEnabled: false,
+            rotateGesturesEnabled: false,
+            tiltGesturesEnabled: false,
+            myLocationEnabled: false,
           ),
-          compassEnabled: false,
-          scrollGesturesEnabled: false,
-          rotateGesturesEnabled: false,
-          tiltGesturesEnabled: false,
-          myLocationEnabled: false,
+          onMapCreated: (GoogleMapController controller) {
+            controller.addMarker(MarkerOptions(position: pos));
+          },
         ),
-        onMapCreated: (GoogleMapController controller) {
-          controller.addMarker(MarkerOptions(position: pos));
-        },
-      ),
-    );
+      );
+    }
   }
 }
 
@@ -92,7 +98,7 @@ class ImageDisplayField extends StatelessWidget {
     Widget _image;
     double sz = _getBoxSize(imageString, boxSize: boxSize);
     if (imageString == null) {
-      _image = Icon(Icons.broken_image, size: sz);
+      _image = Icon(Icons.broken_image);
     } else if (validators.isURL(imageString)) {
       _image = Image(
         image: NetworkImage(imageString),

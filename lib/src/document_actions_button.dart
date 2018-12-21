@@ -20,13 +20,14 @@ class DocumentActionsButton extends StatelessWidget {
         onSelected: (int action) {
           switch (action) {
             case 0:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return DocumentForm(
-                  documentList,
-                  document: documentList[index],
-                );
-              }));
+              Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return DocumentForm(
+                    documentList,
+                    document: documentList[index],
+                  );
+                },
+              ));
               break;
             case 1:
               documentList.removeAt(index);
