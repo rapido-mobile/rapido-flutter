@@ -39,10 +39,13 @@ class TypedDisplayField extends StatelessWidget {
         boxSize: boxSize,
       );
     }
-    return Text(
-      document[fieldName].toString(),
-      softWrap: true,
-      style: Theme.of(context).textTheme.subhead,
+    return Expanded(
+      child:Text(
+          document[fieldName].toString(),
+          softWrap: true,
+          style: Theme.of(context).textTheme.subhead,
+        ),
+     
     );
   }
 }
