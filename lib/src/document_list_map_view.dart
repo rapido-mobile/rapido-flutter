@@ -138,14 +138,11 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     );
   }
 
-  Widget _getMapDetailsWidget(Document doc) {
-    return DocumentPage(labels: widget.documentList.labels, document: doc);
-  }
 
   _onMarkerTapped(Marker marker) {
     Document doc = markerHash[marker];
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return _getMapDetailsWidget(doc);
+      return DocumentPage(labels: widget.documentList.labels, document: doc);
     }));
   }
 
