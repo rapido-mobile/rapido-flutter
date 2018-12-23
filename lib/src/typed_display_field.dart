@@ -33,16 +33,20 @@ class TypedDisplayField extends StatelessWidget {
         boxSize: boxSize,
       );
     }
-    if (fieldName.toLowerCase().endsWith("map_point")) {
+    if (fieldName.toLowerCase().endsWith("map point")) {
       return MapDisplayField(
         mapPoint: document[fieldName],
         boxSize: boxSize,
       );
     }
-    return Text(
-      document[fieldName].toString(),
-      softWrap: true,
-      style: Theme.of(context).textTheme.subhead,
+    return Flexible(
+      child: Container(
+        child: Text(
+          document[fieldName].toString(),
+          softWrap: true,
+          style: Theme.of(context).textTheme.subhead,
+        ),
+      ),
     );
   }
 }

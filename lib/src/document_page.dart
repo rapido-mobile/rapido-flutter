@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rapido/documents.dart';
 
-/// Experimental support for auto-generated view of the contents of 
-/// a Document. This is meant to be a read only view, and returns a 
+/// Experimental support for auto-generated view of the contents of
+/// a Document. This is meant to be a read only view, and returns a
 /// Scaffold, so is mostly meant to be used in page nagivation.
 class DocumentPage extends StatelessWidget {
   /// Map the UI labels to include in the DocumentPage to fields
@@ -16,7 +16,7 @@ class DocumentPage extends StatelessWidget {
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
-    
+
     // creat a form field for each support label
     if (document["subtitle"] != null) {
       fields.add(Text(
@@ -28,13 +28,21 @@ class DocumentPage extends StatelessWidget {
     }
     labels.keys.forEach((String label) {
       String fieldName = labels[label];
+      
       if (fieldName != "title" && fieldName != "subtitle") {
         // add to the array of input fields
         fields.add(
           ListTile(
             subtitle: Text(label),
-              title: Text(document[fieldName].toString()),
-           
+            title: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TypedDisplayField(
+                  fieldName: fieldName,
+                  document: document,
+                ),
+              ],
+            ),
           ),
         );
       }

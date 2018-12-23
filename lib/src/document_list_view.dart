@@ -18,7 +18,7 @@ class DocumentListView extends StatefulWidget {
 
   /// The key specifying which value in the documents to use when
   /// rendering the default ListTiles. Ignored when customItemBuilder is used.
-  /// By default, a field called "subtitle" will be used as a subtitle, but 
+  /// By default, a field called "subtitle" will be used as a subtitle, but
   /// this property will overwrite that behavior
   final String subtitleKey;
 
@@ -39,12 +39,15 @@ class DocumentListView extends StatefulWidget {
   /// DocumentList.length == 0)
   final Widget emptyListWidget;
 
+  final bool showDocumentPageOnTap;
+
   DocumentListView(this.documentList,
       {this.titleKeys,
       this.subtitleKey,
       this.onItemTap,
       this.customItemBuilder,
-      this.emptyListWidget});
+      this.emptyListWidget,
+      this.showDocumentPageOnTap: true});
 
   _DocumentListViewState createState() => _DocumentListViewState();
 }
@@ -76,9 +79,14 @@ class _DocumentListViewState extends State<DocumentListView> {
             skip = true;
           }
         }
-        if (!skip) {
+        if (!skip && doc[key] != null) {
+          // don't try to display null value
           cells.add(
-            TypedDisplayField(document: doc, fieldName: key, boxSize: 100.00,),
+            TypedDisplayField(
+              document: doc,
+              fieldName: key,
+              boxSize: 100.00,
+            ),
           );
         }
       }
@@ -137,6 +145,15 @@ class _DocumentListViewState extends State<DocumentListView> {
           onTap: () {
             if (widget.onItemTap != null) {
               widget.onItemTap(index);
+            } else if (widget.showDocumentPageOnTap) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) {
+                  return DocumentPage(
+                      labels: widget.documentList.labels,
+                      document: widget.documentList[index]);
+                }),
+              );
             }
           },
           title: Row(

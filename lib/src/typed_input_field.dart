@@ -11,7 +11,7 @@ import 'image_form_field.dart';
 /// ends in "count" -> integer
 /// ends in "date" -> date
 /// ends in "datetime" -> date and time
-/// ends in "map_point" -> latitude and longitude
+/// ends in "map point" -> latitude and longitude
 /// ends in "image" -> image
 /// All other fields return strings.
 class TypedInputField extends StatelessWidget {
@@ -59,7 +59,7 @@ class TypedInputField extends StatelessWidget {
       String f = dateFormat == null ? _dateFormat : dateFormat;
       return _getDateTimeFormField(f, true, context);
     }
-    if (fieldName.toLowerCase().endsWith("map_point")) {
+    if (fieldName.toLowerCase().endsWith("map point")) {
       //work around json.decode reading _InternalHashMap<String, dynamic>
       Map<String, double> v;
       if (initialValue != null) {

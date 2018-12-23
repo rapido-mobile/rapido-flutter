@@ -52,6 +52,8 @@ class DocumentListScaffold extends StatefulWidget {
 
   final List<Widget> additionalActions;
 
+  final bool showDocumentPageOnTap;
+
   DocumentListScaffold(this.documentList,
       {this.title,
       this.onItemTap,
@@ -61,7 +63,8 @@ class DocumentListScaffold extends StatefulWidget {
       this.customItemBuilder,
       this.emptyListWidget,
       this.addActionLabel,
-      this.additionalActions});
+      this.additionalActions,
+      this.showDocumentPageOnTap: true});
 
   _DocumentListScaffoldState createState() => _DocumentListScaffoldState();
 }
@@ -88,6 +91,7 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
           onItemTap: widget.onItemTap,
           customItemBuilder: widget.customItemBuilder,
           emptyListWidget: widget.emptyListWidget,
+          showDocumentPageOnTap: widget.showDocumentPageOnTap,
         ),
         decoration: widget.decoration,
       ),

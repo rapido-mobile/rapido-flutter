@@ -5,7 +5,7 @@ import 'package:location/location.dart';
 
 /// Support for presenting a DocumentList on a GoogleMap.
 /// The DocumentListMapView assumes that documents container certain fields.
-/// map_point is a map in the form of {"latitude": double, "longitude: double"}.
+/// map point is a map in the form of {"latitude": double, "longitude: double"}.
 /// The DocumentListMapView will automatically create points on the map for each.
 /// It further assumes there is a "title" and "subtitle" field that will be used
 /// for the info window on the GoogleMap.
@@ -59,8 +59,8 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
       else if (docsWithLocation.length == 1) {
         // one doc to display, center on it
         setState(() {
-          _startingLatitude = docsWithLocation[0]["map_point"]["latitude"];
-          _startingLongitude = docsWithLocation[0]["map_point"]["longitude"];
+          _startingLatitude = docsWithLocation[0]["map point"]["latitude"];
+          _startingLongitude = docsWithLocation[0]["map point"]["longitude"];
         });
       } else if (docsWithLocation.length > 1) {
         // multiple documents to display, fit the map to them
@@ -84,8 +84,8 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   List<double> _getCenterOfDocs(List<Document> docs) {
     double north = -180.0, south = 180.0, east = -180.0, west = 180.0;
     docs.forEach((Document doc) {
-      double lat = doc["map_point"]["latitude"];
-      double lng = doc["map_point"]["longitude"];
+      double lat = doc["map point"]["latitude"];
+      double lng = doc["map point"]["longitude"];
       if (lat > north) north = lat;
       if (lat < south) south = lat;
       if (lng > east) east = lng;
@@ -100,7 +100,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   List<Document> _getDocumentsWithMapPoints() {
     List<Document> matchedDocs = [];
     widget.documentList.forEach((Document doc) {
-      if (doc["map_point"] != null) matchedDocs.add(doc);
+      if (doc["map point"] != null) matchedDocs.add(doc);
     });
     return matchedDocs;
   }
@@ -138,14 +138,11 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     );
   }
 
-  Widget _getMapDetailsWidget(Document doc) {
-    return DocumentPage(labels: widget.documentList.labels, document: doc);
-  }
 
   _onMarkerTapped(Marker marker) {
     Document doc = markerHash[marker];
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return _getMapDetailsWidget(doc);
+      return DocumentPage(labels: widget.documentList.labels, document: doc);
     }));
   }
 
@@ -160,12 +157,12 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     // see if there is any data to display on the map
     data.forEach((Document doc) {
       // don't try add a marker if the location is going to fail
-      if (doc["map_point"] != null &&
-          doc["map_point"]["latitude"] != null &&
-          doc["map_point"]["longitude"] != null) {
+      if (doc["map point"] != null &&
+          doc["map point"]["latitude"] != null &&
+          doc["map point"]["longitude"] != null) {
         MarkerOptions mo = MarkerOptions(
           position: LatLng(
-              doc["map_point"]["latitude"], doc["map_point"]["longitude"]),
+              doc["map point"]["latitude"], doc["map point"]["longitude"]),
           infoWindowText: InfoWindowText(doc["title"], doc["subtitle"]),
           icon: BitmapDescriptor.defaultMarker,
         );

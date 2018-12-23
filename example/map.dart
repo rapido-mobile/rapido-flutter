@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "Note": "subtitle",
       "Priority": "pri count",
       "Date": "date",
-      "Location": "map_point",
+      "Location": "map point",
     },
   );
 
