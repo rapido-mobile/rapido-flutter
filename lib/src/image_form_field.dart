@@ -117,6 +117,13 @@ class _ImageFormFieldState extends State<ImageFormField> {
                     });
                   },
                 ),
+                IconButton(icon: Icon(Icons.clear),onPressed: (){
+                  setState(() {
+                  _imageFile = null;
+                  _imageUrl = null;
+                  _dirty = true;
+                                    });
+                },)
               ],
             ),
           ],
