@@ -59,11 +59,26 @@ class MapDisplayField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double sz = _getBoxSize(mapPoint, boxSize: boxSize);
+    GoogleMapOptions mapOptions;
     LatLng pos;
+    double sz = _getBoxSize(mapPoint, boxSize: boxSize);
+
     if (mapPoint != null) {
       pos = LatLng(mapPoint["latitude"], mapPoint["longitude"]);
+
+      mapOptions = GoogleMapOptions(
+        cameraPosition: CameraPosition(
+          target: LatLng(mapPoint["latitude"], mapPoint["longitude"]),
+          zoom: 15.0,
+        ),
+        compassEnabled: false,
+        scrollGesturesEnabled: false,
+        rotateGesturesEnabled: false,
+        tiltGesturesEnabled: false,
+        myLocationEnabled: false,
+      );
     }
+
     if (mapPoint == null) {
       return Icon(Icons.map);
     } else {
@@ -71,17 +86,7 @@ class MapDisplayField extends StatelessWidget {
         height: sz,
         width: sz,
         child: GoogleMap(
-          options: GoogleMapOptions(
-            cameraPosition: CameraPosition(
-              target: pos,
-              zoom: 15.0,
-            ),
-            compassEnabled: false,
-            scrollGesturesEnabled: false,
-            rotateGesturesEnabled: false,
-            tiltGesturesEnabled: false,
-            myLocationEnabled: false,
-          ),
+          options: mapOptions,
           onMapCreated: (GoogleMapController controller) {
             controller.addMarker(MarkerOptions(position: pos));
           },
