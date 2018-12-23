@@ -91,7 +91,7 @@ DocumentListView will create a ListView to display and edit the items in the lis
 DocumentListView(taskList);
 ```
 
-DocumentListMapView will display any documents with a field called "map_point" on a map:
+DocumentListMapView will display any documents with a field called "map point" on a map:
 ```
 DocumentListMapView(taskList);
 ```
