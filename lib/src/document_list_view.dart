@@ -39,6 +39,8 @@ class DocumentListView extends StatefulWidget {
   /// DocumentList.length == 0)
   final Widget emptyListWidget;
 
+  /// Show default document page when the list item is tapped.
+  /// Ignored if onItemTap callback is set.
   final bool showDocumentPageOnTap;
 
   DocumentListView(this.documentList,
@@ -143,8 +145,11 @@ class _DocumentListViewState extends State<DocumentListView> {
       decoration: null,
       child: ListTile(
           onTap: () {
+            // If the user has passed in an onTap callback then use that.
+            // Otherwise, if the user has not disabled shwoing the DocumentPage
+            // then push a DocumentPage.
             if (widget.onItemTap != null) {
-              widget.onItemTap(index);
+              widget.onItemTap(widget.documentList[index]);
             } else if (widget.showDocumentPageOnTap) {
               Navigator.push(
                 context,

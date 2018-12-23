@@ -12,20 +12,34 @@ import 'package:location/location.dart';
 /// Clicking on the info window will display a DocumentPage for the selected
 /// Document.
 class DocumentListMapView extends StatefulWidget {
-  // The DocumentList that is the source of data to display on the map
+  /// The DocumentList that is the source of data to display on the map
   final DocumentList documentList;
 
-  // The starting zoom level for the map
+  /// The starting zoom level for the map
   final double startingZoom;
 
-  // The starting latitude for the map
+  /// The starting latitude for the map
   final double startingLatitude;
 
-  // The starting longitude for the map
+  /// The starting longitude for the map
   final double startingLongitude;
 
+  /// A call back function to call when the default ListTile in the
+  /// DocumentListView is tapped by the user. Receives a Document
+  /// as an argument.
+  /// Ignored when customItemBuilder is used.
+  final Function onItemTap;
+
+  /// Show default document page view when marker is tapped.
+  /// Ignored if onItemTap callback is set.
+  final bool showDocumentPageOnTap;
+
   DocumentListMapView(this.documentList,
-      {this.startingZoom, this.startingLatitude, this.startingLongitude});
+      {this.startingZoom,
+      this.startingLatitude,
+      this.startingLongitude,
+      this.onItemTap,
+      this.showDocumentPageOnTap: true});
 
   _DocumentListMapViewState createState() => _DocumentListMapViewState();
 }
@@ -67,7 +81,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
         List<double> startPoint = _getCenterOfDocs(docsWithLocation);
         setState(() {
           _startingLatitude = startPoint[0];
-          _startingLongitude = startPoint[1];      
+          _startingLongitude = startPoint[1];
         });
       }
     }
@@ -93,7 +107,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     });
 
     double centerLat = ((north - south) / 2) + south;
-    double centerLong = ((west - east) /2) + east;
+    double centerLong = ((west - east) / 2) + east;
     return [centerLat, centerLong];
   }
 
@@ -138,12 +152,20 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     );
   }
 
-
   _onMarkerTapped(Marker marker) {
     Document doc = markerHash[marker];
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-      return DocumentPage(labels: widget.documentList.labels, document: doc);
-    }));
+
+    // If the user has passed in an onTap callback then use that.
+    // Otherwise, if the user has not disabled shwoing the DocumentPage
+    // then push a DocumentPage.
+    if (widget.onItemTap != null) {
+      widget.onItemTap(doc);
+    } else if (widget.showDocumentPageOnTap) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return DocumentPage(labels: widget.documentList.labels, document: doc);
+      }));
+    }
   }
 
   // called each time the map is rebuilt
