@@ -42,44 +42,56 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
   Widget build(BuildContext context) {
     TextEditingController _textContoller =
         TextEditingController(text: _formatString(_currentValue));
-    return TextFormField(
-        controller: _textContoller,
-        keyboardType:
-            TextInputType.numberWithOptions(signed: true, decimal: true),
-
-        decoration: InputDecoration(
-          labelText: widget.label,
-          suffixIcon: IconButton(
-            icon: Icon(Icons.map),
-            onPressed: () {
-              showDialog<Map<String, double>>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return MapPointDialog(
-                      initialValue: _currentValue,
-                    );
-                  }).then((Map<String, double> location) {
-                    if(location == null) return;
-                setState(() {
-                  _currentValue = location;
-                });
-                _textContoller.text = _formatString(location);
-              });
+    return Row(
+      children: [
+        Flexible(
+          child: TextFormField(
+            controller: _textContoller,
+            keyboardType:
+                TextInputType.numberWithOptions(signed: true, decimal: true),
+            decoration: InputDecoration(
+              labelText: widget.label,
+              suffixIcon: IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {
+                 _textContoller.text = "";
+                },
+              ),
+            ),
+            onSaved: (String value) {
+              List<String> list = value.split(",");
+              if (list.length != 2) {
+                widget.onSaved(null);
+              } else {
+                Map<String, double> map = {
+                  "latitude": double.parse(list[0]),
+                  "longitude": double.parse(list[1])
+                };
+                widget.onSaved(map);
+              }
             },
           ),
         ),
-        onSaved: (String value) {
-          List<String> list = value.split(",");
-          if (list.length != 2) {
-            widget.onSaved(null);
-          } else {
-            Map<String, double> map = {
-              "latitude": double.parse(list[0]),
-              "longitude": double.parse(list[1])
-            };
-            widget.onSaved(map);
-          }
-        });
+        IconButton(
+          icon: Icon(Icons.map),
+          onPressed: () {
+            showDialog<Map<String, double>>(
+                context: context,
+                builder: (BuildContext context) {
+                  return MapPointDialog(
+                    initialValue: _currentValue,
+                  );
+                }).then((Map<String, double> location) {
+              if (location == null) return;
+              setState(() {
+                _currentValue = location;
+              });
+              _textContoller.text = _formatString(location);
+            });
+          },
+        )
+      ],
+    );
   }
 }
 

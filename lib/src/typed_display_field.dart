@@ -54,38 +54,49 @@ class TypedDisplayField extends StatelessWidget {
 class MapDisplayField extends StatelessWidget {
   final Map<String, double> mapPoint;
   final double boxSize;
-
+  
   MapDisplayField({@required this.mapPoint, this.boxSize});
 
   @override
   Widget build(BuildContext context) {
-    double sz = _getBoxSize(mapPoint, boxSize: boxSize);
+    GoogleMap googleMap;
+    GoogleMapOptions mapOptions;
     LatLng pos;
+    double sz = _getBoxSize(mapPoint, boxSize: boxSize);
+
     if (mapPoint != null) {
       pos = LatLng(mapPoint["latitude"], mapPoint["longitude"]);
+
+      mapOptions = GoogleMapOptions(
+        cameraPosition: CameraPosition(
+          target: LatLng(mapPoint["latitude"], mapPoint["longitude"]),
+          zoom: 15.0,
+        ),
+        compassEnabled: false,
+        scrollGesturesEnabled: false,
+        rotateGesturesEnabled: false,
+        tiltGesturesEnabled: false,
+        myLocationEnabled: false,
+
+      );
+
+      googleMap = GoogleMap( 
+        options: mapOptions,
+        onMapCreated: (GoogleMapController controller) {
+          controller.addMarker(MarkerOptions(position: pos));
+        },
+      );  
+
     }
+
     if (mapPoint == null) {
       return Icon(Icons.map);
     } else {
       return SizedBox(
+        key: Key(pos.toString()),
         height: sz,
         width: sz,
-        child: GoogleMap(
-          options: GoogleMapOptions(
-            cameraPosition: CameraPosition(
-              target: pos,
-              zoom: 15.0,
-            ),
-            compassEnabled: false,
-            scrollGesturesEnabled: false,
-            rotateGesturesEnabled: false,
-            tiltGesturesEnabled: false,
-            myLocationEnabled: false,
-          ),
-          onMapCreated: (GoogleMapController controller) {
-            controller.addMarker(MarkerOptions(position: pos));
-          },
-        ),
+        child: googleMap,
       );
     }
   }
