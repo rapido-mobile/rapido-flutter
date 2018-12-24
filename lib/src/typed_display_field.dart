@@ -54,11 +54,12 @@ class TypedDisplayField extends StatelessWidget {
 class MapDisplayField extends StatelessWidget {
   final Map<String, double> mapPoint;
   final double boxSize;
-
+  
   MapDisplayField({@required this.mapPoint, this.boxSize});
 
   @override
   Widget build(BuildContext context) {
+    GoogleMap googleMap;
     GoogleMapOptions mapOptions;
     LatLng pos;
     double sz = _getBoxSize(mapPoint, boxSize: boxSize);
@@ -76,21 +77,26 @@ class MapDisplayField extends StatelessWidget {
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
         myLocationEnabled: false,
+
       );
+
+      googleMap = GoogleMap( 
+        options: mapOptions,
+        onMapCreated: (GoogleMapController controller) {
+          controller.addMarker(MarkerOptions(position: pos));
+        },
+      );  
+
     }
 
     if (mapPoint == null) {
       return Icon(Icons.map);
     } else {
       return SizedBox(
+        key: Key(pos.toString()),
         height: sz,
         width: sz,
-        child: GoogleMap(
-          options: mapOptions,
-          onMapCreated: (GoogleMapController controller) {
-            controller.addMarker(MarkerOptions(position: pos));
-          },
-        ),
+        child: googleMap,
       );
     }
   }
