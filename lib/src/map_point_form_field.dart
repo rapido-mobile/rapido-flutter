@@ -33,79 +33,52 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
     super.initState();
   }
 
-  String _formatString(Map<String, double> location) {
-    if (location == null) return "";
-    return "${location["latitude"]},${location["longitude"]}";
-  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textContoller =
-        TextEditingController(text: _formatString(_currentValue));
-    return Row(
-      children: [
-        Flexible(
-          child: TextFormField(
-            controller: _textContoller,
-            keyboardType:
-                TextInputType.numberWithOptions(signed: true, decimal: true),
-            decoration: InputDecoration(
-              labelText: widget.label,
-              suffixIcon: IconButton(
-                icon: Icon(Icons.clear),
-                onPressed: () {
-                 _textContoller.text = "";
-                },
-              ),
-            ),
-            onSaved: (String value) {
-              List<String> list = value.split(",");
-              if (list.length != 2) {
-                widget.onSaved(null);
-              } else {
-                Map<String, double> map = {
-                  "latitude": double.parse(list[0]),
-                  "longitude": double.parse(list[1])
-                };
-                widget.onSaved(map);
-              }
-            },
-          ),
-        ),
-        IconButton(
-          icon: Icon(Icons.map),
-          onPressed: () {
-            showDialog<Map<String, double>>(
-                context: context,
-                builder: (BuildContext context) {
-                  return MapPointDialog(
-                    initialValue: _currentValue,
-                  );
-                }).then((Map<String, double> location) {
-              if (location == null) return;
-              setState(() {
-                _currentValue = location;
-              });
-              _textContoller.text = _formatString(location);
-            });
+    LatLng location;
+    return FormField(
+      builder: (FormFieldState<Map<String, double>> state) {
+        return MapPointPicker(
+          initialValue: widget.initialValue,
+          onLocationChanged: (LatLng loc) {
+            location = loc;
           },
-        )
-      ],
+        );
+      },
+      onSaved: (Map<String, double> loc) {
+        widget.onSaved(
+            {"latitude": location.latitude, "longitude": location.longitude});
+      },
     );
+
+
   }
 }
 
-class MapPointDialog extends StatefulWidget {
+class MapPointPicker extends StatefulWidget {
   final Map<String, double> initialValue;
-  MapPointDialog({this.initialValue});
+  final Function onLocationChanged;
+  MapPointPicker({this.initialValue, this.onLocationChanged});
 
-  _MapPointDialogState createState() => _MapPointDialogState();
+  _MapPointPickerState createState() => _MapPointPickerState();
 }
 
-class _MapPointDialogState extends State<MapPointDialog> {
+class _MapPointPickerState extends State<MapPointPicker> {
   Map<String, double> _startingMapPoint;
   Widget awaitingWidget = Center(child: CircularProgressIndicator());
   GoogleMapController mapController;
+
+  Map<String, double> get location {
+    if (mapController == null) {
+      return _startingMapPoint;
+    }
+    Map<String, double> mp = {
+      "latitude": mapController.cameraPosition.target.latitude,
+      "longitude": mapController.cameraPosition.target.longitude,
+    };
+    return mp;
+  }
 
   @override
   void initState() {
@@ -126,56 +99,78 @@ class _MapPointDialogState extends State<MapPointDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: _startingMapPoint == null
-          ? awaitingWidget
-          : SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Icon(Icons.map),
-                  Text(""),
-                  SizedBox(
-                    width: 300.0,
-                    height: 300.0,
-                    child: Overlay(initialEntries: [
-                      OverlayEntry(builder: (BuildContext context) {
-                        return GoogleMap(
-                          options: new GoogleMapOptions(
-                            trackCameraPosition: true,
-                            myLocationEnabled: true,
-                            cameraPosition: new CameraPosition(
-                                target: new LatLng(
-                                    _startingMapPoint["latitude"],
-                                    _startingMapPoint["longitude"]),
-                                zoom: 15.0),
-                          ),
-                          onMapCreated: (GoogleMapController controller) {
-                            mapController = controller;
-                          },
-                        );
-                      }),
-                      OverlayEntry(builder: (BuildContext context) {
-                        return Icon(Icons.flag,
-                            color: Theme.of(context).accentColor);
-                      })
-                    ]),
-                  ),
-                  FloatingActionButton(
-                    child: Icon(Icons.check),
-                    onPressed: () {
-                      Map<String, double> mp = {
-                        "latitude":
-                            mapController.cameraPosition.target.latitude,
-                        "longitude":
-                            mapController.cameraPosition.target.longitude,
-                      };
-                      Navigator.pop(context, mp);
-                    },
-                  )
-                ],
-              ),
+  Widget build(BuildContext contexy) {
+    return SizedBox(
+      width: 300.0,
+      height: 300.0,
+      child: Overlay(initialEntries: [
+        OverlayEntry(builder: (BuildContext context) {
+          return GoogleMap(
+            options: new GoogleMapOptions(
+              trackCameraPosition: true,
+              scrollGesturesEnabled: true,
+              myLocationEnabled: true,
+              cameraPosition: new CameraPosition(
+                  target: new LatLng(_startingMapPoint["latitude"],
+                      _startingMapPoint["longitude"]),
+                  zoom: 15.0),
             ),
+            onMapCreated: (GoogleMapController controller) {
+              mapController = controller;
+              mapController.addListener(() {
+                if (widget.onLocationChanged != null) {
+                  widget.onLocationChanged(mapController.cameraPosition.target);
+                }
+              });
+            },
+          );
+        }),
+        OverlayEntry(builder: (BuildContext context) {
+          return Icon(Icons.flag, color: Theme.of(context).accentColor);
+        })
+      ]),
+    );
+  }
+}
+
+class MapPointDialog extends StatefulWidget {
+  final Map<String, double> initialValue;
+  MapPointDialog({this.initialValue});
+
+  _MapPointDialogState createState() => _MapPointDialogState();
+}
+
+class _MapPointDialogState extends State<MapPointDialog> {
+  @override
+  Widget build(BuildContext context) {
+    LatLng location;
+
+    return Dialog(
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Icon(Icons.map),
+            Text(""),
+            MapPointPicker(
+              initialValue: widget.initialValue,
+              onLocationChanged: (LatLng loc) {
+                print(loc);
+                location = loc;
+              },
+            ),
+            FloatingActionButton(
+              child: Icon(Icons.check),
+              onPressed: () {
+                Map<String, double> mp = {
+                  "latitude": location.latitude,
+                  "longitude": location.longitude,
+                };
+                Navigator.pop(context, mp);
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }
