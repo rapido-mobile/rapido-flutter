@@ -1,3 +1,9 @@
+## [0.1.14] - 2018-12-26
+ * Added an image formfield that will automatically provide an image picker that can allow choosing directly from the camera, from the gallery, or entering a link. 
+ * Added TypedDisplay fields, so that you can pass any field from a DocumentList and rapido will do its best to display it. Currently provides supprt for images (either form the device of a url), maps, and otherwise strings.
+ * Enhanced DocumentForm so that the map picker and the image picker are embedded in the form rather than popping up separate dialogs.
+ * Breaking change: remaned "map point" to "latlong." In order to add map functionality to your application, you need to change field names to end in "latlong."
+
 ## [0.0.13] - 2018-12-09
  * Changed DocumentListMapView to set it's starting camera based on the Documents in the list, unless the developer supplied explicit coordinates.
  * Use numbered keyboard with map points.

@@ -90,8 +90,8 @@ class Document extends MapBase<String, dynamic> {
     if (j.length != 0) {
       Map newData = json.decode(j);
       newData.keys.forEach((dynamic key) {
-        if (key == "map point" && newData[key] != null) {
-          // convert map points to the correct type
+        if (key == "latlong" && newData[key] != null) {
+          // convert latlongs to the correct type
           newData[key] = Map<String, double>.from(newData[key]);
         }
         _map[key] = newData[key];

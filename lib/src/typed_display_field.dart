@@ -33,7 +33,7 @@ class TypedDisplayField extends StatelessWidget {
         boxSize: boxSize,
       );
     }
-    if (fieldName.toLowerCase().endsWith("map point")) {
+    if (fieldName.toLowerCase().endsWith("latlong")) {
       return MapDisplayField(
         mapPoint: document[fieldName],
         boxSize: boxSize,
