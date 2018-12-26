@@ -93,7 +93,7 @@ class MapDisplayField extends StatelessWidget {
       return Icon(Icons.map);
     } else {
       return SizedBox(
-        key: Key(pos.toString()),
+        key: Key("${pos.toString()}:${sz.toString()}"),
         height: sz,
         width: sz,
         child: googleMap,
