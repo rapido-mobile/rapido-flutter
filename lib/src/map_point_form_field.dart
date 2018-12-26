@@ -113,46 +113,52 @@ class _MapPointPickerState extends State<MapPointPicker> {
       setState(() {
         _startingMapPoint = location;
       });
+      if (widget.onLocationChanged != null) {
+        widget.onLocationChanged(location);
+      }
     });
   }
 
   @override
   Widget build(BuildContext contexy) {
-    return SizedBox(
-      width: 300.0,
-      height: 300.0,
-      child: Overlay(initialEntries: [
-        OverlayEntry(builder: (BuildContext context) {
-          return GoogleMap(
-            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-              new Factory<OneSequenceGestureRecognizer>(
-                () => new EagerGestureRecognizer(),
-              ),
-            ].toSet(),
-            options: new GoogleMapOptions(
-              trackCameraPosition: true,
-              scrollGesturesEnabled: true,
-              myLocationEnabled: true,
-              cameraPosition: new CameraPosition(
-                  target: new LatLng(_startingMapPoint["latitude"],
-                      _startingMapPoint["longitude"]),
-                  zoom: 15.0),
-            ),
-            onMapCreated: (GoogleMapController controller) {
-              mapController = controller;
-              mapController.addListener(() {
-                if (widget.onLocationChanged != null) {
-                  widget.onLocationChanged(mapController.cameraPosition.target);
-                }
-              });
-            },
+    return _startingMapPoint == null
+        ? CircularProgressIndicator()
+        : SizedBox(
+            width: 300.0,
+            height: 300.0,
+            child: Overlay(initialEntries: [
+              OverlayEntry(builder: (BuildContext context) {
+                return GoogleMap(
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                    new Factory<OneSequenceGestureRecognizer>(
+                      () => new EagerGestureRecognizer(),
+                    ),
+                  ].toSet(),
+                  options: new GoogleMapOptions(
+                    trackCameraPosition: true,
+                    scrollGesturesEnabled: true,
+                    myLocationEnabled: true,
+                    cameraPosition: new CameraPosition(
+                        target: new LatLng(_startingMapPoint["latitude"],
+                            _startingMapPoint["longitude"]),
+                        zoom: 15.0),
+                  ),
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController = controller;
+                    mapController.addListener(() {
+                      if (widget.onLocationChanged != null) {
+                        widget.onLocationChanged(
+                            mapController.cameraPosition.target);
+                      }
+                    });
+                  },
+                );
+              }),
+              OverlayEntry(builder: (BuildContext context) {
+                return Icon(Icons.flag, color: Theme.of(context).accentColor);
+              })
+            ]),
           );
-        }),
-        OverlayEntry(builder: (BuildContext context) {
-          return Icon(Icons.flag, color: Theme.of(context).accentColor);
-        })
-      ]),
-    );
   }
 }
 
