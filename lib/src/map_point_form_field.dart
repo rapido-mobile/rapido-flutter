@@ -48,8 +48,13 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
         );
       },
       onSaved: (Map<String, double> loc) {
-        widget.onSaved(
-            {"latitude": location.latitude, "longitude": location.longitude});
+        if (location == null && widget.initialValue != null) {
+          return;
+        }
+        else if (location != null) {
+          widget.onSaved(
+              {"latitude": location.latitude, "longitude": location.longitude});
+        }
       },
     );
   }

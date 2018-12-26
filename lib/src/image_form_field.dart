@@ -31,7 +31,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
   File _imageFile;
   String _imageUrl;
   bool _dirty = false;
-  final double _thumbSize = 200.0;
+  final double _thumbSize = 300.0;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
         return Row(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(border: Border.all()),
+              decoration: BoxDecoration(color: Colors.grey),
               child: SizedBox(
                 height: _thumbSize,
                 width: _thumbSize,
