@@ -54,76 +54,94 @@ class _ImageFormFieldState extends State<ImageFormField> {
 
     return FormField(
       builder: (FormFieldState<String> state) {
-        return Row(
+        return Column(
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(color: Colors.grey),
-              child: SizedBox(
-                height: _thumbSize,
-                width: _thumbSize,
-                child: _imageFile != null
-                    ? ImageDisplayField(
-                        imageString: _imageFile.path, boxSize: _thumbSize)
-                    : ImageDisplayField(
-                        imageString: _imageUrl, boxSize: _thumbSize),
-              ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    widget.label,
+                    style: Theme.of(context).textTheme.caption,
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+              ],
             ),
-            Column(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.image),
-                  onPressed: () {
-                    _setImageFile(ImageSource.gallery);
-                  },
+            Row(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(color: Colors.grey),
+                  child: SizedBox(
+                    height: _thumbSize,
+                    width: _thumbSize,
+                    child: _imageFile != null
+                        ? ImageDisplayField(
+                            imageString: _imageFile.path, boxSize: _thumbSize)
+                        : ImageDisplayField(
+                            imageString: _imageUrl, boxSize: _thumbSize),
+                  ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.camera),
-                  onPressed: () {
-                    _setImageFile(ImageSource.camera);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.insert_link),
-                  onPressed: () async {
-                    await showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Icon(Icons.link),
-                          content: TextField(
-                            controller: _textEditingController,
-                            decoration: InputDecoration(
-                                hintText:
-                                    "https://rapido-mobile.github.io/assets/background.jpg"),
-                          ),
-                          actions: <Widget>[
-                            FloatingActionButton(
-                              child: Icon(Icons.check),
-                              onPressed: () {
-                                Navigator.pop(
-                                    context, _textEditingController.text);
-                              },
-                            ),
-                          ],
-                        );
+                Column(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.image),
+                      onPressed: () {
+                        _setImageFile(ImageSource.gallery);
                       },
-                    ).then((String url) {
-                      if(url == "" || url == null) return;
-                      setState(() {
-                        _imageFile = null;
-                        _imageUrl = url;
-                        _dirty = true;
-                      });
-                    });
-                  },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.camera),
+                      onPressed: () {
+                        _setImageFile(ImageSource.camera);
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.insert_link),
+                      onPressed: () async {
+                        await showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Icon(Icons.link),
+                              content: TextField(
+                                controller: _textEditingController,
+                                decoration: InputDecoration(
+                                    hintText:
+                                        "https://rapido-mobile.github.io/assets/background.jpg"),
+                              ),
+                              actions: <Widget>[
+                                FloatingActionButton(
+                                  child: Icon(Icons.check),
+                                  onPressed: () {
+                                    Navigator.pop(
+                                        context, _textEditingController.text);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ).then((String url) {
+                          if (url == "" || url == null) return;
+                          setState(() {
+                            _imageFile = null;
+                            _imageUrl = url;
+                            _dirty = true;
+                          });
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _imageFile = null;
+                          _imageUrl = null;
+                          _dirty = true;
+                        });
+                      },
+                    )
+                  ],
                 ),
-                IconButton(icon: Icon(Icons.clear),onPressed: (){
-                  setState(() {
-                  _imageFile = null;
-                  _imageUrl = null;
-                  _dirty = true;
-                                    });
-                },)
               ],
             ),
           ],
@@ -149,7 +167,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
 
   void _setImageFile(ImageSource source) async {
     File file = await ImagePicker.pickImage(source: source);
-    if(file == null) return;
+    if (file == null) return;
     setState(() {
       _imageUrl = null;
       _imageFile = file;

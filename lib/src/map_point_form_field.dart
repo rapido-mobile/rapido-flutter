@@ -40,18 +40,32 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
     LatLng location;
     return FormField(
       builder: (FormFieldState<Map<String, double>> state) {
-        return MapPointPicker(
-          initialValue: widget.initialValue,
-          onLocationChanged: (LatLng loc) {
-            location = loc;
-          },
+        return Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    widget.label,
+                    style: Theme.of(context).textTheme.caption,
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+              ],
+            ),
+            MapPointPicker(
+              initialValue: widget.initialValue,
+              onLocationChanged: (LatLng loc) {
+                location = loc;
+              },
+            ),
+          ],
         );
       },
       onSaved: (Map<String, double> loc) {
         if (location == null && widget.initialValue != null) {
           return;
-        }
-        else if (location != null) {
+        } else if (location != null) {
           widget.onSaved(
               {"latitude": location.latitude, "longitude": location.longitude});
         }
