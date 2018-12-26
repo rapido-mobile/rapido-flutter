@@ -158,9 +158,11 @@ class _ImageFormFieldState extends State<ImageFormField> {
           } else if (_imageUrl != null) {
             widget.onSaved(_imageUrl);
           } else {
-            widget.onSaved(widget.initialValue);
+            widget.onSaved(null);
           }
-        }
+        }else {
+            widget.onSaved(widget.initialValue);
+          } 
       },
     );
   }

@@ -81,7 +81,7 @@ class _DocumentListViewState extends State<DocumentListView> {
             skip = true;
           }
         }
-        if (!skip && doc[key] != null) {
+        if (!skip && (doc[key] != null)) {
           // don't try to display null value
           cells.add(
             TypedDisplayField(

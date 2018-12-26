@@ -68,7 +68,6 @@ class _DocumentFormState extends State<DocumentForm> {
             // this will caused onSaved to be called for each input field
             // which will cause the document to autosave
             formKey.currentState.save();
-
             // add a new form to the documentList
             if (widget.document == null) {
               widget.documentList.add(_document);
@@ -83,11 +82,26 @@ class _DocumentFormState extends State<DocumentForm> {
   Widget build(BuildContext context) {
     IconData titleIconData = widget.document == null ? Icons.add : Icons.edit;
     return Scaffold(
-      appBar: AppBar(title: Icon(titleIconData)),
+      appBar: AppBar(
+        title: Icon(titleIconData),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                formKey.currentState.save();
+                if (widget.document == null) {
+                  widget.documentList.add(_document);
+                }
+                Navigator.pop(context);
+              }),
+        ],
+      ),
       body: Form(
         key: formKey,
-        child: ListView(
-          children: _buildFormFields(context),
+        child: SingleChildScrollView(
+          child: Column(
+            children: _buildFormFields(context),
+          ),
         ),
       ),
     );

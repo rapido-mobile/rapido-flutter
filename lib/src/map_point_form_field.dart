@@ -37,7 +37,6 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
 
   @override
   Widget build(BuildContext context) {
-    LatLng location;
     return FormField(
       builder: (FormFieldState<Map<String, double>> state) {
         return Column(
@@ -54,20 +53,19 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
               ],
             ),
             MapPointPicker(
-              initialValue: widget.initialValue,
-              onLocationChanged: (LatLng loc) {
-                location = loc;
+              initialValue: _currentValue,
+              onLocationChanged: (Map<String, double> loc) {
+                _currentValue = loc;
               },
             ),
           ],
         );
       },
       onSaved: (Map<String, double> loc) {
-        if (location == null && widget.initialValue != null) {
-          return;
-        } else if (location != null) {
-          widget.onSaved(
-              {"latitude": location.latitude, "longitude": location.longitude});
+        if (_currentValue == null && widget.initialValue != null) {
+          widget.onSaved(_currentValue);
+        } else if (_currentValue != null) {
+          widget.onSaved(_currentValue);
         }
       },
     );
@@ -147,8 +145,13 @@ class _MapPointPickerState extends State<MapPointPicker> {
                     mapController = controller;
                     mapController.addListener(() {
                       if (widget.onLocationChanged != null) {
-                        widget.onLocationChanged(
-                            mapController.cameraPosition.target);
+                        Map<String, double> mp = {
+                          "latitude":
+                              mapController.cameraPosition.target.latitude,
+                          "longitude":
+                              mapController.cameraPosition.target.longitude,
+                        };
+                        widget.onLocationChanged(mp);
                       }
                     });
                   },
@@ -172,7 +175,7 @@ class MapPointDialog extends StatefulWidget {
 class _MapPointDialogState extends State<MapPointDialog> {
   @override
   Widget build(BuildContext context) {
-    LatLng location;
+    Map<String, double> location;
 
     return Dialog(
       child: SingleChildScrollView(
@@ -182,18 +185,14 @@ class _MapPointDialogState extends State<MapPointDialog> {
             Text(""),
             MapPointPicker(
               initialValue: widget.initialValue,
-              onLocationChanged: (LatLng loc) {
+              onLocationChanged: (Map<String, double> loc) {
                 location = loc;
               },
             ),
             FloatingActionButton(
               child: Icon(Icons.check),
               onPressed: () {
-                Map<String, double> mp = {
-                  "latitude": location.latitude,
-                  "longitude": location.longitude,
-                };
-                Navigator.pop(context, mp);
+                Navigator.pop(context, location);
               },
             )
           ],
