@@ -22,4 +22,23 @@ void main() {
     expect(widgetTest.find.text(dateTimeString), widgetTest.findsOneWidget);
     expect(widgetTest.find.text(dateString), widgetTest.findsOneWidget);
   });
+
+  widgetTest.testWidgets('test text form',
+      (widgetTest.WidgetTester tester) async {
+    DocumentList testList =
+        DocumentList("title test", labels: {"Title": "title"});
+    await tester.pumpWidget(
+      MaterialApp(
+        home: DocumentForm(testList),
+      ),
+    );
+    expect(widgetTest.find.byType(FloatingActionButton),
+        widgetTest.findsOneWidget);
+    expect(widgetTest.find.byType(TextFormField),
+        widgetTest.findsOneWidget); 
+    await tester.enterText(widgetTest.find.byType(TextFormField), "xxxx");
+    await tester.tap(widgetTest.find.byType(FloatingActionButton));
+    print(testList[0]["title"]);
+    expect(testList[0]["title"] == "xxxx", true);
+  });
 }
