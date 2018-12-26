@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/foundation.dart';
 
 class MapPointFormField extends StatefulWidget {
   /// The name of the field, used to calculate which type of input to return
@@ -33,7 +35,6 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     LatLng location;
@@ -51,8 +52,6 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
             {"latitude": location.latitude, "longitude": location.longitude});
       },
     );
-
-
   }
 }
 
@@ -106,6 +105,11 @@ class _MapPointPickerState extends State<MapPointPicker> {
       child: Overlay(initialEntries: [
         OverlayEntry(builder: (BuildContext context) {
           return GoogleMap(
+            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+              new Factory<OneSequenceGestureRecognizer>(
+                () => new EagerGestureRecognizer(),
+              ),
+            ].toSet(),
             options: new GoogleMapOptions(
               trackCameraPosition: true,
               scrollGesturesEnabled: true,
@@ -154,7 +158,6 @@ class _MapPointDialogState extends State<MapPointDialog> {
             MapPointPicker(
               initialValue: widget.initialValue,
               onLocationChanged: (LatLng loc) {
-                print(loc);
                 location = loc;
               },
             ),
