@@ -11,3 +11,5 @@ export 'src/document.dart';
 export 'src/document_list_map_view.dart';
 export 'src/document_page.dart';
 export 'src/typed_display_field.dart';
+export 'src/map_point_form_field.dart';
+export 'src/image_form_field.dart';
