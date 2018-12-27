@@ -4,6 +4,14 @@ import 'package:rapido/documents.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:validators/validators.dart' as validators;
 
+/// Given a Document and field name, TypedDisplayField will return a widget
+/// appropriate for displaying the current value in that document.
+/// Currently, the following special fieldnamse are supported:
+/// "latlong" - any field name ending in "latlong" will be displayed with
+/// a map widget.
+/// "image" - any field name ending in "image" will be display with an image, 
+/// and will assume that the value is a string that is either a path to an 
+/// image on disk, or is a url to a publicly accessible image on the interent.
 class TypedDisplayField extends StatelessWidget {
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;

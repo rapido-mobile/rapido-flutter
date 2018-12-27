@@ -4,8 +4,10 @@ import 'package:location/location.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
 
+/// A form field for allowing the user to choose a location on a
+/// map. The chosen value is stored as a Map<String, double>. 
 class MapPointFormField extends StatefulWidget {
-  /// The name of the field, used to calculate which type of input to return
+  /// The name of the field in the Document
   final String fieldName;
 
   /// The label to display in the UI for the specified fieldName
@@ -15,7 +17,10 @@ class MapPointFormField extends StatefulWidget {
   /// saved. The value returned is determined by the type of the field.
   final Function onSaved;
 
-  /// The initial value to display in the FormField.
+  /// The initial location to display in the map. If null, the map
+  /// will use the device's location as the initial value.
+  /// The value must be a Map<String, double> with at least the 
+  /// keys "latitude" and "longitude" defined.
   final Map<String, double> initialValue;
 
   MapPointFormField(this.fieldName,
@@ -72,8 +77,18 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
   }
 }
 
+/// A picker for a point on a map. Used by the MapPointFormField, though
+/// it could be generally useful.
 class MapPointPicker extends StatefulWidget {
+
+  /// The initial location to display in the map. If null, the map
+  /// will use the device's location as the initial value.
+  /// The value must be a Map<String, double> with at least the 
+  /// keys "latitude" and "longitude" defined.
   final Map<String, double> initialValue;
+
+  /// call back function to reveive notification when the map
+  /// position changes.
   final Function onLocationChanged;
   MapPointPicker({this.initialValue, this.onLocationChanged});
 
@@ -165,7 +180,14 @@ class _MapPointPickerState extends State<MapPointPicker> {
   }
 }
 
+/// A dialog that encapsulated a MapPointPicker. Returns the chosen locations
+/// as a Map<String, double> with the keys "latitude" and "longitude."
 class MapPointDialog extends StatefulWidget {
+
+  /// The initial location to display in the map. If null, the map
+  /// will use the device's location as the initial value.
+  /// The value must be a Map<String, double> with at least the 
+  /// keys "latitude" and "longitude" defined.
   final Map<String, double> initialValue;
   MapPointDialog({this.initialValue});
 
