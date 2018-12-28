@@ -4,7 +4,8 @@
  * Enhanced DocumentForm so that the map picker and the image picker are embedded in the form rather than popping up separate dialogs.
  * Added 'text' to inferred types. Field names ending in 'text' will be rendered with a multi-line input field.
  * Breaking change: remaned "map point" to "latlong." In order to add map functionality to your application, you need to change field names to end in "latlong."
-
+ * Breaking change: renamed the library from "documents" to "rapido. So, you must change your imports to: import 'package:rapido/rapido.dart';
+ 
 ## [0.0.13] - 2018-12-09
  * Changed DocumentListMapView to set it's starting camera based on the Documents in the list, unless the developer supplied explicit coordinates.
  * Use numbered keyboard with map points.
