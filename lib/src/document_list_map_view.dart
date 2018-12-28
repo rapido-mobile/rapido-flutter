@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rapido/rapido.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/foundation.dart';
 
 /// Support for presenting a DocumentList on a GoogleMap.
 /// The DocumentListMapView assumes that documents container certain fields.
@@ -56,19 +58,14 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
 
   @override
   initState() {
-    // set the starting location of the map as best as possible
-    // In priority order:
-    // 1. if the starting coordinates were explicitly set, use that
-    // 2. otherwise, if there are no documents to display, use the current location
-    // 3. otherwise, if there is one document to display, center on that document
-    // 4. otherwise if there are multiple documents to display, fit the map to them
+    // if the DocumentList is not ready, wait until
+    // the documents are loaded before initializing the map
     if (widget.documentList.documentsLoaded) {
       _initializeMapPosition();
       data = widget.documentList;
     } else {
       widget.documentList.onLoadComplete = ((DocumentList completeData) {
         _initializeMapPosition();
-
         data = widget.documentList;
       });
     }
@@ -76,6 +73,13 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   }
 
   void _initializeMapPosition() {
+    // set the starting location of the map as best as possible
+    // In priority order:
+    // 1. if the starting coordinates were explicitly set, use that
+    // 2. otherwise, if there are no documents to display, use the current location
+    // 3. otherwise, if there is one document to display, center on that document
+    // 4. otherwise if there are multiple documents to display, fit the map to them
+
     if (widget.startingLatitude == null || widget.startingLongitude == null) {
       // starting coordinates were not specifically set
 
@@ -194,6 +198,11 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     return GoogleMap(
       options: options,
       onMapCreated: _onMapCreated,
+      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+        new Factory<OneSequenceGestureRecognizer>(
+          () => new EagerGestureRecognizer(),
+        ),
+      ].toSet(),
     );
   }
 
