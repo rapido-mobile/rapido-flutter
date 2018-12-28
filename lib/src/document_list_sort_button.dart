@@ -33,13 +33,22 @@ class _DocumentListSortButtonState extends State<DocumentListSortButton> {
           currentFieldName = fieldName;
         },
         itemBuilder: (BuildContext context) {
+          List<String> unsortable = ["image", "latlong"];
           List<PopupMenuItem<String>> fieldButtons = [];
           widget.documentList.labels.forEach((String label, String fieldName) {
-            fieldButtons.add(PopupMenuItem<String>(
-                value: fieldName,
-                child: ListTile(
-                  title: Text(label),
-                )));
+            bool addToList = true;
+            unsortable.forEach((String s) {
+              if (fieldName.toLowerCase().endsWith(s)) {
+                addToList = false;
+              }
+            });
+            if (addToList) {
+              fieldButtons.add(PopupMenuItem<String>(
+                  value: fieldName,
+                  child: ListTile(
+                    title: Text(label),
+                  )));
+            }
           });
           return fieldButtons;
         });

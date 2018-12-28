@@ -27,7 +27,6 @@ The rapido widgets infer what kind data is in each field based on the field name
 Rapido also handles specialized data types:
 ![pickers, and mapss](https://rapido-mobile.github.io/assets/advanced-ui.png)
 
-
 You can replace any widget with your own widget, or you can use built in customization hooks to quickly create your own look and feel.
 
 # Rapido Online
@@ -44,7 +43,7 @@ DocumentList lies at the core of the R.A.D. experience. By simply using a list, 
 2. Default CRUD UI that your users can use for displaying, creating, editing, and deleting documents in the list.
 
 ## Importing
-Everything you need is in documents.dart:
+Everything you need is in rapido.dart:
 
 ```
 import 'package:rapido/rapido.dart';
@@ -112,17 +111,3 @@ DocumentForm(taskList, index: 0);
 
 ## Feedback Welcome
 Rapido is undergoing rapid development. Please visit [our Github repo](https://github.com/rapido-mobile/rapido-flutter) to log any issues or features requests. Of course, pull requests are most welcome.
-
-## Roadmap
-### More TypedInputFields
-DocumentForm works by creating input fields based on the name of the field in the document. Our current plan is to add more typed input fields, such as:
- * Switches
- * Favorite 
- * Time and DateTime
- * Long Text
-
-### Cloud Storage and Syncing
-We plan to make storing and syncing documents with DocumentList incredibly easy.
-
-### Camera Widget
-We need to dramatically simplify using a camera in your application.

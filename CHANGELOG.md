@@ -3,6 +3,7 @@
  * Added TypedDisplay fields, so that you can pass any field from a DocumentList and rapido will do its best to display it. Currently provides supprt for images (either form the device of a url), maps, and otherwise strings.
  * Enhanced DocumentForm so that the map picker and the image picker are embedded in the form rather than popping up separate dialogs.
  * Added 'text' to inferred types. Field names ending in 'text' will be rendered with a multi-line input field.
+ * Added DocumentListPageView class for paging through DocumentViews.
  * Breaking change: remaned "map point" to "latlong." In order to add map functionality to your application, you need to change field names to end in "latlong."
  * Breaking change: renamed the library from "documents" to "rapido. So, you must change your imports to: import 'package:rapido/rapido.dart';
  
