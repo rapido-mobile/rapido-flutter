@@ -13,7 +13,8 @@ import 'image_form_field.dart';
 /// ends in "datetime" -> date and time
 /// ends in "latlong" -> latitude and longitude
 /// ends in "image" -> image
-/// All other fields return strings.
+/// ends in "text" -> multiline string
+/// All other fields return a single line text input field.
 class TypedInputField extends StatelessWidget {
   /// Optional Custom format string for reading, writing, and
   /// display DateTime objects which include both date and time
@@ -82,11 +83,16 @@ class TypedInputField extends StatelessWidget {
       );
     }
 
+    if(fieldName.toLowerCase().endsWith("text")) {
+      return _getTextFormField(lines: 10);
+    }
+
     return _getTextFormField();
   }
 
-  TextFormField _getTextFormField() {
+  TextFormField _getTextFormField({int lines: 1}) {
     return TextFormField(
+        maxLines: lines,
         decoration: InputDecoration(labelText: label),
         initialValue: initialValue,
         onSaved: (String value) {
