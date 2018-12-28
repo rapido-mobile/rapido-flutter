@@ -62,40 +62,48 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     // 2. otherwise, if there are no documents to display, use the current location
     // 3. otherwise, if there is one document to display, center on that document
     // 4. otherwise if there are multiple documents to display, fit the map to them
-
-    widget.documentList.onLoadComplete = ((DocumentList completeData) {
-      if (widget.startingLatitude == null || widget.startingLongitude == null) {
-        // starting coordinates were not specifically set
-
-        // find documents that have location
-        List<Document> docsWithLocation = _getDocumentsWithMapPoints();
-
-        if (docsWithLocation.length == 0)
-          _setCurrentLocation(); // no docs to display, use current location
-        else if (docsWithLocation.length == 1) {
-          // one doc to display, center on it
-          setState(() {
-            _startingLatitude = docsWithLocation[0]["latlong"]["latitude"];
-            _startingLongitude = docsWithLocation[0]["latlong"]["longitude"];
-          });
-        } else if (docsWithLocation.length > 1) {
-          //   // CameraTargetBounds is not working according to:
-          //   // https://github.com/flutter/flutter/issues/25298
-          // multiple documents to display, fit the map to them
-          // _cameraBounds = _docsBounds(docsWithLocation);
-          List<double> center = _centerOfDocs(docsWithLocation);
-            _startingLatitude = center[0];
-            _startingLongitude = center[1];
-        }
-      }
-
-      widget.startingZoom != null
-          ? _startingZoom = widget.startingZoom
-          : _startingZoom = 15.0;
-
+    if (widget.documentList.documentsLoaded) {
+      _initializeMapPosition();
       data = widget.documentList;
-    });
+    } else {
+      widget.documentList.onLoadComplete = ((DocumentList completeData) {
+        _initializeMapPosition();
+
+        data = widget.documentList;
+      });
+    }
     super.initState();
+  }
+
+  void _initializeMapPosition() {
+    if (widget.startingLatitude == null || widget.startingLongitude == null) {
+      // starting coordinates were not specifically set
+
+      // find documents that have location
+      List<Document> docsWithLocation = _getDocumentsWithMapPoints();
+
+      if (docsWithLocation.length == 0)
+        _setCurrentLocation(); // no docs to display, use current location
+      else if (docsWithLocation.length == 1) {
+        // one doc to display, center on it
+        setState(() {
+          _startingLatitude = docsWithLocation[0]["latlong"]["latitude"];
+          _startingLongitude = docsWithLocation[0]["latlong"]["longitude"];
+        });
+      } else if (docsWithLocation.length > 1) {
+        //   // CameraTargetBounds is not working according to:
+        //   // https://github.com/flutter/flutter/issues/25298
+        // multiple documents to display, fit the map to them
+        // _cameraBounds = _docsBounds(docsWithLocation);
+        List<double> center = _centerOfDocs(docsWithLocation);
+        _startingLatitude = center[0];
+        _startingLongitude = center[1];
+      }
+    }
+
+    widget.startingZoom != null
+        ? _startingZoom = widget.startingZoom
+        : _startingZoom = 15.0;
   }
 
   Map<String, double> _locationMaxes(List<Document> docs) {

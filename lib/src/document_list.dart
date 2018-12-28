@@ -19,6 +19,11 @@ class DocumentList extends ListBase<Document> {
   /// persisted data. It passes a reference to itself,
   /// onLoadComplete: (DocumentList documentList) {/* do something */}
   Function onLoadComplete;
+
+  /// True when there are no more documents to load
+  /// False when documents are still loading
+  bool documentsLoaded = false;
+
   Map<String, String> _labels;
   List<Document> _documents;
 
@@ -206,6 +211,7 @@ class DocumentList extends ListBase<Document> {
         }
       });
       if (onLoadComplete != null) onLoadComplete(this);
+      documentsLoaded = true;
       _notifyListener();
     });
   }
