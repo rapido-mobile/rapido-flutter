@@ -134,6 +134,8 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
       setState(() {
         data = newData;
       });
+      mapController.clearMarkers();
+      _addMarkers();
     };
     if (_startingLatitude == null || _startingLongitude == null) {
       return Center(
@@ -177,6 +179,10 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     controller.onInfoWindowTapped.add(_onMarkerTapped);
 
     // see if there is any data to display on the map
+    _addMarkers();
+  }
+
+  void _addMarkers() {
     data.forEach((Document doc) {
       // don't try add a marker if the location is going to fail
       if (doc["latlong"] != null &&
@@ -188,8 +194,8 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
           infoWindowText: InfoWindowText(doc["title"], doc["subtitle"]),
           icon: BitmapDescriptor.defaultMarker,
         );
-
-        controller.addMarker(mo).then((Marker m) {
+    
+        mapController.addMarker(mo).then((Marker m) {
           markerHash[m] = doc;
         });
       }

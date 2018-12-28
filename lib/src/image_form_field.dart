@@ -6,6 +6,12 @@ import 'package:path/path.dart';
 import 'package:validators/validators.dart' as validators;
 import 'typed_display_field.dart';
 
+/// A form field for allowing the user to choose an image. The chosen
+/// value is stored as a string that is either a path to an image on the 
+/// local device, or a URL. Supports selecting images from the camera, the 
+/// device's gallery, or a URL. Images from the gallery or camera are
+/// copied into the application's directory, and a path to the copied image
+/// is stored. Images from the internet are not copied locally.
 class ImageFormField extends StatefulWidget {
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
@@ -17,7 +23,9 @@ class ImageFormField extends StatefulWidget {
   /// saved. The value returned is determined by the type of the field.
   final Function onSaved;
 
-  /// The initial value to display in the FormField.
+  /// The initial value to display in the FormField. Should be a string that is
+  /// either a path to an image on the device, or a URL to an image on the
+  /// internet.
   final String initialValue;
 
   ImageFormField(this.fieldName,
