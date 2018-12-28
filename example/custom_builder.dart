@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapido/documents.dart';
+import 'package:rapido/rapido.dart';
 
 void main() => runApp(MyApp());
 

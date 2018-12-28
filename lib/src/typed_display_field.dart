@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:rapido/documents.dart';
+import 'package:rapido/rapido.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:validators/validators.dart' as validators;
 

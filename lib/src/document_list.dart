@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:math';
-import 'package:rapido/documents.dart';
+import 'package:rapido/rapido.dart';
 
 /// A list Documents. DocumentList automatically persists changes
 /// to the list through, adding, removing, and updating documents that it

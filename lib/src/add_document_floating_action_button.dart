@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rapido/documents.dart';
+import 'package:rapido/rapido.dart';
 
 /// A floating button that invokes a form to add a new
 /// document to a DocumentList. Typically used in Scaffolds.

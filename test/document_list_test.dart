@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:rapido/documents.dart';
+import 'package:rapido/rapido.dart';
 
 void main() {
   test('creates a DocumentList', () {

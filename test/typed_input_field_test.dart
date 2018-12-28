@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart' as widgetTest;
 import 'package:flutter/material.dart';
-import 'package:rapido/documents.dart';
+import 'package:rapido/rapido.dart';
 import "package:test/test.dart";
 
 void main() {
