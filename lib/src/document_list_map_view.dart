@@ -62,40 +62,41 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     // 3. otherwise, if there is one document to display, center on that document
     // 4. otherwise if there are multiple documents to display, fit the map to them
 
-    if (widget.startingLatitude == null || widget.startingLongitude == null) {
-      // starting coordinates were not specifically set
+    widget.documentList.onLoadComplete = ((DocumentList completeData) {
+      if (widget.startingLatitude == null || widget.startingLongitude == null) {
+        // starting coordinates were not specifically set
 
-      // find documents that have location
-      List<Document> docsWithLocation = _getDocumentsWithMapPoints();
+        // find documents that have location
+        List<Document> docsWithLocation = _getDocumentsWithMapPoints();
 
-      if (docsWithLocation.length == 0)
-        _setCurrentLocation(); // no docs to display, use current location
-      else if (docsWithLocation.length == 1) {
-        // one doc to display, center on it
-        setState(() {
-          _startingLatitude = docsWithLocation[0]["latlong"]["latitude"];
-          _startingLongitude = docsWithLocation[0]["latlong"]["longitude"];
-        });
-      } else if (docsWithLocation.length > 1) {
-        // multiple documents to display, fit the map to them
-        List<double> startPoint = _getCenterOfDocs(docsWithLocation);
-        setState(() {
-          _startingLatitude = startPoint[0];
-          _startingLongitude = startPoint[1];
-        });
+        if (docsWithLocation.length == 0)
+          _setCurrentLocation(); // no docs to display, use current location
+        else if (docsWithLocation.length == 1) {
+          // one doc to display, center on it
+          setState(() {
+            _startingLatitude = docsWithLocation[0]["latlong"]["latitude"];
+            _startingLongitude = docsWithLocation[0]["latlong"]["longitude"];
+          });
+        } else if (docsWithLocation.length > 1) {
+          // multiple documents to display, fit the map to them
+          List<double> startPoint = _getCenterOfDocs(docsWithLocation);
+          setState(() {
+            _startingLatitude = startPoint[0];
+            _startingLongitude = startPoint[1];
+          });
+        }
       }
-    }
 
-    widget.startingZoom != null
-        ? _startingZoom = widget.startingZoom
-        : _startingZoom = 15.0;
+      widget.startingZoom != null
+          ? _startingZoom = widget.startingZoom
+          : _startingZoom = 15.0;
 
-    data = widget.documentList;
-
+      data = widget.documentList;
+    });
     super.initState();
   }
 
-  List<double> _getCenterOfDocs(List<Document> docs) {
+  Map<String, double> _locationMaxes(List<Document> docs) {
     double north = -180.0, south = 180.0, east = -180.0, west = 180.0;
     docs.forEach((Document doc) {
       double lat = doc["latlong"]["latitude"];
@@ -105,9 +106,21 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
       if (lng > east) east = lng;
       if (lng < west) west = lng;
     });
+    return {"north": north, "south": south, "east": east, "west": west};
+  }
 
-    double centerLat = ((north - south) / 2) + south;
-    double centerLong = ((west - east) / 2) + east;
+  LatLngBounds _docsBounds(List<Document> docs) {
+    Map<String, double> maxes = _locationMaxes(docs);
+    return LatLngBounds(
+        southwest: LatLng(maxes["south"], maxes["west"]),
+        northeast: LatLng(maxes["north"], maxes["east"]));
+  }
+
+  List<double> _getCenterOfDocs(List<Document> docs) {
+    Map<String, double> maxes = _locationMaxes(docs);
+
+    double centerLat = ((maxes["north"] - maxes["south"]) / 2) + maxes["south"];
+    double centerLong = ((maxes["west"] - maxes["east"]) / 2) + maxes["east"];
     return [centerLat, centerLong];
   }
 
@@ -189,12 +202,12 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
           doc["latlong"]["latitude"] != null &&
           doc["latlong"]["longitude"] != null) {
         MarkerOptions mo = MarkerOptions(
-          position: LatLng(
-              doc["latlong"]["latitude"], doc["latlong"]["longitude"]),
+          position:
+              LatLng(doc["latlong"]["latitude"], doc["latlong"]["longitude"]),
           infoWindowText: InfoWindowText(doc["title"], doc["subtitle"]),
           icon: BitmapDescriptor.defaultMarker,
         );
-    
+
         mapController.addMarker(mo).then((Marker m) {
           markerHash[m] = doc;
         });
