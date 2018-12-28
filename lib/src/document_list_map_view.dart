@@ -50,6 +50,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   double _startingZoom;
   double _startingLatitude;
   double _startingLongitude;
+  LatLngBounds _cameraBounds;
 
   Map<Marker, Document> markerHash = {};
 
@@ -78,12 +79,13 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
             _startingLongitude = docsWithLocation[0]["latlong"]["longitude"];
           });
         } else if (docsWithLocation.length > 1) {
+          //   // CameraTargetBounds is not working according to:
+          //   // https://github.com/flutter/flutter/issues/25298
           // multiple documents to display, fit the map to them
-          List<double> startPoint = _getCenterOfDocs(docsWithLocation);
-          setState(() {
-            _startingLatitude = startPoint[0];
-            _startingLongitude = startPoint[1];
-          });
+          // _cameraBounds = _docsBounds(docsWithLocation);
+          List<double> center = _centerOfDocs(docsWithLocation);
+            _startingLatitude = center[0];
+            _startingLongitude = center[1];
         }
       }
 
@@ -109,14 +111,16 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     return {"north": north, "south": south, "east": east, "west": west};
   }
 
-  LatLngBounds _docsBounds(List<Document> docs) {
-    Map<String, double> maxes = _locationMaxes(docs);
-    return LatLngBounds(
-        southwest: LatLng(maxes["south"], maxes["west"]),
-        northeast: LatLng(maxes["north"], maxes["east"]));
-  }
+  //   // CameraTargetBounds is not working according to:
+  //   // https://github.com/flutter/flutter/issues/25298
+  // LatLngBounds _docsBounds(List<Document> docs) {
+  //   Map<String, double> maxes = _locationMaxes(docs);
+  //   return LatLngBounds(
+  //       southwest: LatLng(maxes["south"], maxes["west"]),
+  //       northeast: LatLng(maxes["north"], maxes["east"]));
+  // }
 
-  List<double> _getCenterOfDocs(List<Document> docs) {
+  List<double> _centerOfDocs(List<Document> docs) {
     Map<String, double> maxes = _locationMaxes(docs);
 
     double centerLat = ((maxes["north"] - maxes["south"]) / 2) + maxes["south"];
@@ -147,22 +151,40 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
       setState(() {
         data = newData;
       });
-      mapController.clearMarkers();
-      _addMarkers();
+      if (mapController != null) {
+        mapController.clearMarkers();
+        _addMarkers();
+      }
     };
-    if (_startingLatitude == null || _startingLongitude == null) {
+
+    // the data is not done loading
+    if ((_startingLatitude == null || _startingLongitude == null) &&
+        (_cameraBounds == null)) {
       return Center(
         child: CircularProgressIndicator(),
       );
     }
 
+    GoogleMapOptions options;
+    // if (_cameraBounds != null) {
+    //   // CameraTargetBounds is not working according to:
+    //   // https://github.com/flutter/flutter/issues/25298
+    //   // resurrect this code when it is working again
+    //   options = GoogleMapOptions(
+    //     myLocationEnabled: true,
+    //     cameraTargetBounds: CameraTargetBounds(_cameraBounds),
+    //   );
+    // } else {
+    options = GoogleMapOptions(
+      myLocationEnabled: true,
+      cameraPosition: CameraPosition(
+          target: LatLng(_startingLatitude, _startingLongitude),
+          zoom: _startingZoom),
+    );
+    // }
+
     return GoogleMap(
-      options: GoogleMapOptions(
-        myLocationEnabled: true,
-        cameraPosition: CameraPosition(
-            target: LatLng(_startingLatitude, _startingLongitude),
-            zoom: _startingZoom),
-      ),
+      options: options,
       onMapCreated: _onMapCreated,
     );
   }
