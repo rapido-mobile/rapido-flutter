@@ -135,6 +135,18 @@ class _DocumentListViewState extends State<DocumentListView> {
     if (widget.customItemBuilder == null) {
       return _defaultListTile(index);
     } else {
+      if (widget.titleKeys != null) {
+        print("""
+Warning: DocumentListView.customItemBuilder and titleKeys are both set.
+Ignoring titleKeys property.
+        """);
+      }
+      if (widget.subtitleKey != null) {
+        print("""
+Warning: DocumentListView.customItemBuilder and subtitleKey are both set.
+Ignoring subtitleKey property.
+        """);
+      }
       return widget.customItemBuilder(
           index, widget.documentList[index], context);
     }
