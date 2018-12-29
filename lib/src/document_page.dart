@@ -28,7 +28,7 @@ class DocumentPage extends StatelessWidget {
     }
     labels.keys.forEach((String label) {
       String fieldName = labels[label];
-      
+
       if (fieldName != "title" && fieldName != "subtitle") {
         // add to the array of input fields
         fields.add(
@@ -59,8 +59,10 @@ class DocumentPage extends StatelessWidget {
         : titleWidget = Icon(Icons.book);
     return Scaffold(
       appBar: AppBar(title: titleWidget),
-      body: ListView(
-        children: _buildFormFields(context),
+      body: SingleChildScrollView(
+        child: Column(
+          children: _buildFormFields(context),
+        ),
       ),
     );
   }

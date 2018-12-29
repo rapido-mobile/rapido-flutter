@@ -15,7 +15,7 @@ class _DocumentListPageViewState extends State<DocumentListPageView> {
     super.initState();
     data = widget.documentList;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     widget.documentList.onChanged = (DocumentList newData) {
