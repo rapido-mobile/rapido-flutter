@@ -9,9 +9,14 @@ class DocumentForm extends StatefulWidget {
   /// The DocumentList on which the forms acts.
   final DocumentList documentList;
 
+  /// If supplied, the Document to edit. If null, a new Document
+  /// will be created.
   final Document document;
 
-  DocumentForm(this.documentList, {this.document});
+  /// If supplised, will be used to decorate the form
+  final BoxDecoration decoration;
+
+  DocumentForm(this.documentList, {this.document, this.decoration});
   @override
   _DocumentFormState createState() => _DocumentFormState();
 }
@@ -98,10 +103,13 @@ class _DocumentFormState extends State<DocumentForm> {
       ),
       body: Form(
         key: formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: _buildFormFields(context),
+        child: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: _buildFormFields(context),
+            ),
           ),
+          decoration: widget.decoration,
         ),
       ),
     );
