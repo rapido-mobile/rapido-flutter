@@ -43,13 +43,16 @@ class DocumentListView extends StatefulWidget {
   /// Ignored if onItemTap callback is set.
   final bool showDocumentPageOnTap;
 
+  final Axis scrollDirection;
+
   DocumentListView(this.documentList,
       {this.titleKeys,
       this.subtitleKey,
       this.onItemTap,
       this.customItemBuilder,
       this.emptyListWidget,
-      this.showDocumentPageOnTap: true});
+      this.showDocumentPageOnTap: true,
+      this.scrollDirection: Axis.vertical});
 
   _DocumentListViewState createState() => _DocumentListViewState();
 }
@@ -125,6 +128,7 @@ class _DocumentListViewState extends State<DocumentListView> {
     }
 
     return ListView.builder(
+        scrollDirection: widget.scrollDirection ,
         itemCount: data.length,
         itemBuilder: (context, index) {
           return buildListItem(index);
