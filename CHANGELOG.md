@@ -4,7 +4,7 @@
  * Enhanced DocumentForm so that the map picker and the image picker are embedded in the form rather than popping up separate dialogs.
  * Added 'text' to inferred types. Field names ending in 'text' will be rendered with a multi-line input field.
  * Added DocumentListPageView class for paging through DocumentViews.
- * Added scroll direction option to DocumentListView.
+ * Added scroll direction option to DocumentListView. If you set ScrollDirection = Axis.horizontal, you must pass in a customItemBuilder as well, or this property will be ignored.
  * Breaking change: remaned "map point" to "latlong." In order to add map functionality to your application, you need to change field names to end in "latlong."
  * Breaking change: renamed the library from "documents" to "rapido. So, you must change your imports to: import 'package:rapido/rapido.dart';
  

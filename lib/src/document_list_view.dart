@@ -43,7 +43,8 @@ class DocumentListView extends StatefulWidget {
   /// Ignored if onItemTap callback is set.
   final bool showDocumentPageOnTap;
 
-  /// Control the scroll axis. Defaults to Vertical
+  /// Control the scroll axis. Defaults to Vertical. Ignored if
+  /// customItemBuilder is null.
   final Axis scrollDirection;
 
   /// A BoxDecoration for the whole list view
@@ -190,7 +191,7 @@ Ignoring subtitleKey property.
       child: ListTile(
           onTap: () {
             // If the user has passed in an onTap callback then use that.
-            // Otherwise, if the user has not disabled shwoing the DocumentPage
+            // Otherwise, if the user has not disabled showing the DocumentPage
             // then push a DocumentPage.
             if (widget.onItemTap != null) {
               widget.onItemTap(widget.documentList[index]);

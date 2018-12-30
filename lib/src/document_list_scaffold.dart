@@ -9,6 +9,9 @@ import 'package:rapido/rapido.dart';
 /// Can be customized with a customIemBuilder and/or a decoration.
 /// decoration, customItemBuild, and emptuListWidget, are passed
 /// through to the DocumentListView.
+/// 
+/// To ignore item taps, set showDocumentPageOnTap to false.
+/// To set a special behavion for item taps, set onItemTap.
 class DocumentListScaffold extends StatefulWidget {
   /// The DocumentList rendered by the DocumentListScaffold
   final DocumentList documentList;
@@ -50,8 +53,12 @@ class DocumentListScaffold extends StatefulWidget {
   /// If supplied, the fab will use an extended fab, with the label.
   final String addActionLabel;
 
+  /// Adds widgets to the titlebar, typically IconButtons.
   final List<Widget> additionalActions;
 
+  /// If true, tapping on the item will automatically display a
+  /// DocumentPage for the item. Defaults to true. Ignored if
+  /// onItemTap is not null.
   final bool showDocumentPageOnTap;
 
   DocumentListScaffold(this.documentList,
