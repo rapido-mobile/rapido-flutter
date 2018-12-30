@@ -12,7 +12,9 @@ class DocumentActionsButton extends StatelessWidget {
   /// The index of document in documentList on which button acts.
   final int index;
 
-  DocumentActionsButton(this.documentList, {@required this.index});
+  final BoxDecoration formDecoration;
+
+  DocumentActionsButton(this.documentList, {@required this.index, this.formDecoration});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class DocumentActionsButton extends StatelessWidget {
                   return DocumentForm(
                     documentList,
                     document: documentList[index],
+                    decoration: formDecoration,
                   );
                 },
               ));

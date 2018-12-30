@@ -43,7 +43,17 @@ class DocumentListView extends StatefulWidget {
   /// Ignored if onItemTap callback is set.
   final bool showDocumentPageOnTap;
 
+  /// Control the scroll axis. Defaults to Vertical
   final Axis scrollDirection;
+
+  /// A BoxDecoration for the whole list view
+  final BoxDecoration decoration;
+
+  /// A BoxDecoration for automatically generated forms
+  final BoxDecoration formDecoration;
+
+  /// A BoxDecoration for automatically generated pages
+  final BoxDecoration pageDecoration;
 
   DocumentListView(this.documentList,
       {this.titleKeys,
@@ -51,6 +61,9 @@ class DocumentListView extends StatefulWidget {
       this.onItemTap,
       this.customItemBuilder,
       this.emptyListWidget,
+      this.decoration,
+      this.formDecoration,
+      this.pageDecoration,
       this.showDocumentPageOnTap: true,
       this.scrollDirection: Axis.vertical});
 
@@ -59,11 +72,23 @@ class DocumentListView extends StatefulWidget {
 
 class _DocumentListViewState extends State<DocumentListView> {
   DocumentList data;
+  Axis _scrollDirection;
 
   @override
   initState() {
-    super.initState();
     data = widget.documentList;
+    if (widget.customItemBuilder == null &&
+        widget.scrollDirection == Axis.horizontal) {
+      print("""
+WARNING: DocumentListView defaults do not support horizontal scroll
+direction. To use scrollDirection of horizontal, you must supply a
+customItemBuilder to the DocumentListView.
+""");
+      _scrollDirection = Axis.vertical;
+    } else {
+      _scrollDirection = widget.scrollDirection;
+    }
+    super.initState();
   }
 
   List<Widget> _buildTitleRowChildren(Document doc) {
@@ -84,8 +109,8 @@ class _DocumentListViewState extends State<DocumentListView> {
             skip = true;
           }
         }
-        if (!skip && (doc[key] != null)) {
-          // don't try to display null value
+        if (!skip && (doc[key] != null && doc[key] != "")) {
+          // don't try to display null or empty value
           cells.add(
             TypedDisplayField(
               document: doc,
@@ -127,12 +152,15 @@ class _DocumentListViewState extends State<DocumentListView> {
       return widget.emptyListWidget;
     }
 
-    return ListView.builder(
-        scrollDirection: widget.scrollDirection ,
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return buildListItem(index);
-        });
+    return Container(
+      decoration: widget.decoration,
+      child: ListView.builder(
+          scrollDirection: _scrollDirection,
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            return buildListItem(index);
+          }),
+    );
   }
 
   Widget buildListItem(int index) {
@@ -171,8 +199,10 @@ Ignoring subtitleKey property.
                 context,
                 MaterialPageRoute(builder: (BuildContext context) {
                   return DocumentPage(
-                      labels: widget.documentList.labels,
-                      document: widget.documentList[index]);
+                    labels: widget.documentList.labels,
+                    document: widget.documentList[index],
+                    decoration: widget.pageDecoration,
+                  );
                 }),
               );
             }
@@ -183,7 +213,11 @@ Ignoring subtitleKey property.
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
           subtitle: _buildSubtitle(data[index]),
-          trailing: DocumentActionsButton(widget.documentList, index: index)),
+          trailing: DocumentActionsButton(
+            widget.documentList,
+            index: index,
+            formDecoration: widget.formDecoration,
+          )),
     );
   }
 }
