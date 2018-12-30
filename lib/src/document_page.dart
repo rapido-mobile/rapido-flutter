@@ -12,7 +12,10 @@ class DocumentPage extends StatelessWidget {
   /// The Document object to display
   final Document document;
 
-  DocumentPage({@required this.labels, @required this.document});
+  /// A decoration for the entire DocumentPage
+  final BoxDecoration decoration;
+  
+  DocumentPage({@required this.labels, @required this.document, this.decoration});
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
@@ -59,10 +62,13 @@ class DocumentPage extends StatelessWidget {
         : titleWidget = Icon(Icons.book);
     return Scaffold(
       appBar: AppBar(title: titleWidget),
-      body: SingleChildScrollView(
-        child: Column(
-          children: _buildFormFields(context),
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: _buildFormFields(context),
+          ),
         ),
+        decoration: decoration,
       ),
     );
   }
