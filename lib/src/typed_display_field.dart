@@ -9,8 +9,8 @@ import 'package:validators/validators.dart' as validators;
 /// Currently, the following special fieldnamse are supported:
 /// "latlong" - any field name ending in "latlong" will be displayed with
 /// a map widget.
-/// "image" - any field name ending in "image" will be display with an image, 
-/// and will assume that the value is a string that is either a path to an 
+/// "image" - any field name ending in "image" will be display with an image,
+/// and will assume that the value is a string that is either a path to an
 /// image on disk, or is a url to a publicly accessible image on the interent.
 class TypedDisplayField extends StatelessWidget {
   /// The name of the field, used to calculate which type of input to return
@@ -26,6 +26,8 @@ class TypedDisplayField extends StatelessWidget {
   /// images, maps, etc... Will determine the height and width of the
   /// SizedBox
   final double boxSize;
+
+  static const double defaultBoxSize = 200.0;
 
   TypedDisplayField(
       {@required this.fieldName,
@@ -117,39 +119,38 @@ class ImageDisplayField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _image;
     double sz = _getBoxSize(imageString, boxSize: boxSize);
     if (imageString == null) {
-      _image = Icon(Icons.broken_image);
+      return SizedBox(
+        height: TypedDisplayField.defaultBoxSize,
+        width: TypedDisplayField.defaultBoxSize,
+        child: Icon(Icons.broken_image),
+      );
     } else if (validators.isURL(imageString)) {
-      _image = Image(
+      return Image(
         image: NetworkImage(imageString),
+        height: sz,
+        width: sz,
       );
     } else {
-      _image = Image.file(
+      return Image.file(
         File.fromUri(
           Uri(
             path: imageString,
           ),
         ),
+        height: sz,
+        width: sz,
       );
     }
-    return SizedBox(
-      height: sz,
-      width: sz,
-      child: _image,
-    );
   }
 }
 
-double _getBoxSize(dynamic value, {double boxSize}) {
+double _getBoxSize(dynamic value,
+    {double boxSize: TypedDisplayField.defaultBoxSize}) {
   double sz = 0.0;
   if (value != "" && value != null) {
-    if (boxSize != null)
-      sz = boxSize;
-    else {
-      sz = 200.0;
-    }
+    return boxSize == null ? TypedDisplayField.defaultBoxSize : boxSize;
   }
   return sz;
 }
