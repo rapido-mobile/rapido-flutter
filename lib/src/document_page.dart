@@ -14,8 +14,18 @@ class DocumentPage extends StatelessWidget {
 
   /// A decoration for the entire DocumentPage
   final BoxDecoration decoration;
-  
-  DocumentPage({@required this.labels, @required this.document, this.decoration});
+
+  /// A DocumentForm to enable editing the Document
+  /// If not null, it will add an editing action to title bar
+  /// of the page, which will push a DocumentForm on the navigation
+  /// stack.
+  final DocumentForm documentForm;
+
+  DocumentPage(
+      {@required this.labels,
+      @required this.document,
+      this.decoration,
+      this.documentForm});
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
@@ -61,7 +71,22 @@ class DocumentPage extends StatelessWidget {
         ? titleWidget = Text(document["title"])
         : titleWidget = Icon(Icons.book);
     return Scaffold(
-      appBar: AppBar(title: titleWidget),
+      appBar: AppBar(
+        title: titleWidget,
+        actions: documentForm != null
+            ? <Widget>[
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return documentForm;
+                    }));
+                  },
+                )
+              ]
+            : null,
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
