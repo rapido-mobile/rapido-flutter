@@ -25,7 +25,7 @@ The rapido widgets infer what kind data is in each field based on the field name
 ![add button, forms, listview, edit and delete, sorting](https://rapido-mobile.github.io/assets/basic-ui.png)
 
 Rapido also handles specialized data types:
-![pickers, and mapss](https://rapido-mobile.github.io/assets/advanced-ui.png)
+![pickers, and maps](https://rapido-mobile.github.io/assets/advanced-ui.png)
 
 You can replace any widget with your own widget, or you can use built in customization hooks to quickly create your own look and feel.
 
