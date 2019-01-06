@@ -7,8 +7,8 @@ import 'package:validators/validators.dart' as validators;
 import 'typed_display_field.dart';
 
 /// A form field for allowing the user to choose an image. The chosen
-/// value is stored as a string that is either a path to an image on the 
-/// local device, or a URL. Supports selecting images from the camera, the 
+/// value is stored as a string that is either a path to an image on the
+/// local device, or a URL. Supports selecting images from the camera, the
 /// device's gallery, or a URL. Images from the gallery or camera are
 /// copied into the application's directory, and a path to the copied image
 /// is stored. Images from the internet are not copied locally.
@@ -77,11 +77,11 @@ class _ImageFormFieldState extends State<ImageFormField> {
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(color: Colors.grey),
-                    child: _imageFile != null
-                        ? ImageDisplayField(
-                            imageString: _imageFile.path, boxSize: _thumbSize)
-                        : ImageDisplayField(
-                            imageString: _imageUrl, boxSize: _thumbSize),
+                  child: _imageFile != null
+                      ? ImageDisplayField(
+                          imageString: _imageFile.path, boxSize: _thumbSize)
+                      : ImageDisplayField(
+                          imageString: _imageUrl, boxSize: _thumbSize),
                 ),
                 Column(
                   children: [
@@ -162,9 +162,9 @@ class _ImageFormFieldState extends State<ImageFormField> {
           } else {
             widget.onSaved(null);
           }
-        }else {
-            widget.onSaved(widget.initialValue);
-          } 
+        } else {
+          widget.onSaved(widget.initialValue);
+        }
       },
     );
   }

@@ -83,7 +83,7 @@ class TypedInputField extends StatelessWidget {
       );
     }
 
-    if(fieldName.toLowerCase().endsWith("text")) {
+    if (fieldName.toLowerCase().endsWith("text")) {
       return _getTextFormField(lines: 10);
     }
 

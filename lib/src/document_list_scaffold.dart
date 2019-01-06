@@ -9,7 +9,7 @@ import 'package:rapido/rapido.dart';
 /// Can be customized with a customIemBuilder and/or a decoration.
 /// decoration, customItemBuild, and emptuListWidget, are passed
 /// through to the DocumentListView.
-/// 
+///
 /// To ignore item taps, set showDocumentPageOnTap to false.
 /// To set a special behavion for item taps, set onItemTap.
 class DocumentListScaffold extends StatefulWidget {
@@ -79,8 +79,10 @@ class DocumentListScaffold extends StatefulWidget {
 class _DocumentListScaffoldState extends State<DocumentListScaffold> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> actions = <Widget>[DocumentListSortButton(widget.documentList)];
-    if(widget.additionalActions != null) {
+    List<Widget> actions = <Widget>[
+      DocumentListSortButton(widget.documentList)
+    ];
+    if (widget.additionalActions != null) {
       actions += widget.additionalActions;
     }
     String _title =

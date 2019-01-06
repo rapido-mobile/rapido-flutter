@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
 
 /// A form field for allowing the user to choose a location on a
-/// map. The chosen value is stored as a Map<String, double>. 
+/// map. The chosen value is stored as a Map<String, double>.
 class MapPointFormField extends StatefulWidget {
   /// The name of the field in the Document
   final String fieldName;
@@ -19,7 +19,7 @@ class MapPointFormField extends StatefulWidget {
 
   /// The initial location to display in the map. If null, the map
   /// will use the device's location as the initial value.
-  /// The value must be a Map<String, double> with at least the 
+  /// The value must be a Map<String, double> with at least the
   /// keys "latitude" and "longitude" defined.
   final Map<String, double> initialValue;
 
@@ -80,10 +80,9 @@ class _MapPointFormFieldState extends State<MapPointFormField> {
 /// A picker for a point on a map. Used by the MapPointFormField, though
 /// it could be generally useful.
 class MapPointPicker extends StatefulWidget {
-
   /// The initial location to display in the map. If null, the map
   /// will use the device's location as the initial value.
-  /// The value must be a Map<String, double> with at least the 
+  /// The value must be a Map<String, double> with at least the
   /// keys "latitude" and "longitude" defined.
   final Map<String, double> initialValue;
 
@@ -183,10 +182,9 @@ class _MapPointPickerState extends State<MapPointPicker> {
 /// A dialog that encapsulated a MapPointPicker. Returns the chosen locations
 /// as a Map<String, double> with the keys "latitude" and "longitude."
 class MapPointDialog extends StatefulWidget {
-
   /// The initial location to display in the map. If null, the map
   /// will use the device's location as the initial value.
-  /// The value must be a Map<String, double> with at least the 
+  /// The value must be a Map<String, double> with at least the
   /// keys "latitude" and "longitude" defined.
   final Map<String, double> initialValue;
   MapPointDialog({this.initialValue});

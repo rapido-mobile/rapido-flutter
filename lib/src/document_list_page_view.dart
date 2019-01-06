@@ -8,7 +8,7 @@ class DocumentListPageView extends StatefulWidget {
 }
 
 class _DocumentListPageViewState extends State<DocumentListPageView> {
-    DocumentList data;
+  DocumentList data;
 
   @override
   initState() {
