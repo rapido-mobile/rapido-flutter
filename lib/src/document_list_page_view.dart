@@ -18,11 +18,10 @@ class _DocumentListPageViewState extends State<DocumentListPageView> {
 
   @override
   Widget build(BuildContext context) {
-    widget.documentList.onChanged = (DocumentList newData) {
-      setState(() {
-        data = newData;
-      });
-    };
+    widget.documentList.addListener(() {
+      setState(() {});
+    });
+    
     if (!widget.documentList.documentsLoaded) {
       return Center(
         child: CircularProgressIndicator(),

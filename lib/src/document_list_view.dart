@@ -143,11 +143,10 @@ customItemBuilder to the DocumentListView.
 
   @override
   Widget build(BuildContext context) {
-    widget.documentList.onChanged = (DocumentList newData) {
+    widget.documentList.addListener(() {
       setState(() {
-        data = newData;
       });
-    };
+    });
 
     if (widget.documentList.length == 0 && widget.emptyListWidget != null) {
       return widget.emptyListWidget;

@@ -33,10 +33,9 @@ void main() {
 
   test('onChanged works', () {
     DocumentList list = DocumentList("onchange");
-    // TODO: why is onChanged called twice?
-    list.onChanged = (DocumentList l) {
-      expect(l.length, 1);
-    };
+    list.addListener(() {
+      expect(list.length, 1);
+    });
     list.add(Document(initialValues: {"a": 1}));
   });
   test('tests that any() works', () {
