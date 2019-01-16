@@ -4,10 +4,11 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 
 /// A Document is a persisted Map of type <String, dynamic>.
 /// It is used by DocumentList amd all related UI widgets.
-class Document extends MapBase<String, dynamic> {
+class Document extends MapBase<String, dynamic> with ChangeNotifier {
   Map<String, dynamic> _map = {};
 
   /// The Documents type, typically used to organize documents
@@ -20,11 +21,9 @@ class Document extends MapBase<String, dynamic> {
   String get id => _map["_id"];
   set id(String v) => _map["_id"] = v;
 
-  Function onChanged;
-
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
-  Document({Map<String, dynamic> initialValues, this.onChanged}) {
+  Document({Map<String, dynamic> initialValues,}) {
     // initial values if provided
     if (initialValues != null) {
       initialValues.keys.forEach((String key) {
@@ -44,20 +43,16 @@ class Document extends MapBase<String, dynamic> {
     save();
   }
 
-  _notifyListener() {
-    if (onChanged != null) {
-      onChanged(this);
-    }
-  }
+ 
 
   void clear() {
     _map.clear();
-    _notifyListener();
+    notifyListeners();
   }
 
   void remove(Object key) {
     _map.remove(key);
-    _notifyListener();
+     notifyListeners();
   }
 
   List<String> get keys {
@@ -69,7 +64,7 @@ class Document extends MapBase<String, dynamic> {
     // Write the file
     String mapString = json.encode(_map);
     file.writeAsString('$mapString');
-    _notifyListener();
+    notifyListeners();
     return file;
   }
 
@@ -105,7 +100,7 @@ class Document extends MapBase<String, dynamic> {
       // even called
       // print("Warning: ${f.path} file was empty.");
     }
-    _notifyListener();
+    notifyListeners();
   }
 
   static String randomFileSafeId(int length) {

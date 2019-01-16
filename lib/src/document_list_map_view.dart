@@ -159,15 +159,15 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
 
   @override
   Widget build(BuildContext context) {
-    widget.documentList.onChanged = (DocumentList newData) {
+    widget.documentList.addListener(() {
       setState(() {
-        data = newData;
+        
       });
       if (mapController != null) {
         mapController.clearMarkers();
         _addMarkers();
       }
-    };
+    });
 
     // the data is not done loading
     if ((_startingLatitude == null || _startingLongitude == null) &&

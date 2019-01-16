@@ -6,12 +6,13 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:math';
 import 'package:rapido/rapido.dart';
+import 'package:flutter/foundation.dart';
 
 /// A list Documents. DocumentList automatically persists changes
 /// to the list through, adding, removing, and updating documents that it
 /// contains. The document_widgets library can render useful UI elements
 /// for a DocumentList.
-class DocumentList extends ListBase<Document> {
+class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// A unique string identifying the documents organized by the list.
   final String documentType;
 
@@ -26,11 +27,6 @@ class DocumentList extends ListBase<Document> {
 
   Map<String, String> _labels;
   List<Document> _documents;
-
-  /// A callback function that is called for any changes in the DocumentList,
-  /// such as adding, removing, or updating documents. It passes a reference
-  /// to itself, onChanged: (DocumentList documentList) {/* do something */}
-  Function onChanged;
 
   set length(int newLength) {
     _documents.length = newLength;
@@ -49,12 +45,12 @@ class DocumentList extends ListBase<Document> {
 
     _documents[index].save();
     _deleteMapLocal(oldDoc["_id"]);
-    _notifyListener();
+    notifyListeners();
   }
 
   /// The documentType parameter should be unique.
   DocumentList(this.documentType,
-      {this.onLoadComplete, Map<String, String> labels, this.onChanged}) {
+      {this.onLoadComplete, Map<String, String> labels}) {
     _labels = labels;
     _documents = [];
     _loadLocalData();
@@ -84,29 +80,25 @@ class DocumentList extends ListBase<Document> {
     return _labels;
   }
 
-  void _notifyListener() {
-    if (onChanged != null) {
-      onChanged(this);
-    }
-  }
-
   @override
   void add(Document doc) {
     doc["_docType"] = documentType;
     doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
     _documents.add(doc);
-    doc.onChanged = (Document doc) {
-      _notifyListener();
-    };
+    doc.addListener(() {
+      notifyListeners();
+    });
     doc.save();
-    _notifyListener();
+    notifyListeners();
   }
 
   @override
   addAll(Iterable<Document> list) {
     list.forEach((Document doc) {
       add(doc);
-      doc.onChanged = _docChanged;
+      doc.addListener(() {
+        notifyListeners();
+      });
     });
   }
 
@@ -135,14 +127,14 @@ class DocumentList extends ListBase<Document> {
     Document doc = _documents[index];
     _deleteMapLocal(_documents[index]["_id"]);
     _documents.removeAt(index);
-    _notifyListener();
+    notifyListeners();
     return doc;
   }
 
   @override
   void sort([int compare(Document a, Document b)]) {
     _documents.sort(compare);
-    _notifyListener();
+    notifyListeners();
   }
 
   /// Sorts by the field specified in the required parameter fieldName.
@@ -166,7 +158,7 @@ class DocumentList extends ListBase<Document> {
         return b[fieldName].compareTo(a[fieldName]);
       });
     }
-    _notifyListener();
+    notifyListeners();
   }
 
   static String randomFileSafeId(int length) {
@@ -192,10 +184,6 @@ class DocumentList extends ListBase<Document> {
     file.delete();
   }
 
-  void _docChanged(Document doc) {
-    _notifyListener();
-  }
-
   void _loadLocalData() async {
     getApplicationDocumentsDirectory().then((Directory appDir) {
       appDir
@@ -206,13 +194,15 @@ class DocumentList extends ListBase<Document> {
           loadedDoc.loadFromFilePath(f);
           if (loadedDoc["_docType"] == documentType) {
             _documents.add(loadedDoc);
-            loadedDoc.onChanged = _docChanged;
+            loadedDoc.addListener(() {
+              notifyListeners();
+            });
           }
         }
       });
       if (onLoadComplete != null) onLoadComplete(this);
       documentsLoaded = true;
-      _notifyListener();
+      notifyListeners();
     });
   }
 
