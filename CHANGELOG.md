@@ -1,5 +1,6 @@
 ## [0.1.15] - 
  * Added ChangeNotifier to Document and DocumentList classes. This is a breaking change. The onChanged property is no longer supported. Use addListener instead.
+ * Added formDecoration, formFieldDecoration, documentPageDecoration, and documentFieldDecoration properties to DocumentListScaffold, DocumentList and related widgets to provide more easy of use use and depth in customizing the look and feel of an app.
  
 ## [0.1.14] - 2019-01-06
  * Added an image formfield that will automatically provide an image picker that can allow choosing directly from the camera, from the gallery, or entering a link. 
