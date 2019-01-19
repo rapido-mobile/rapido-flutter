@@ -1,4 +1,7 @@
-## [0.1.14] - 2018-12-26
+## [0.1.15] - 
+ * Added ChangeNotifier to Document and DocumentList classes. This is a breaking change. The onChanged property is no longer supported. Use addListener instead.
+ 
+## [0.1.14] - 2019-01-06
  * Added an image formfield that will automatically provide an image picker that can allow choosing directly from the camera, from the gallery, or entering a link. 
  * Added TypedDisplay fields, so that you can pass any field from a DocumentList and rapido will do its best to display it. Currently provides supprt for images (either form the device of a url), maps, and otherwise strings.
  * Enhanced DocumentForm so that the map picker and the image picker are embedded in the form rather than popping up separate dialogs.
