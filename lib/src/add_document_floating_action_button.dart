@@ -11,7 +11,12 @@ class AddDocumentFloatingActionButton extends StatelessWidget {
   /// If supplied, the fab will use an extended fab, with the label.
   final String addActionLabel;
 
-  AddDocumentFloatingActionButton(this.documentList, {this.addActionLabel});
+  final BoxDecoration formDecoration;
+
+  final BoxDecoration formFieldDecoration;
+
+  AddDocumentFloatingActionButton(this.documentList,
+      {this.addActionLabel, this.formDecoration, this.formFieldDecoration});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,11 @@ class AddDocumentFloatingActionButton extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (BuildContext context) {
-              return DocumentForm(documentList);
+              return DocumentForm(
+                documentList,
+                decoration: formDecoration,
+                fieldDecoration: formFieldDecoration,
+              );
             }),
           );
         },
@@ -34,7 +43,11 @@ class AddDocumentFloatingActionButton extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (BuildContext context) {
-              return DocumentForm(documentList);
+              return DocumentForm(
+                documentList,
+                decoration: formDecoration,
+                fieldDecoration: formFieldDecoration,
+              );
             }),
           );
         },

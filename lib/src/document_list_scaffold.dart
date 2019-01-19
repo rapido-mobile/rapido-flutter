@@ -61,17 +61,31 @@ class DocumentListScaffold extends StatefulWidget {
   /// onItemTap is not null.
   final bool showDocumentPageOnTap;
 
-  DocumentListScaffold(this.documentList,
-      {this.title,
-      this.onItemTap,
-      @required this.titleKeys,
-      this.subtitleKey,
-      this.decoration,
-      this.customItemBuilder,
-      this.emptyListWidget,
-      this.addActionLabel,
-      this.additionalActions,
-      this.showDocumentPageOnTap: true});
+  final BoxDecoration formDecoration;
+
+  final BoxDecoration formFieldDecoration;
+
+  final BoxDecoration documentPageDecoration;
+
+  final BoxDecoration documentFieldDecoration;
+
+  DocumentListScaffold(
+    this.documentList, {
+    this.title,
+    this.onItemTap,
+    @required this.titleKeys,
+    this.subtitleKey,
+    this.decoration,
+    this.customItemBuilder,
+    this.emptyListWidget,
+    this.addActionLabel,
+    this.additionalActions,
+    this.formDecoration,
+    this.formFieldDecoration,
+    this.documentPageDecoration,
+    this.documentFieldDecoration,
+    this.showDocumentPageOnTap: true,
+  });
 
   _DocumentListScaffoldState createState() => _DocumentListScaffoldState();
 }
@@ -101,12 +115,18 @@ class _DocumentListScaffoldState extends State<DocumentListScaffold> {
           customItemBuilder: widget.customItemBuilder,
           emptyListWidget: widget.emptyListWidget,
           showDocumentPageOnTap: widget.showDocumentPageOnTap,
+          formDecoration: widget.formDecoration,
+          formFieldDecoration: widget.formFieldDecoration,
+          documentPageDecoration: widget.documentPageDecoration,
+          documentFieldDecoration: widget.documentFieldDecoration,
         ),
         decoration: widget.decoration,
       ),
       floatingActionButton: AddDocumentFloatingActionButton(
         widget.documentList,
         addActionLabel: widget.addActionLabel,
+        formDecoration: widget.formDecoration,
+        formFieldDecoration: widget.formFieldDecoration,
       ),
     );
   }

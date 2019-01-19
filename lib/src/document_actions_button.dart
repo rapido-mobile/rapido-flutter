@@ -14,8 +14,10 @@ class DocumentActionsButton extends StatelessWidget {
 
   final BoxDecoration formDecoration;
 
+  final BoxDecoration formFieldDecoration;
+
   DocumentActionsButton(this.documentList,
-      {@required this.index, this.formDecoration});
+      {@required this.index, this.formDecoration, this.formFieldDecoration});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class DocumentActionsButton extends StatelessWidget {
                     documentList,
                     document: documentList[index],
                     decoration: formDecoration,
+                    fieldDecoration: formFieldDecoration,
                   );
                 },
               ));
