@@ -12,8 +12,10 @@ class DocumentActionsButton extends StatelessWidget {
   /// The index of document in documentList on which button acts.
   final int index;
 
+  /// A BoxDecoration for automatically generated forms
   final BoxDecoration formDecoration;
 
+  /// A BoxDecoration for each field in a DocumentForm
   final BoxDecoration formFieldDecoration;
 
   DocumentActionsButton(this.documentList,

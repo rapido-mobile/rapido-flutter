@@ -61,12 +61,16 @@ class DocumentListScaffold extends StatefulWidget {
   /// onItemTap is not null.
   final bool showDocumentPageOnTap;
 
+  /// A BoxDecoration for automatically generated forms
   final BoxDecoration formDecoration;
 
-  final BoxDecoration formFieldDecoration;
-
+  /// A BoxDecoration for automatically generated pages
   final BoxDecoration documentPageDecoration;
 
+  /// A BoxDecoration for each field in a DocumentForm
+  final BoxDecoration formFieldDecoration;
+
+  /// A BoxDecoration for each field in a DocumentPage
   final BoxDecoration documentFieldDecoration;
 
   DocumentListScaffold(

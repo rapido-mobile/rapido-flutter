@@ -56,8 +56,10 @@ class DocumentListView extends StatefulWidget {
   /// A BoxDecoration for automatically generated pages
   final BoxDecoration documentPageDecoration;
 
+  /// A BoxDecoration for each field in a DocumentForm
   final BoxDecoration formFieldDecoration;
 
+  /// A BoxDecoration for each field in a DocumentPage
   final BoxDecoration documentFieldDecoration;
 
   DocumentListView(this.documentList,
