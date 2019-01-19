@@ -16,7 +16,9 @@ class DocumentForm extends StatefulWidget {
   /// If supplised, will be used to decorate the form
   final BoxDecoration decoration;
 
-  DocumentForm(this.documentList, {this.document, this.decoration});
+  final BoxDecoration fieldDecoration;
+
+  DocumentForm(this.documentList, {this.document, this.decoration, this.fieldDecoration});
   @override
   _DocumentFormState createState() => _DocumentFormState();
 }
@@ -53,6 +55,7 @@ class _DocumentFormState extends State<DocumentForm> {
       fields.add(
         Container(
           padding: EdgeInsets.all(10.0),
+          decoration: widget.fieldDecoration,
           child: TypedInputField(widget.documentList.labels[label],
               label: label,
               initialValue: initialValue, onSaved: (dynamic value) {

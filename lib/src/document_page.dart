@@ -15,6 +15,9 @@ class DocumentPage extends StatelessWidget {
   /// A decoration for the entire DocumentPage
   final BoxDecoration decoration;
 
+  /// A decoration to apply to each field in the DocumentPage
+  final BoxDecoration fieldDecoration;
+
   /// A DocumentForm to enable editing the Document
   /// If not null, it will add an editing action to title bar
   /// of the page, which will push a DocumentForm on the navigation
@@ -25,6 +28,7 @@ class DocumentPage extends StatelessWidget {
       {@required this.labels,
       @required this.document,
       this.decoration,
+      this.fieldDecoration,
       this.documentForm});
 
   List<Widget> _buildFormFields(BuildContext context) {
@@ -32,12 +36,21 @@ class DocumentPage extends StatelessWidget {
 
     // creat a form field for each support label
     if (document["subtitle"] != null) {
-      fields.add(Text(
-        document["subtitle"].toString(),
-        softWrap: true,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headline,
-      ));
+      fields.add(
+        Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Container(
+            decoration: fieldDecoration,
+            child: ListTile(
+                title: Text(
+              document["subtitle"].toString(),
+              softWrap: true,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline,
+            )),
+          ),
+        ),
+      );
     }
     labels.keys.forEach((String label) {
       String fieldName = labels[label];
@@ -45,16 +58,23 @@ class DocumentPage extends StatelessWidget {
       if (fieldName != "title" && fieldName != "subtitle") {
         // add to the array of input fields
         fields.add(
-          ListTile(
-            subtitle: Text(label),
-            title: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TypedDisplayField(
-                  fieldName: fieldName,
-                  document: document,
+          Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: fieldDecoration,
+              child: ListTile(
+                subtitle: Text(label),
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TypedDisplayField(
+                      fieldName: fieldName,
+                      document: document,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );

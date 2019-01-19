@@ -56,6 +56,10 @@ class DocumentListView extends StatefulWidget {
   /// A BoxDecoration for automatically generated pages
   final BoxDecoration pageDecoration;
 
+  final BoxDecoration formFieldDecoration;
+
+  final BoxDecoration documentFieldDecoration;
+
   DocumentListView(this.documentList,
       {this.titleKeys,
       this.subtitleKey,
@@ -65,6 +69,8 @@ class DocumentListView extends StatefulWidget {
       this.decoration,
       this.formDecoration,
       this.pageDecoration,
+      this.formFieldDecoration,
+      this.documentFieldDecoration,
       this.showDocumentPageOnTap: true,
       this.scrollDirection: Axis.vertical});
 
@@ -202,6 +208,7 @@ Ignoring subtitleKey property.
                     labels: widget.documentList.labels,
                     document: widget.documentList[index],
                     decoration: widget.pageDecoration,
+                    fieldDecoration: widget.formFieldDecoration,
                   );
                 }),
               );

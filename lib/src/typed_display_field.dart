@@ -22,6 +22,7 @@ class TypedDisplayField extends StatelessWidget {
   /// The document's whose data shoud be displayed
   final Document document;
 
+
   /// Size, used for fields that are displayed in a SizedBox, such as
   /// images, maps, etc... Will determine the height and width of the
   /// SizedBox
@@ -115,16 +116,19 @@ class ImageDisplayField extends StatelessWidget {
   final String imageString;
   final double boxSize;
 
-  ImageDisplayField({@required this.imageString, this.boxSize});
+  ImageDisplayField(
+      {@required this.imageString, this.boxSize});
 
   @override
   Widget build(BuildContext context) {
     double sz = _getBoxSize(imageString, boxSize: boxSize);
     if (imageString == null) {
-      return SizedBox(
-        height: TypedDisplayField.defaultBoxSize,
-        width: TypedDisplayField.defaultBoxSize,
-        child: Icon(Icons.broken_image),
+      return Container(
+        child: SizedBox(
+          height: TypedDisplayField.defaultBoxSize,
+          width: TypedDisplayField.defaultBoxSize,
+          child: Icon(Icons.broken_image),
+        ),
       );
     } else if (validators.isURL(imageString)) {
       return Image(
@@ -133,14 +137,16 @@ class ImageDisplayField extends StatelessWidget {
         width: sz,
       );
     } else {
-      return Image.file(
-        File.fromUri(
-          Uri(
-            path: imageString,
+      return Container(
+        child: Image.file(
+          File.fromUri(
+            Uri(
+              path: imageString,
+            ),
           ),
+          height: sz,
+          width: sz,
         ),
-        height: sz,
-        width: sz,
       );
     }
   }
