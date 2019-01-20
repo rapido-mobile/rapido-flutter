@@ -12,6 +12,11 @@ import 'package:validators/validators.dart' as validators;
 /// "image" - any field name ending in "image" will be display with an image,
 /// and will assume that the value is a string that is either a path to an
 /// image on disk, or is a url to a publicly accessible image on the interent.
+/// "?" - any field name ending with a question mark will display with a
+/// checkbox. By default the checkbox will be read only, but setting the
+/// document property and fieldName property will make it interactive and
+/// will automatically persist the state. This is useful for using checkboxes
+/// in lists.
 class TypedDisplayField extends StatelessWidget {
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
@@ -195,7 +200,11 @@ class BooleanDisplayFieldState extends State<BooleanDisplayField> {
     }
     children.add(Checkbox(
       value: currentValue,
-      onChanged: widget.document != null ? onChanged : null,
+      // if the fieldName and Document are supplied, the widget
+      // will actually be interactive
+      onChanged: widget.document != null && widget.fieldName != null
+          ? onChanged
+          : null,
     ));
 
     return Column(children: children);
