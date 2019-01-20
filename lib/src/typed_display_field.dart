@@ -56,7 +56,6 @@ class TypedDisplayField extends StatelessWidget {
     }
     if (fieldName.toLowerCase().endsWith("?")) {
       return BooleanDisplayField(
-        label: label,
         value: document[fieldName],
         document: document,
         fieldName: fieldName,
@@ -165,7 +164,6 @@ class ImageDisplayField extends StatelessWidget {
 
 class BooleanDisplayField extends StatefulWidget {
   final bool value;
-  final String label;
   final Document document;
   final String fieldName;
 
@@ -173,7 +171,6 @@ class BooleanDisplayField extends StatefulWidget {
     Key key,
     this.document,
     this.value: false,
-    this.label,
     this.fieldName,
   }) : super(key: key);
 
@@ -194,20 +191,14 @@ class BooleanDisplayFieldState extends State<BooleanDisplayField> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = List<Widget>();
-    if (widget.label != null && widget.label != "") {
-      children.add(Text(widget.label));
-    }
-    children.add(Checkbox(
+    return Checkbox(
       value: currentValue,
       // if the fieldName and Document are supplied, the widget
       // will actually be interactive
       onChanged: widget.document != null && widget.fieldName != null
           ? onChanged
           : null,
-    ));
-
-    return Column(children: children);
+    );
   }
 
   onChanged(bool val) {
