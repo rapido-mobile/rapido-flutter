@@ -3,6 +3,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'map_point_form_field.dart';
 import 'image_form_field.dart';
+import 'boolean_form_field.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
 /// possibly parented by another widget.
@@ -14,6 +15,7 @@ import 'image_form_field.dart';
 /// ends in "latlong" -> latitude and longitude
 /// ends in "image" -> image
 /// ends in "text" -> multiline string
+/// ends in "?" -> boolean
 /// All other fields return a single line text input field.
 class TypedInputField extends StatelessWidget {
   /// Optional Custom format string for reading, writing, and
@@ -85,6 +87,17 @@ class TypedInputField extends StatelessWidget {
 
     if (fieldName.toLowerCase().endsWith("text")) {
       return _getTextFormField(lines: 10);
+    }
+
+    if (fieldName.toLowerCase().endsWith("?")) {
+      return BooleanFormField(
+        fieldName,
+        label: label,
+        initialValue: initialValue,
+        onSaved: (bool value) {
+          this.onSaved(value);
+        },
+      );
     }
 
     return _getTextFormField();

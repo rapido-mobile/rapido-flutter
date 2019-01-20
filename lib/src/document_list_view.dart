@@ -118,13 +118,24 @@ customItemBuilder to the DocumentListView.
             skip = true;
           }
         }
+        // don't try to display null or empty value
         if (!skip && (doc[key] != null && doc[key] != "")) {
-          // don't try to display null or empty value
+          // find if there is label for the key
+          // this is a little confusing because the key is actual a value
+          // in the documentList.labels map, and the key in that map
+          // is the string that we want to display
+          String lbl;
+          if (widget.documentList.labels.containsValue(key)) {
+            Map<String, String> reversed =
+                widget.documentList.labels.map((k, v) => MapEntry(v, k));
+            lbl = reversed[key];
+          }
           cells.add(
             TypedDisplayField(
               document: doc,
               fieldName: key,
               boxSize: 100.00,
+              label: lbl,
             ),
           );
         }
@@ -152,8 +163,7 @@ customItemBuilder to the DocumentListView.
   @override
   Widget build(BuildContext context) {
     widget.documentList.addListener(() {
-      setState(() {
-      });
+      setState(() {});
     });
 
     if (widget.documentList.length == 0 && widget.emptyListWidget != null) {

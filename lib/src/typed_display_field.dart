@@ -12,6 +12,11 @@ import 'package:validators/validators.dart' as validators;
 /// "image" - any field name ending in "image" will be display with an image,
 /// and will assume that the value is a string that is either a path to an
 /// image on disk, or is a url to a publicly accessible image on the interent.
+/// "?" - any field name ending with a question mark will display with a
+/// checkbox. By default the checkbox will be read only, but setting the
+/// document property and fieldName property will make it interactive and
+/// will automatically persist the state. This is useful for using checkboxes
+/// in lists.
 class TypedDisplayField extends StatelessWidget {
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
@@ -21,7 +26,6 @@ class TypedDisplayField extends StatelessWidget {
 
   /// The document's whose data shoud be displayed
   final Document document;
-
 
   /// Size, used for fields that are displayed in a SizedBox, such as
   /// images, maps, etc... Will determine the height and width of the
@@ -48,6 +52,13 @@ class TypedDisplayField extends StatelessWidget {
       return MapDisplayField(
         mapPoint: document[fieldName],
         boxSize: boxSize,
+      );
+    }
+    if (fieldName.toLowerCase().endsWith("?")) {
+      return BooleanDisplayField(
+        value: document[fieldName],
+        document: document,
+        fieldName: fieldName,
       );
     }
     return Flexible(
@@ -116,8 +127,7 @@ class ImageDisplayField extends StatelessWidget {
   final String imageString;
   final double boxSize;
 
-  ImageDisplayField(
-      {@required this.imageString, this.boxSize});
+  ImageDisplayField({@required this.imageString, this.boxSize});
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +159,53 @@ class ImageDisplayField extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class BooleanDisplayField extends StatefulWidget {
+  final bool value;
+  final Document document;
+  final String fieldName;
+
+  const BooleanDisplayField({
+    Key key,
+    this.document,
+    this.value: false,
+    this.fieldName,
+  }) : super(key: key);
+
+  @override
+  BooleanDisplayFieldState createState() {
+    return new BooleanDisplayFieldState();
+  }
+}
+
+class BooleanDisplayFieldState extends State<BooleanDisplayField> {
+  bool currentValue;
+
+  @override
+  void initState() {
+    currentValue = widget.value;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Checkbox(
+      value: currentValue,
+      // if the fieldName and Document are supplied, the widget
+      // will actually be interactive
+      onChanged: widget.document != null && widget.fieldName != null
+          ? onChanged
+          : null,
+    );
+  }
+
+  onChanged(bool val) {
+    setState(() {
+      currentValue = val;
+    });
+    widget.document[widget.fieldName] = val;
   }
 }
 
