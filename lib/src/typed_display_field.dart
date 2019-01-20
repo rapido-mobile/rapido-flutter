@@ -53,6 +53,8 @@ class TypedDisplayField extends StatelessWidget {
       return BooleanDisplayField(
         label: label,
         value: document[fieldName],
+        document: document,
+        fieldName: fieldName,
       );
     }
     return Flexible(
@@ -156,23 +158,54 @@ class ImageDisplayField extends StatelessWidget {
   }
 }
 
-class BooleanDisplayField extends StatelessWidget {
+class BooleanDisplayField extends StatefulWidget {
   final bool value;
   final String label;
+  final Document document;
+  final String fieldName;
 
-  const BooleanDisplayField({Key key, this.value: false, this.label})
-      : super(key: key);
+  const BooleanDisplayField({
+    Key key,
+    this.document,
+    this.value: false,
+    this.label,
+    this.fieldName,
+  }) : super(key: key);
+
+  @override
+  BooleanDisplayFieldState createState() {
+    return new BooleanDisplayFieldState();
+  }
+}
+
+class BooleanDisplayFieldState extends State<BooleanDisplayField> {
+  bool currentValue;
+
+  @override
+  void initState() {
+    currentValue = widget.value;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> children = List<Widget>();
-    if (label != null && label != "") {
-      children.add(Text(label));
+    if (widget.label != null && widget.label != "") {
+      children.add(Text(widget.label));
     }
     children.add(Checkbox(
-      value: value,
-      onChanged: ((bool val) {}),
+      value: currentValue,
+      onChanged: widget.document != null ? onChanged : null,
     ));
+
     return Column(children: children);
+  }
+
+  onChanged(bool val) {
+    setState(() {
+      currentValue = val;
+    });
+    widget.document[widget.fieldName] = val;
   }
 }
 
