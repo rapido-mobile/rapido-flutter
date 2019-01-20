@@ -61,7 +61,6 @@ class _DocumentFormState extends State<DocumentForm> {
               initialValue: initialValue, onSaved: (dynamic value) {
             // update the field with whatever data was in the input field
             // this will cause the Document to autosave
-            print("************ $label: $value");
             _document[widget.documentList.labels[label]] = value;
           }),
           margin: EdgeInsets.all(10.0),
@@ -108,12 +107,13 @@ class _DocumentFormState extends State<DocumentForm> {
       body: Form(
         key: formKey,
         child: Container(
+          decoration: widget.decoration,
+          constraints: BoxConstraints.expand(),
           child: SingleChildScrollView(
             child: Column(
               children: _buildFormFields(context),
             ),
           ),
-          decoration: widget.decoration,
         ),
       ),
     );
