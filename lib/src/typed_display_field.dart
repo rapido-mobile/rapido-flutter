@@ -182,15 +182,13 @@ class BooleanDisplayField extends StatefulWidget {
 
 class BooleanDisplayFieldState extends State<BooleanDisplayField> {
   bool currentValue;
-
-  @override
-  void initState() {
-    currentValue = widget.value;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    if (widget.document != null && widget.fieldName != null) {
+      currentValue = widget.document[widget.fieldName];
+    } else {
+      currentValue = widget.value;
+    }
     return Checkbox(
       value: currentValue,
       // if the fieldName and Document are supplied, the widget
