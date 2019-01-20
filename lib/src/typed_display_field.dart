@@ -22,7 +22,6 @@ class TypedDisplayField extends StatelessWidget {
   /// The document's whose data shoud be displayed
   final Document document;
 
-
   /// Size, used for fields that are displayed in a SizedBox, such as
   /// images, maps, etc... Will determine the height and width of the
   /// SizedBox
@@ -48,6 +47,12 @@ class TypedDisplayField extends StatelessWidget {
       return MapDisplayField(
         mapPoint: document[fieldName],
         boxSize: boxSize,
+      );
+    }
+    if (fieldName.toLowerCase().endsWith("?")) {
+      return BooleanDisplayField(
+        label: label,
+        value: document[fieldName],
       );
     }
     return Flexible(
@@ -116,8 +121,7 @@ class ImageDisplayField extends StatelessWidget {
   final String imageString;
   final double boxSize;
 
-  ImageDisplayField(
-      {@required this.imageString, this.boxSize});
+  ImageDisplayField({@required this.imageString, this.boxSize});
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +153,26 @@ class ImageDisplayField extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class BooleanDisplayField extends StatelessWidget {
+  final bool value;
+  final String label;
+
+  const BooleanDisplayField({Key key, this.value: false, this.label})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = List<Widget>();
+    if (label != null && label != "") {
+      children.add(Text(label));
+    }
+    children.add(Checkbox(
+      value: value,
+      onChanged: ((bool val) {}),
+    ));
+    return Column(children: children);
   }
 }
 
