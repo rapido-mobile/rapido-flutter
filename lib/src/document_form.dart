@@ -13,9 +13,10 @@ class DocumentForm extends StatefulWidget {
   /// will be created.
   final Document document;
 
-  /// If supplised, will be used to decorate the form
+  /// If supplied, will be used to decorate the form
   final BoxDecoration decoration;
 
+  // If supplied, will be used to decorate fields in the form
   final BoxDecoration fieldDecoration;
 
   DocumentForm(this.documentList,
