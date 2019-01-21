@@ -77,7 +77,7 @@ class DocumentListScaffold extends StatefulWidget {
     this.documentList, {
     this.title,
     this.onItemTap,
-    @required this.titleKeys,
+    this.titleKeys,
     this.subtitleKey,
     this.decoration,
     this.customItemBuilder,
