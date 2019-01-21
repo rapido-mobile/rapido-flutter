@@ -108,6 +108,7 @@ class DocumentPage extends StatelessWidget {
             : null,
       ),
       body: Container(
+        constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
           child: Column(
             children: _buildFormFields(context),
