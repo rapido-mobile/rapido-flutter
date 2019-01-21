@@ -1,4 +1,7 @@
-## [0.1.0] - 
+## [0.1.1] - 2019-01-21
+ * Added API documentation to TypedDisplayField
+
+## [0.1.0] - 2019-01-21
  * Added ChangeNotifier to Document and DocumentList classes. This is a breaking change. The onChanged property is no longer supported. Use addListener instead.
  * Added formDecoration, formFieldDecoration, documentPageDecoration, and documentFieldDecoration properties to DocumentListScaffold, DocumentList and related widgets to provide more easy of use use and depth in customizing the look and feel of an app.
  
