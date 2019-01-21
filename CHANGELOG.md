@@ -1,3 +1,6 @@
+## [0.1.2] - 2019-01-21
+ * Removed @required from DocumentListScaffold.titleKeys. 
+ 
 ## [0.1.1] - 2019-01-21
  * Added API documentation to TypedDisplayField
 
