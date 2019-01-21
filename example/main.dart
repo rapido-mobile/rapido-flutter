@@ -30,7 +30,7 @@ class _RapidoExampleState extends State<RapidoExample> {
       "Complete": "done?",
       "Date": "date",
       "Title": "title",
-      "Note":"subtitle",
+      "Note": "subtitle",
       "Priorty": "pri count"
     },
   );

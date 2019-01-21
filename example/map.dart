@@ -44,13 +44,17 @@ class _MyHomePageState extends State<MyHomePage> {
       documentList,
       titleKeys: ["date", "title", "pri count"],
       subtitleKey: "subtitle",
-      additionalActions: <Widget>[IconButton(icon: Icon(Icons.map), onPressed: (){
-        Navigator.push(context, MaterialPageRoute(
-          builder: (BuildContext context) {
-            return DocumentListMapView(documentList);
-          }
-        ));
-      },),],
+      additionalActions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.map),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (BuildContext context) {
+              return DocumentListMapView(documentList);
+            }));
+          },
+        ),
+      ],
     );
   }
 }
