@@ -21,7 +21,7 @@ class _DocumentListPageViewState extends State<DocumentListPageView> {
     widget.documentList.addListener(() {
       setState(() {});
     });
-    
+
     if (!widget.documentList.documentsLoaded) {
       return Center(
         child: CircularProgressIndicator(),

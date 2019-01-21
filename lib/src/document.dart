@@ -23,7 +23,9 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
-  Document({Map<String, dynamic> initialValues,}) {
+  Document({
+    Map<String, dynamic> initialValues,
+  }) {
     // initial values if provided
     if (initialValues != null) {
       initialValues.keys.forEach((String key) {
@@ -43,8 +45,6 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     save();
   }
 
- 
-
   void clear() {
     _map.clear();
     notifyListeners();
@@ -52,7 +52,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
 
   void remove(Object key) {
     _map.remove(key);
-     notifyListeners();
+    notifyListeners();
   }
 
   List<String> get keys {

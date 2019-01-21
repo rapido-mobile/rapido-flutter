@@ -28,10 +28,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   DocumentList docs = DocumentList("taskList",
       labels: {
-        "Date": "date", // will create a date field in forms
-        "Task": "task", // will create a text field in forms
-        "Priority": "pri count", // will create an integer field in forms
-        "Note": "note" // will create a text field in forms
+        "Date": "date",
+        "Task": "title",
+        "Priority": "pri count",
+        "Note": "subtitle"
       },
       onLoadComplete: (DocumentList list) {});
 
@@ -65,13 +65,13 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(children: [
         Center(
           child: Text(
-            doc["task"],
+            doc["title"],
             style: Theme.of(context).textTheme.display1,
           ),
         ),
         Center(
           child: Text(
-            doc["note"].toString(),
+            doc["subtitle"].toString(),
             style: Theme.of(context).textTheme.headline,
           ),
         ),

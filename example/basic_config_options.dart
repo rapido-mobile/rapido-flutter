@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Labels to use in the UI
     labels: {
       "Date": "date", // will create a date field in forms
-      "Task": "task", // will create a text field in forms
+      "Task": "title", // will create a text field in forms
       "Priority": "pri count", // will create an integer field in forms
       "Note": "note" // will create a text field in forms
     },
@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
       docs,
       title: "Tasks",
       // set the order and fields to display in the title of the default ListTyle
-      titleKeys: ["task", "date", "pri count"],
+      titleKeys: ["title", "date", "pri count"],
 
       // set the field to use for the subtitle in default ListTile
       subtitleKey: "note",

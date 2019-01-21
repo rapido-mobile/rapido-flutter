@@ -26,7 +26,13 @@ class _RapidoExampleState extends State<RapidoExample> {
   // Include a map of lables for the fields in the document type.
   final DocumentList documentList = DocumentList(
     "task list",
-    labels: {"Date": "date", "Title": "task", "Priorty": "pri count"},
+    labels: {
+      "Complete": "done?",
+      "Date": "date",
+      "Title": "title",
+      "Note":"subtitle",
+      "Priorty": "pri count"
+    },
   );
 
   // Build a DocumentListScaffold to provide the UI for users to

@@ -18,7 +18,8 @@ class DocumentForm extends StatefulWidget {
 
   final BoxDecoration fieldDecoration;
 
-  DocumentForm(this.documentList, {this.document, this.decoration, this.fieldDecoration});
+  DocumentForm(this.documentList,
+      {this.document, this.decoration, this.fieldDecoration});
   @override
   _DocumentFormState createState() => _DocumentFormState();
 }

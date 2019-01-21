@@ -160,9 +160,7 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   @override
   Widget build(BuildContext context) {
     widget.documentList.addListener(() {
-      setState(() {
-        
-      });
+      setState(() {});
       if (mapController != null) {
         mapController.clearMarkers();
         _addMarkers();
