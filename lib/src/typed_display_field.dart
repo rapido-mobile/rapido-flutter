@@ -50,7 +50,7 @@ class TypedDisplayField extends StatelessWidget {
     }
     if (fieldName.toLowerCase().endsWith("latlong")) {
       return MapDisplayField(
-        mapPoint: document[fieldName],
+        latlong: document[fieldName],
         boxSize: boxSize,
       );
     }
@@ -73,25 +73,30 @@ class TypedDisplayField extends StatelessWidget {
   }
 }
 
+/// Provides a widget that displays a map given a Map<String, double>
+/// in the form of {"latitidude": latitude, "longitude": longitude}
 class MapDisplayField extends StatelessWidget {
-  final Map<String, double> mapPoint;
+  /// The latitude and longitude to display
+  final Map<String, double> latlong;
+
+  /// The height and widgth of the box in which the map will display
   final double boxSize;
 
-  MapDisplayField({@required this.mapPoint, this.boxSize});
+  MapDisplayField({@required this.latlong, this.boxSize});
 
   @override
   Widget build(BuildContext context) {
     GoogleMap googleMap;
     GoogleMapOptions mapOptions;
     LatLng pos;
-    double sz = _getBoxSize(mapPoint, boxSize: boxSize);
+    double sz = _getBoxSize(latlong, boxSize: boxSize);
 
-    if (mapPoint != null) {
-      pos = LatLng(mapPoint["latitude"], mapPoint["longitude"]);
+    if (latlong != null) {
+      pos = LatLng(latlong["latitude"], latlong["longitude"]);
 
       mapOptions = GoogleMapOptions(
         cameraPosition: CameraPosition(
-          target: LatLng(mapPoint["latitude"], mapPoint["longitude"]),
+          target: LatLng(latlong["latitude"], latlong["longitude"]),
           zoom: 15.0,
         ),
         compassEnabled: false,
@@ -110,7 +115,7 @@ class MapDisplayField extends StatelessWidget {
       );
     }
 
-    if (mapPoint == null) {
+    if (latlong == null) {
       return Icon(Icons.map);
     } else {
       return SizedBox(
@@ -123,8 +128,13 @@ class MapDisplayField extends StatelessWidget {
   }
 }
 
+/// Provides a widget for displaying an image. It will display
+/// any image given either a filepath or a url.
 class ImageDisplayField extends StatelessWidget {
+  /// File path or URL to an image to display
   final String imageString;
+
+  /// The height and widgth of the box in which the map will display
   final double boxSize;
 
   ImageDisplayField({@required this.imageString, this.boxSize});
@@ -162,9 +172,18 @@ class ImageDisplayField extends StatelessWidget {
   }
 }
 
+/// Provides a checkbox to display the current value of a
+/// boolean. The display field can be made to be active by including
+/// a document and fieldname to modify when the user interacts with the
+/// checkbox, or inactive by only supplying the value
 class BooleanDisplayField extends StatefulWidget {
+  /// The value to display
   final bool value;
+
+  /// Optional document to update for the supplied fieldName
   final Document document;
+
+  /// Optional field to update for the supplied Document
   final String fieldName;
 
   const BooleanDisplayField({
@@ -175,12 +194,12 @@ class BooleanDisplayField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  BooleanDisplayFieldState createState() {
-    return new BooleanDisplayFieldState();
+  _BooleanDisplayFieldState createState() {
+    return new _BooleanDisplayFieldState();
   }
 }
 
-class BooleanDisplayFieldState extends State<BooleanDisplayField> {
+class _BooleanDisplayFieldState extends State<BooleanDisplayField> {
   bool currentValue;
   @override
   Widget build(BuildContext context) {

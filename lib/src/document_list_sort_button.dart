@@ -4,7 +4,6 @@ import 'package:rapido/rapido.dart';
 /// A button that adds sorting to a DocumentList. Useful for adding
 /// sorting functionality to a DocumentListView.
 class DocumentListSortButton extends StatefulWidget {
-
   /// The DocumentList to be sorted
   final DocumentList documentList;
 
