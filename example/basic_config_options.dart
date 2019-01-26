@@ -36,6 +36,11 @@ class _MyHomePageState extends State<MyHomePage> {
       "Priority": "pri count", // will create an integer field in forms
       "Note": "note" // will create a text field in forms
     },
+    // limit pri count to 0 through 10, and provide a spinning
+    // picker rather than a text field
+    fieldOptions: {
+      "pri count": {"min": 0, "max": 10},
+    },
   );
 
   @override

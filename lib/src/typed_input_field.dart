@@ -55,7 +55,7 @@ class TypedInputField extends StatelessWidget {
       if (fieldOptions != null) {
         dateTimeFormat = fieldOptions[fieldName]["format"];
       }
-      if(dateTimeFormat == null) {
+      if (dateTimeFormat == null) {
         dateTimeFormat = _dateTimeFormat;
       }
       return _getDateTimeFormField(dateTimeFormat, false, context);
@@ -170,6 +170,11 @@ class TypedInputField extends StatelessWidget {
   }
 }
 
+/// A FormField for choosing integer values, rendered
+/// as a spinning chooser. You must provide a map
+/// of field options that include min and max, in the form of:
+/// fieldOptions: {"min":0,"max":10}, in order to provide a
+/// FormField limited to 0 through 10.
 class IntegerPickerFormField extends StatefulWidget {
   const IntegerPickerFormField({
     Key key,
@@ -228,6 +233,7 @@ class _IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
   }
 }
 
+/// A widget for captioning fields in DocumentForm and DocumentPage.
 class FormFieldCaption extends StatelessWidget {
   const FormFieldCaption(this.label, {Key key}) : super(key: key);
 

@@ -65,7 +65,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
           children: <Widget>[
             Row(
               children: <Widget>[
-              FormFieldCaption(widget.label),
+                FormFieldCaption(widget.label),
               ],
             ),
             Row(
@@ -174,5 +174,3 @@ class _ImageFormFieldState extends State<ImageFormField> {
     });
   }
 }
-
-

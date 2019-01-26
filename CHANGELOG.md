@@ -1,3 +1,7 @@
+## [0.1.3] - 2019-01-26
+ * Add fieldOptions with support for customizing IntegerFields and Date and DateTime fields. 
+ * Removed dateFormat and dateTimeFormat properties from TypedInputFields because that is not supported by fieldOptions. This is a breaking change. If you were using those properties, you need to migrate your code to use fieldOptions instead.
+ 
 ## [0.1.2] - 2019-01-21
  * Removed @required from DocumentListScaffold.titleKeys. 
  
