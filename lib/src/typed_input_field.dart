@@ -19,14 +19,6 @@ import 'package:numberpicker/numberpicker.dart';
 /// ends in "?" -> boolean
 /// All other fields return a single line text input field.
 class TypedInputField extends StatelessWidget {
-  /// Optional Custom format string for reading, writing, and
-  /// display DateTime objects which include both date and time
-  final String dateTimeFormat;
-
-  /// Optional Custom format string for reading, writing, and
-  /// display DateTime objects which include only a date
-  final String dateFormat;
-
   /// A list of options typically used for rendering
   /// input widgets.
   final Map<String, dynamic> fieldOptions;
@@ -51,8 +43,6 @@ class TypedInputField extends StatelessWidget {
       {@required this.label,
       @required this.onSaved,
       this.initialValue,
-      this.dateTimeFormat,
-      this.dateFormat,
       this.fieldOptions});
 
   @override
@@ -61,12 +51,24 @@ class TypedInputField extends StatelessWidget {
       return _getIntegerFormField();
     }
     if (fieldName.toLowerCase().endsWith("datetime")) {
-      String f = dateTimeFormat == null ? _dateTimeFormat : dateTimeFormat;
-      return _getDateTimeFormField(f, false, context);
+      String dateTimeFormat;
+      if (fieldOptions != null) {
+        dateTimeFormat = fieldOptions[fieldName]["format"];
+      }
+      if(dateTimeFormat == null) {
+        dateTimeFormat = _dateTimeFormat;
+      }
+      return _getDateTimeFormField(dateTimeFormat, false, context);
     }
     if (fieldName.toLowerCase().endsWith("date")) {
-      String f = dateFormat == null ? _dateFormat : dateFormat;
-      return _getDateTimeFormField(f, true, context);
+      String dateFormat;
+      if (fieldOptions != null) {
+        dateFormat = fieldOptions[fieldName]["format"];
+      }
+      if (dateFormat == null) {
+        dateFormat = _dateFormat;
+      }
+      return _getDateTimeFormField(dateFormat, true, context);
     }
     if (fieldName.toLowerCase().endsWith("latlong")) {
       //work around json.decode reading _InternalHashMap<String, dynamic>
@@ -150,7 +152,7 @@ class TypedInputField extends StatelessWidget {
           label: label,
           initialValue: initialValue,
           fieldOptions: fieldOptions,
-          onSaved: (int val){
+          onSaved: (int val) {
             this.onSaved(val);
           },
         );

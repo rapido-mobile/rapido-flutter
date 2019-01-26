@@ -43,7 +43,6 @@ class _DocumentFormState extends State<DocumentForm> {
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
-    
 
     // creat a form field for each support label
     widget.documentList.labels.keys.forEach((String label) {
@@ -54,7 +53,10 @@ class _DocumentFormState extends State<DocumentForm> {
       if (widget.document != null) {
         initialValue = _document[fieldName];
       }
-
+      Map<String, dynamic> fieldOptions;
+      if(widget.documentList.fieldOptions != null) {
+        fieldOptions = widget.documentList.fieldOptions[fieldName];
+      }
       // add to the array of input fields
       fields.add(
         Container(
@@ -62,7 +64,7 @@ class _DocumentFormState extends State<DocumentForm> {
           decoration: widget.fieldDecoration,
           child: TypedInputField(fieldName,
               label: label,
-              fieldOptions: widget.documentList.fieldOptions[fieldName],
+              fieldOptions: fieldOptions,
               initialValue: initialValue, onSaved: (dynamic value) {
             // update the field with whatever data was in the input field
             // this will cause the Document to autosave
