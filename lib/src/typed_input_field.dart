@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'map_point_form_field.dart';
 import 'image_form_field.dart';
 import 'boolean_form_field.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
 /// possibly parented by another widget.
@@ -51,7 +52,8 @@ class TypedInputField extends StatelessWidget {
       @required this.onSaved,
       this.initialValue,
       this.dateTimeFormat,
-      this.dateFormat, this.fieldOptions});
+      this.dateFormat,
+      this.fieldOptions});
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +145,29 @@ class TypedInputField extends StatelessWidget {
     }
   }
 
-  TextFormField _getIntegerFormField() {
+  Widget _getIntegerFormField() {
+    if (fieldOptions != null) {
+      if (fieldOptions["min"] != null && fieldOptions["max"] != null) {
+        int value;
+        int iv;
+        initialValue == null ? iv = fieldOptions["min"] : iv = initialValue;
+        return FormField(
+          builder: (FormFieldState<int> state) {
+            return NumberPicker.integer(
+              initialValue: iv,
+              maxValue: fieldOptions["max"],
+              minValue: fieldOptions["min"],
+              onChanged: (num val) {
+                value = val;
+              },
+            );
+          },
+          onSaved: (int val) {
+            this.onSaved(value);
+          },
+        );
+      }
+    }
     return TextFormField(
       decoration: InputDecoration(labelText: label),
       initialValue: initialValue == null ? "0" : initialValue.toString(),
