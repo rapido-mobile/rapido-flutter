@@ -26,6 +26,10 @@ class TypedInputField extends StatelessWidget {
   /// display DateTime objects which include only a date
   final String dateFormat;
 
+  /// A list of options typically used for rendering
+  /// input widgets.
+  final Map<String, dynamic> fieldOptions;
+
   final String _dateTimeFormat = "EEE, MMM d, y H:mm:s";
   final String _dateFormat = "yMd";
 
@@ -47,10 +51,12 @@ class TypedInputField extends StatelessWidget {
       @required this.onSaved,
       this.initialValue,
       this.dateTimeFormat,
-      this.dateFormat});
+      this.dateFormat, this.fieldOptions});
 
   @override
   Widget build(BuildContext context) {
+    print(fieldOptions);
+
     if (fieldName.toLowerCase().endsWith("count")) {
       return _getIntegerFormField();
     }

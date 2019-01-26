@@ -27,6 +27,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
 
   Map<String, String> _labels;
   List<Document> _documents;
+  Map<String, Map<String, dynamic>> fieldOptions;
 
   set length(int newLength) {
     _documents.length = newLength;
@@ -50,7 +51,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
 
   /// The documentType parameter should be unique.
   DocumentList(this.documentType,
-      {this.onLoadComplete, Map<String, String> labels}) {
+      {this.onLoadComplete, Map<String, String> labels, this.fieldOptions}) {
     _labels = labels;
     _documents = [];
     _loadLocalData();
