@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'map_point_form_field.dart';
 import 'image_form_field.dart';
 import 'boolean_form_field.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
 /// possibly parented by another widget.
@@ -18,13 +19,9 @@ import 'boolean_form_field.dart';
 /// ends in "?" -> boolean
 /// All other fields return a single line text input field.
 class TypedInputField extends StatelessWidget {
-  /// Optional Custom format string for reading, writing, and
-  /// display DateTime objects which include both date and time
-  final String dateTimeFormat;
-
-  /// Optional Custom format string for reading, writing, and
-  /// display DateTime objects which include only a date
-  final String dateFormat;
+  /// A list of options typically used for rendering
+  /// input widgets.
+  final Map<String, dynamic> fieldOptions;
 
   final String _dateTimeFormat = "EEE, MMM d, y H:mm:s";
   final String _dateFormat = "yMd";
@@ -46,8 +43,7 @@ class TypedInputField extends StatelessWidget {
       {@required this.label,
       @required this.onSaved,
       this.initialValue,
-      this.dateTimeFormat,
-      this.dateFormat});
+      this.fieldOptions});
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +51,24 @@ class TypedInputField extends StatelessWidget {
       return _getIntegerFormField();
     }
     if (fieldName.toLowerCase().endsWith("datetime")) {
-      String f = dateTimeFormat == null ? _dateTimeFormat : dateTimeFormat;
-      return _getDateTimeFormField(f, false, context);
+      String dateTimeFormat;
+      if (fieldOptions != null) {
+        dateTimeFormat = fieldOptions[fieldName]["format"];
+      }
+      if (dateTimeFormat == null) {
+        dateTimeFormat = _dateTimeFormat;
+      }
+      return _getDateTimeFormField(dateTimeFormat, false, context);
     }
     if (fieldName.toLowerCase().endsWith("date")) {
-      String f = dateFormat == null ? _dateFormat : dateFormat;
-      return _getDateTimeFormField(f, true, context);
+      String dateFormat;
+      if (fieldOptions != null) {
+        dateFormat = fieldOptions[fieldName]["format"];
+      }
+      if (dateFormat == null) {
+        dateFormat = _dateFormat;
+      }
+      return _getDateTimeFormField(dateFormat, true, context);
     }
     if (fieldName.toLowerCase().endsWith("latlong")) {
       //work around json.decode reading _InternalHashMap<String, dynamic>
@@ -137,7 +145,19 @@ class TypedInputField extends StatelessWidget {
     }
   }
 
-  TextFormField _getIntegerFormField() {
+  Widget _getIntegerFormField() {
+    if (fieldOptions != null) {
+      if (fieldOptions["min"] != null && fieldOptions["max"] != null) {
+        return new IntegerPickerFormField(
+          label: label,
+          initialValue: initialValue,
+          fieldOptions: fieldOptions,
+          onSaved: (int val) {
+            this.onSaved(val);
+          },
+        );
+      }
+    }
     return TextFormField(
       decoration: InputDecoration(labelText: label),
       initialValue: initialValue == null ? "0" : initialValue.toString(),
@@ -146,6 +166,86 @@ class TypedInputField extends StatelessWidget {
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: false, decimal: false),
+    );
+  }
+}
+
+/// A FormField for choosing integer values, rendered
+/// as a spinning chooser. You must provide a map
+/// of field options that include min and max, in the form of:
+/// fieldOptions: {"min":0,"max":10}, in order to provide a
+/// FormField limited to 0 through 10.
+class IntegerPickerFormField extends StatefulWidget {
+  const IntegerPickerFormField({
+    Key key,
+    @required this.initialValue,
+    @required this.fieldOptions,
+    @required this.onSaved,
+    this.label,
+  }) : super(key: key);
+
+  final Map<String, dynamic> fieldOptions;
+  final Function onSaved;
+  final int initialValue;
+  final String label;
+
+  @override
+  _IntegerPickerFormFieldState createState() {
+    return new _IntegerPickerFormFieldState();
+  }
+}
+
+class _IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
+  int _currentValue;
+
+  @override
+  void initState() {
+    widget.initialValue == null
+        ? _currentValue = widget.fieldOptions["min"]
+        : _currentValue = widget.initialValue;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        FormFieldCaption(widget.label),
+        FormField(
+          builder: (FormFieldState<int> state) {
+            return NumberPicker.integer(
+              initialValue: _currentValue,
+              maxValue: widget.fieldOptions["max"],
+              minValue: widget.fieldOptions["min"],
+              onChanged: (num val) {
+                setState(() {
+                  _currentValue = val;
+                });
+              },
+            );
+          },
+          onSaved: (int val) {
+            widget.onSaved(_currentValue);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+/// A widget for captioning fields in DocumentForm and DocumentPage.
+class FormFieldCaption extends StatelessWidget {
+  const FormFieldCaption(this.label, {Key key}) : super(key: key);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    if (label == null) return Container();
+    return Text(
+      label,
+      style: Theme.of(context).textTheme.caption,
+      textAlign: TextAlign.start,
     );
   }
 }

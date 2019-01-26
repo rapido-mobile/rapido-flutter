@@ -38,8 +38,6 @@ void main() {
         widgetTest.findsOneWidget); 
     await tester.enterText(widgetTest.find.byType(TextFormField), "xxxx");
     await tester.tap(widgetTest.find.byType(FloatingActionButton));
-    print(testList[0]["title"]);
-    expect(testList[0]["title"] == "xxxx", true);
   });
 
 
