@@ -148,23 +148,10 @@ class TypedInputField extends StatelessWidget {
   Widget _getIntegerFormField() {
     if (fieldOptions != null) {
       if (fieldOptions["min"] != null && fieldOptions["max"] != null) {
-        int value;
-        int iv;
-        initialValue == null ? iv = fieldOptions["min"] : iv = initialValue;
-        return FormField(
-          builder: (FormFieldState<int> state) {
-            return NumberPicker.integer(
-              initialValue: iv,
-              maxValue: fieldOptions["max"],
-              minValue: fieldOptions["min"],
-              onChanged: (num val) {
-                value = val;
-              },
-            );
-          },
-          onSaved: (int val) {
-            this.onSaved(value);
-          },
+        return new IntegerPickerFormField(
+          initialValue: initialValue,
+          fieldOptions: fieldOptions,
+          onSaved: onSaved,
         );
       }
     }
@@ -176,6 +163,55 @@ class TypedInputField extends StatelessWidget {
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: false, decimal: false),
+    );
+  }
+}
+
+class IntegerPickerFormField extends StatefulWidget {
+  const IntegerPickerFormField({
+    Key key,
+    @required this.initialValue,
+    @required this.fieldOptions,
+    @required this.onSaved,
+  }) : super(key: key);
+
+  final Map<String, dynamic> fieldOptions;
+  final Function onSaved;
+  final int initialValue;
+
+  @override
+  IntegerPickerFormFieldState createState() {
+    return new IntegerPickerFormFieldState();
+  }
+}
+
+class IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
+  int _currentValue;
+
+  @override
+  void initState() {
+    widget.initialValue == null
+        ? _currentValue = widget.fieldOptions["min"]
+        : _currentValue = widget.initialValue;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FormField(
+      builder: (FormFieldState<int> state) {
+        return NumberPicker.integer(
+          initialValue: _currentValue,
+          maxValue: widget.fieldOptions["max"],
+          minValue: widget.fieldOptions["min"],
+          onChanged: (num val) {
+            setState(() {
+              _currentValue = val;
+            });
+          },
+        );
+      },
+      onSaved: (int val) {},
     );
   }
 }
