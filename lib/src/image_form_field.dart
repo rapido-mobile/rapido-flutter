@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:validators/validators.dart' as validators;
 import 'typed_display_field.dart';
+import 'typed_input_field.dart';
 
 /// A form field for allowing the user to choose an image. The chosen
 /// value is stored as a string that is either a path to an image on the
@@ -64,13 +65,7 @@ class _ImageFormFieldState extends State<ImageFormField> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Expanded(
-                  child: Text(
-                    widget.label,
-                    style: Theme.of(context).textTheme.caption,
-                    textAlign: TextAlign.start,
-                  ),
-                ),
+              FormFieldCaption(widget.label),
               ],
             ),
             Row(
@@ -179,3 +174,5 @@ class _ImageFormFieldState extends State<ImageFormField> {
     });
   }
 }
+
+

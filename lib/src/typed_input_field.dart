@@ -57,8 +57,6 @@ class TypedInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(fieldOptions);
-
     if (fieldName.toLowerCase().endsWith("count")) {
       return _getIntegerFormField();
     }
@@ -149,9 +147,12 @@ class TypedInputField extends StatelessWidget {
     if (fieldOptions != null) {
       if (fieldOptions["min"] != null && fieldOptions["max"] != null) {
         return new IntegerPickerFormField(
+          label: label,
           initialValue: initialValue,
           fieldOptions: fieldOptions,
-          onSaved: onSaved,
+          onSaved: (int val){
+            this.onSaved(val);
+          },
         );
       }
     }
@@ -173,19 +174,21 @@ class IntegerPickerFormField extends StatefulWidget {
     @required this.initialValue,
     @required this.fieldOptions,
     @required this.onSaved,
+    this.label,
   }) : super(key: key);
 
   final Map<String, dynamic> fieldOptions;
   final Function onSaved;
   final int initialValue;
+  final String label;
 
   @override
-  IntegerPickerFormFieldState createState() {
-    return new IntegerPickerFormFieldState();
+  _IntegerPickerFormFieldState createState() {
+    return new _IntegerPickerFormFieldState();
   }
 }
 
-class IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
+class _IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
   int _currentValue;
 
   @override
@@ -198,20 +201,43 @@ class IntegerPickerFormFieldState extends State<IntegerPickerFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return FormField(
-      builder: (FormFieldState<int> state) {
-        return NumberPicker.integer(
-          initialValue: _currentValue,
-          maxValue: widget.fieldOptions["max"],
-          minValue: widget.fieldOptions["min"],
-          onChanged: (num val) {
-            setState(() {
-              _currentValue = val;
-            });
+    return Column(
+      children: <Widget>[
+        FormFieldCaption(widget.label),
+        FormField(
+          builder: (FormFieldState<int> state) {
+            return NumberPicker.integer(
+              initialValue: _currentValue,
+              maxValue: widget.fieldOptions["max"],
+              minValue: widget.fieldOptions["min"],
+              onChanged: (num val) {
+                setState(() {
+                  _currentValue = val;
+                });
+              },
+            );
           },
-        );
-      },
-      onSaved: (int val) {},
+          onSaved: (int val) {
+            widget.onSaved(_currentValue);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class FormFieldCaption extends StatelessWidget {
+  const FormFieldCaption(this.label, {Key key}) : super(key: key);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    if (label == null) return Container();
+    return Text(
+      label,
+      style: Theme.of(context).textTheme.caption,
+      textAlign: TextAlign.start,
     );
   }
 }
