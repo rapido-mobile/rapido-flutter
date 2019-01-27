@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'map_point_form_field.dart';
-import 'image_form_field.dart';
-import 'boolean_form_field.dart';
+import 'package:rapido/rapido.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
@@ -111,7 +109,16 @@ class TypedInputField extends StatelessWidget {
     return _getTextFormField();
   }
 
-  TextFormField _getTextFormField({int lines: 1}) {
+  Widget _getTextFormField({int lines: 1}) {
+    if (fieldOptions != null) {
+      if (fieldOptions["inputList"] != null) {
+        return ListPicker(
+          documentList: DocumentList(fieldOptions["inputList"]),
+          displayField: fieldOptions["displayField"],
+          label: label,
+        );
+      }
+    }
     return TextFormField(
         maxLines: lines,
         decoration: InputDecoration(labelText: label),
