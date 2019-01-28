@@ -8,12 +8,15 @@ import 'package:rapido/rapido.dart';
 class ListPicker extends StatefulWidget {
   final DocumentList documentList;
   final String displayField;
-  final String label;
+  final Function onChanged;
+  final int initialIndex;
+
   const ListPicker(
       {Key key,
       @required this.documentList,
       @required this.displayField,
-      this.label})
+      this.onChanged,
+      this.initialIndex})
       : super(key: key);
 
   @override
@@ -21,38 +24,47 @@ class ListPicker extends StatefulWidget {
 }
 
 class _ListPickerState extends State<ListPicker> {
-  int currentIndex = 0;
+  int currentIndex;
 
-  ScrollController scrollController = new ScrollController();
+  @override
+  void initState() {
+    currentIndex = widget.initialIndex == null ? 0 : widget.initialIndex;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // widget.documentList.addListener(() {
-    //   setState(() {});
-    // });
     widget.documentList.onLoadComplete = (DocumentList list) {
       setState(() {});
     };
     if (widget.documentList.length == 0) {
       return Center(child: CircularProgressIndicator());
     }
-
+    ScrollController scrollController =
+        ScrollController(initialScrollOffset: (50.0 * currentIndex) + 50.0);
+    ListView listView = ListView(
+      controller: scrollController,
+      itemExtent: 50.0,
+      children: _buildChildren(context),
+    );
     return Container(
       height: 150.0,
       child: NotificationListener(
-        child: ListView(
-          controller: scrollController,
-          itemExtent: 50.0,
-          children: _buildChildren(context),
-        ),
+        child: listView,
         onNotification: (Notification notification) {
           if (notification is ScrollNotification) {
             int intIndexOfMiddleElement =
                 (notification.metrics.pixels / 50.0).round();
-            setState(() {
-              currentIndex = intIndexOfMiddleElement;
-            });
+            intIndexOfMiddleElement = intIndexOfMiddleElement.clamp(
+                0, widget.documentList.length - 1);
+            if (currentIndex != intIndexOfMiddleElement) {
+              setState(() {
+                currentIndex = intIndexOfMiddleElement;
+              });
+              widget.onChanged(widget.documentList[currentIndex]);
+            }
           }
+          return true;
         },
       ),
     );
@@ -82,5 +94,79 @@ class _ListPickerState extends State<ListPicker> {
 
     widgets.add(Container());
     return widgets;
+  }
+}
+
+class ListPickerFormField extends StatefulWidget {
+  final DocumentList documentList;
+  final String displayField;
+  final String valueField;
+  final String label;
+  final Function onSaved;
+  final dynamic initiValue;
+
+  const ListPickerFormField(
+      {Key key,
+      @required this.documentList,
+      @required this.displayField,
+      this.label,
+      this.onSaved,
+      this.initiValue,
+      @required this.valueField})
+      : super(key: key);
+
+  @override
+  _ListPickerFormField createState() => _ListPickerFormField();
+}
+
+class _ListPickerFormField extends State<ListPickerFormField> {
+  int initialIndex;
+  dynamic currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  initializeValues(DocumentList list) {
+    if (widget.initiValue != null) {
+      for (int i = 0; i < list.length; i++) {
+        if (list[i][widget.valueField] == widget.initiValue) {
+          currentValue = widget.initiValue;
+          initialIndex = i;
+          break;
+        }
+      }
+    } else {
+      currentValue = list[0][widget.valueField];
+      initialIndex = 0;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    widget.documentList.onLoadComplete = (DocumentList list) {
+      setState(() {
+        initializeValues(list);
+      });
+    };
+    if (!widget.documentList.documentsLoaded) {
+      return CircularProgressIndicator();
+    }
+    return FormField(
+      builder: (FormFieldState<dynamic> state) {
+        return ListPicker(
+          documentList: widget.documentList,
+          displayField: widget.displayField,
+          initialIndex: initialIndex,
+          onChanged: (Document doc) {
+            currentValue = doc[widget.valueField];
+          },
+        );
+      },
+      onSaved: (dynamic val) {
+        widget.onSaved(currentValue);
+      },
+    );
   }
 }

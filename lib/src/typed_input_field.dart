@@ -112,10 +112,15 @@ class TypedInputField extends StatelessWidget {
   Widget _getTextFormField({int lines: 1}) {
     if (fieldOptions != null) {
       if (fieldOptions["inputList"] != null) {
-        return ListPicker(
+        return ListPickerFormField(
           documentList: DocumentList(fieldOptions["inputList"]),
           displayField: fieldOptions["displayField"],
+          valueField: fieldOptions["valueField"],
           label: label,
+          initiValue: initialValue,
+          onSaved: (dynamic value) {
+            this.onSaved(value);
+          },
         );
       }
     }
