@@ -1,9 +1,5 @@
-// import 'dart:math' as math;
-
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rapido/rapido.dart';
-// import 'package:flutter/rendering.dart';
 
 const double _ITEM_EXTENT = 50.0;
 const int _VISIBLE_ITEMS_COUNT = 3;
