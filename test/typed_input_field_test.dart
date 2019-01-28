@@ -35,4 +35,38 @@ void main() {
     );
     expect(widgetTest.find.text(dateTimeString), widgetTest.findsOneWidget);
   });
+
+  widgetTest.testWidgets("Test listInput option",
+      (widgetTest.WidgetTester tester) async {
+    DocumentList testList = DocumentList(
+      "listInputTest",
+    );
+    testList.addAll([
+      Document(initialValues: {"a": "A"}),
+      Document(initialValues: {"a": "B"}),
+      Document(initialValues: {"a": "C"}),
+      Document(initialValues: {"a": "D"}),
+      Document(initialValues: {"a": "E"}),
+      Document(initialValues: {"a": "F"}),
+    ]);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Card(
+          child: TypedInputField("a",
+              fieldOptions: {
+                "a": {
+                  "inputList": "listInputTest",
+                  "displayField": "a",
+                  "valueField": "a"
+                }
+              },
+              label: "AAA",
+              initialValue: "F",
+              onSaved: () {}),
+        ),
+      ),
+    );
+    expect(widgetTest.find.text("F"), widgetTest.findsOneWidget);
+  });
 }
