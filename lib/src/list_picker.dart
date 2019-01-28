@@ -123,11 +123,6 @@ class _ListPickerFormField extends State<ListPickerFormField> {
   int initialIndex;
   dynamic currentValue;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   initializeValues(DocumentList list) {
     if (widget.initiValue != null) {
       for (int i = 0; i < list.length; i++) {
@@ -153,20 +148,25 @@ class _ListPickerFormField extends State<ListPickerFormField> {
     if (!widget.documentList.documentsLoaded) {
       return CircularProgressIndicator();
     }
-    return FormField(
-      builder: (FormFieldState<dynamic> state) {
-        return ListPicker(
-          documentList: widget.documentList,
-          displayField: widget.displayField,
-          initialIndex: initialIndex,
-          onChanged: (Document doc) {
-            currentValue = doc[widget.valueField];
+    return Column(
+      children: <Widget>[
+        FormFieldCaption(widget.label),
+        FormField(
+          builder: (FormFieldState<dynamic> state) {
+            return ListPicker(
+              documentList: widget.documentList,
+              displayField: widget.displayField,
+              initialIndex: initialIndex,
+              onChanged: (Document doc) {
+                currentValue = doc[widget.valueField];
+              },
+            );
           },
-        );
-      },
-      onSaved: (dynamic val) {
-        widget.onSaved(currentValue);
-      },
+          onSaved: (dynamic val) {
+            widget.onSaved(currentValue);
+          },
+        ),
+      ],
     );
   }
 }
