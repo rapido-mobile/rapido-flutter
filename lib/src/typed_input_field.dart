@@ -45,6 +45,12 @@ class TypedInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    if(fieldOptions != null){
+      if(fieldOptions["inputList"] != null){
+        return _getListPickerFormField();
+      }
+    }
     if (fieldName.toLowerCase().endsWith("count")) {
       return _getIntegerFormField();
     }
@@ -110,20 +116,6 @@ class TypedInputField extends StatelessWidget {
   }
 
   Widget _getTextFormField({int lines: 1}) {
-    if (fieldOptions != null) {
-      if (fieldOptions["inputList"] != null) {
-        return ListPickerFormField(
-          documentList: DocumentList(fieldOptions["inputList"]),
-          displayField: fieldOptions["displayField"],
-          valueField: fieldOptions["valueField"],
-          label: label,
-          initiValue: initialValue,
-          onSaved: (dynamic value) {
-            this.onSaved(value);
-          },
-        );
-      }
-    }
     return TextFormField(
         maxLines: lines,
         decoration: InputDecoration(labelText: label),
@@ -131,6 +123,19 @@ class TypedInputField extends StatelessWidget {
         onSaved: (String value) {
           this.onSaved(value);
         });
+  }
+
+  ListPickerFormField _getListPickerFormField() {
+    return ListPickerFormField(
+      documentList: DocumentList(fieldOptions["inputList"]),
+      displayField: fieldOptions["displayField"],
+      valueField: fieldOptions["valueField"],
+      label: label,
+      initiValue: initialValue,
+      onSaved: (dynamic value) {
+        this.onSaved(value);
+      },
+    );
   }
 
   DateTimePickerFormField _getDateTimeFormField(
