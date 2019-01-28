@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:rapido/rapido.dart';
 // import 'package:flutter/rendering.dart';
 
+const double _ITEM_EXTENT = 50.0;
+
 class ListPicker extends StatefulWidget {
   final DocumentList documentList;
   final String displayField;
@@ -41,20 +43,20 @@ class _ListPickerState extends State<ListPicker> {
       return Center(child: CircularProgressIndicator());
     }
     ScrollController scrollController =
-        ScrollController(initialScrollOffset: (50.0 * currentIndex) + 50.0);
+        ScrollController(initialScrollOffset: (_ITEM_EXTENT * currentIndex) + _ITEM_EXTENT);
     ListView listView = ListView(
       controller: scrollController,
-      itemExtent: 50.0,
+      itemExtent: _ITEM_EXTENT,
       children: _buildChildren(context),
     );
     return Container(
-      height: 150.0,
+      height: 3 * _ITEM_EXTENT,
       child: NotificationListener(
         child: listView,
         onNotification: (Notification notification) {
           if (notification is ScrollNotification) {
             int intIndexOfMiddleElement =
-                (notification.metrics.pixels / 50.0).round();
+                (notification.metrics.pixels / _ITEM_EXTENT).round();
             intIndexOfMiddleElement = intIndexOfMiddleElement.clamp(
                 0, widget.documentList.length - 1);
             if (currentIndex != intIndexOfMiddleElement) {
