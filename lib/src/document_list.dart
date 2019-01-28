@@ -44,6 +44,14 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// fieldOptions{"date": "format": myCustomFormString}
   Map<String, Map<String, dynamic>> fieldOptions;
 
+  /// Optional list of Documents to initialize the DocumentList.
+  /// Whenever the DocumentList first initializes, if there are no
+  /// existing Documents already persisted, the DocumentList will
+  /// initialize itself with this list of Documents. If there are
+  /// are one for more Documents already persisted, this property
+  /// will be ignored.
+  final List<Document> initialDocuments;
+
   set length(int newLength) {
     _documents.length = newLength;
   }
@@ -66,7 +74,10 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
 
   /// The documentType parameter should be unique.
   DocumentList(this.documentType,
-      {this.onLoadComplete, Map<String, String> labels, this.fieldOptions}) {
+      {this.onLoadComplete,
+      this.initialDocuments,
+      Map<String, String> labels,
+      this.fieldOptions}) {
     _labels = labels;
     _documents = [];
     _loadLocalData();
@@ -216,10 +227,25 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
           }
         }
       });
-      if (onLoadComplete != null) onLoadComplete(this);
-      documentsLoaded = true;
-      notifyListeners();
+      if (_documents.length == 0 && initialDocuments != null) {
+        _loadInitialDocuments().then((int i) {
+          _signalLoadComplete();
+        });
+      } else {
+        _signalLoadComplete();
+      }
     });
+  }
+
+  void _signalLoadComplete() {
+    if (onLoadComplete != null) onLoadComplete(this);
+    documentsLoaded = true;
+    notifyListeners();
+  }
+
+  Future<int> _loadInitialDocuments() async {
+    addAll(this.initialDocuments);
+    return _documents.length;
   }
 
   Future<File> _localFile(String id) async {
