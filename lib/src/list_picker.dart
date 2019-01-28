@@ -6,6 +6,7 @@ import 'package:rapido/rapido.dart';
 // import 'package:flutter/rendering.dart';
 
 const double _ITEM_EXTENT = 50.0;
+const int _VISIBLE_ITEMS_COUNT = 3;
 
 class ListPicker extends StatefulWidget {
   final DocumentList documentList;
@@ -50,7 +51,7 @@ class _ListPickerState extends State<ListPicker> {
       children: _buildChildren(context),
     );
     return Container(
-      height: 3 * _ITEM_EXTENT,
+      height: _VISIBLE_ITEMS_COUNT * _ITEM_EXTENT,
       child: NotificationListener(
         child: listView,
         onNotification: (Notification notification) {
