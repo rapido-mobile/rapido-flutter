@@ -4,6 +4,8 @@ import 'package:rapido/rapido.dart';
 const double _ITEM_EXTENT = 50.0;
 const int _VISIBLE_ITEMS_COUNT = 3;
 
+/// Widget that displays a scrolling list of items, allowing users
+/// to choose one item from that list.
 class ListPicker extends StatefulWidget {
   final DocumentList documentList;
   final String displayField;
@@ -83,7 +85,7 @@ class _ListPickerState extends State<ListPicker> {
         widgets.add(
           Center(
             child: Text(
-              doc[widget.displayField],
+              doc[widget.displayField].toString(),
               style: i == currentIndex ? selectedStyle : defaultStyle,
             ),
           ),
@@ -96,6 +98,7 @@ class _ListPickerState extends State<ListPicker> {
   }
 }
 
+/// A FormFielf for a ListPicker
 class ListPickerFormField extends StatefulWidget {
   final DocumentList documentList;
   final String displayField;

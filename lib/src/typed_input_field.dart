@@ -16,9 +16,11 @@ import 'package:numberpicker/numberpicker.dart';
 /// ends in "text" -> multiline string
 /// ends in "?" -> boolean
 /// All other fields return a single line text input field.
+/// Optionally, you can provide an appropriate FieldOptions subclass object
+/// to specify how to render the field. 
 class TypedInputField extends StatelessWidget {
-  /// A list of options typically used for rendering
-  /// input widgets.
+
+  /// Options for configuring the InputField
   final FieldOptions fieldOptions;
 
   final String _dateTimeFormat = "EEE, MMM d, y H:mm:s";

@@ -28,20 +28,9 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   Map<String, String> _labels;
   List<Document> _documents;
 
-  /// Field options allow you to provide extra information related to
-  /// how to format different fields in the UI. Currently supported field
-  /// types are integer, date, and datetime.
-  /// Options supported for an integer field are "max" and "min". If
-  /// both are supplied, then instead of a text field, Rapido will
-  /// provide a spinning number picker. For example, given a field named
-  /// "count", you can provide a spinner like this:
-  /// fieldOptions {"count":{"min":1,"max":10}},
-  /// This will result in a spinner that supports values
-  /// between 1 and 10.
-  /// Date and datetime support different format strings through the
-  /// format option. Given a field named "date" you can support an alternate
-  /// format like this:
-  /// fieldOptions{"date": "format": myCustomFormString}
+  /// FieldOptions permit specifying how to render a field in different
+  /// circumstances, most commonly in a DocumentForm. fieldOptionsMap is 
+  /// map of field names to objects that are subclass of FieldOptions.
   Map<String, FieldOptions> fieldOptionsMap;
 
   /// Optional list of Documents to initialize the DocumentList.
