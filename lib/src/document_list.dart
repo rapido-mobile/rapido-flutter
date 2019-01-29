@@ -42,7 +42,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// format option. Given a field named "date" you can support an alternate
   /// format like this:
   /// fieldOptions{"date": "format": myCustomFormString}
-  Map<String, Map<String, dynamic>> fieldOptions;
+  Map<String, FieldOptions> fieldOptionsMap;
 
   /// Optional list of Documents to initialize the DocumentList.
   /// Whenever the DocumentList first initializes, if there are no
@@ -77,7 +77,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
       {this.onLoadComplete,
       this.initialDocuments,
       Map<String, String> labels,
-      this.fieldOptions}) {
+      this.fieldOptionsMap}) {
     _labels = labels;
     _documents = [];
     _loadLocalData();

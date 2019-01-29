@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     },
     // limit pri count to 0 through 10, and provide a spinning
     // picker rather than a text field
-    fieldOptions: {
+    fieldOptionsMap: {
       "pri count": {"min": 0, "max": 10},
     },
   );

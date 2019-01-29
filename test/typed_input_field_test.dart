@@ -11,9 +11,6 @@ void main() {
       (widgetTest.WidgetTester tester) async {
     DocumentList testList = DocumentList(
       "formTest",
-      fieldOptions: {
-        "datetime": {"format": customDateTimeFormat}
-      },
     );
     testList.addAll([
       Document(
@@ -24,9 +21,7 @@ void main() {
       MaterialApp(
         home: Card(
           child: TypedInputField("datetime",
-              fieldOptions: {
-                "datetime": {"format": customDateTimeFormat}
-              },
+              fieldOptions: DateTimeFieldOptions(customDateTimeFormat),
               label: "datetime",
               initialValue: dateTimeString,
               onSaved: () {}),
@@ -54,13 +49,7 @@ void main() {
       MaterialApp(
         home: Card(
           child: TypedInputField("a",
-              fieldOptions: {
-                "a": {
-                  "inputList": "listInputTest",
-                  "displayField": "a",
-                  "valueField": "a"
-                }
-              },
+              fieldOptions: InputListFieldOptions("listInputTest", "a", "a"),
               label: "AAA",
               initialValue: "F",
               onSaved: () {}),
