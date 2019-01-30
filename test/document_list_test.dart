@@ -247,6 +247,39 @@ void main() {
     expect(brokenList[1]["b"] == 1, true);
   });
 
+  test('initialDocuments test', () {
+    List<Document> docs = [
+      Document(initialValues: {"a": 1}),
+      Document(initialValues: {"b": 2}),
+      Document(initialValues: {"c": 3}),
+      Document(initialValues: {"d": 4}),
+    ];
+    DocumentList("initializeMe", initialDocuments: docs,
+        onLoadComplete: (DocumentList l) {
+      expect(l.length, 4);
+      l.removeAt(0);
+    });
+  });
+
+  test('initialDocuments skipped', () {
+    List<Document> docs = [
+      Document(initialValues: {"a": 1}),
+      Document(initialValues: {"b": 2}),
+      Document(initialValues: {"c": 3}),
+      Document(initialValues: {"d": 4}),
+    ];
+    DocumentList("initializeMe", initialDocuments: docs,
+        onLoadComplete: (DocumentList l) {
+      expect(l.length, 3);
+    });
+  });
+
+  test('empty DocumentList documentsLoaded property', () {
+    DocumentList("empty", onLoadComplete: (DocumentList l) {
+      expect(l.documentsLoaded, true);
+    });
+  });
+
   setUpAll(() async {
     // Create a temporary directory to work with
     final directory = await Directory.systemTemp.createTemp();

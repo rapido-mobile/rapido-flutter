@@ -53,9 +53,9 @@ class _DocumentFormState extends State<DocumentForm> {
       if (widget.document != null) {
         initialValue = _document[fieldName];
       }
-      Map<String, dynamic> fieldOptions;
-      if (widget.documentList.fieldOptions != null) {
-        fieldOptions = widget.documentList.fieldOptions[fieldName];
+      FieldOptions fieldOptions;
+      if (widget.documentList.fieldOptionsMap != null) {
+        fieldOptions = widget.documentList.fieldOptionsMap[fieldName];
       }
       // add to the array of input fields
       fields.add(
