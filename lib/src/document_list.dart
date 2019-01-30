@@ -227,8 +227,8 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   void _signalLoadComplete() {
-    if (onLoadComplete != null) onLoadComplete(this);
     documentsLoaded = true;
+    if (onLoadComplete != null) onLoadComplete(this);
     notifyListeners();
   }
 

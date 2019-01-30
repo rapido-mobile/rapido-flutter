@@ -273,6 +273,13 @@ void main() {
       expect(l.length, 3);
     });
   });
+
+  test('empty DocumentList documentsLoaded property', () {
+    DocumentList("empty", onLoadComplete: (DocumentList l) {
+      expect(l.documentsLoaded, true);
+    });
+  });
+
   setUpAll(() async {
     // Create a temporary directory to work with
     final directory = await Directory.systemTemp.createTemp();

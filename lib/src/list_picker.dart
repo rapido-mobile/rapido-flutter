@@ -7,17 +7,31 @@ const int _VISIBLE_ITEMS_COUNT = 3;
 /// Widget that displays a scrolling list of items, allowing users
 /// to choose one item from that list.
 class ListPicker extends StatefulWidget {
+  /// The DocumentList that will supply the list of values to
+  /// display in the picker
   final DocumentList documentList;
+
+  /// The name of the field in the DocumentList to display in the picker
   final String displayField;
+
+  /// Callback for when the user has chosen a new value in the picker.
+  /// Returns the chosen Document.
   final Function onChanged;
+
+  /// Initial index in the DocumentList. Defaults to 0.
   final int initialIndex;
+
+  /// fires when the DocumentList has loaded, and the widget
+  /// has loaded the list. Typically used for tests.
+  final Function onListLoaded;
 
   const ListPicker(
       {Key key,
       @required this.documentList,
       @required this.displayField,
       this.onChanged,
-      this.initialIndex})
+      this.initialIndex,
+      this.onListLoaded})
       : super(key: key);
 
   @override
@@ -41,13 +55,14 @@ class _ListPickerState extends State<ListPicker> {
     if (widget.documentList.length == 0) {
       return Center(child: CircularProgressIndicator());
     }
-    ScrollController scrollController =
-        ScrollController(initialScrollOffset: (_ITEM_EXTENT * currentIndex) + _ITEM_EXTENT);
+    ScrollController scrollController = ScrollController(
+        initialScrollOffset: (_ITEM_EXTENT * currentIndex) + _ITEM_EXTENT);
     ListView listView = ListView(
       controller: scrollController,
       itemExtent: _ITEM_EXTENT,
       children: _buildChildren(context),
     );
+
     return Container(
       height: _VISIBLE_ITEMS_COUNT * _ITEM_EXTENT,
       child: NotificationListener(
@@ -98,13 +113,25 @@ class _ListPickerState extends State<ListPicker> {
   }
 }
 
-/// A FormFielf for a ListPicker
+/// A FormField for a ListPicker
 class ListPickerFormField extends StatefulWidget {
+  /// The DocumentList that will supply the list of values to
+  /// display in the picker
   final DocumentList documentList;
+
+  /// The name of the field in the DocumentList to display in the picker
   final String displayField;
+
+  /// The name of the field in DocumentList that provides the tracked value 
   final String valueField;
+
+  /// Label for the FormField
   final String label;
+
+  /// Function callback for onSaved, typically called by a DocumentForm
   final Function onSaved;
+
+  /// Sets the initial state of the FormField, if any
   final dynamic initiValue;
 
   const ListPickerFormField(
