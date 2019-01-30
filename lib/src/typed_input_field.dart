@@ -17,9 +17,8 @@ import 'package:numberpicker/numberpicker.dart';
 /// ends in "?" -> boolean
 /// All other fields return a single line text input field.
 /// Optionally, you can provide an appropriate FieldOptions subclass object
-/// to specify how to render the field. 
+/// to specify how to render the field.
 class TypedInputField extends StatelessWidget {
-
   /// Options for configuring the InputField
   final FieldOptions fieldOptions;
 

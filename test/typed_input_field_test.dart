@@ -9,14 +9,6 @@ void main() {
 
   widgetTest.testWidgets("Custom format String test",
       (widgetTest.WidgetTester tester) async {
-    DocumentList testList = DocumentList(
-      "formTest",
-    );
-    testList.addAll([
-      Document(
-        initialValues: {"datetime": dateTimeString},
-      )
-    ]);
     await tester.pumpWidget(
       MaterialApp(
         home: Card(
@@ -31,31 +23,42 @@ void main() {
     expect(widgetTest.find.text(dateTimeString), widgetTest.findsOneWidget);
   });
 
-  widgetTest.testWidgets("Test listInput option",
-      (widgetTest.WidgetTester tester) async {
-    DocumentList testList = DocumentList(
-      "listInputTest",
-    );
-    testList.addAll([
-      Document(initialValues: {"a": "A"}),
-      Document(initialValues: {"a": "B"}),
-      Document(initialValues: {"a": "C"}),
-      Document(initialValues: {"a": "D"}),
-      Document(initialValues: {"a": "E"}),
-      Document(initialValues: {"a": "F"}),
-    ]);
+  // widgetTest.testWidgets("Test listInput option",
+  //     (widgetTest.WidgetTester tester) {
+  //   DocumentList testList = DocumentList(
+  //     "listInputTest",
+  //   );
+  //   testList.addAll([
+  //     Document(initialValues: {"a": "A"}),
+  //     Document(initialValues: {"a": "B"}),
+  //     Document(initialValues: {"a": "C"}),
+  //     Document(initialValues: {"a": "D"}),
+  //     Document(initialValues: {"a": "E"}),
+  //     Document(initialValues: {"a": "F"}),
+  //   ]);
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Card(
-          child: TypedInputField("a",
-              fieldOptions: InputListFieldOptions("listInputTest", "a", "a"),
-              label: "AAA",
-              initialValue: "F",
-              onSaved: () {}),
-        ),
-      ),
-    );
-    expect(widgetTest.find.text("F"), widgetTest.findsOneWidget);
-  });
+  //   tester.pumpWidget(MaterialApp(
+  //     home: Card(
+  //       child: ListPickerFormField(
+  //         documentList: testList,
+  //         displayField: "a",
+  //         valueField: "a",
+  //       ),
+  //     ),
+  //   ));
+
+  //   expect(widgetTest.find.text("A"), widgetTest.findsOneWidget);
+  //   tester.pumpWidget(MaterialApp(
+  //     home: Card(
+  //       child: ListPickerFormField(
+  //         documentList: testList,
+  //         displayField: "a",
+  //         valueField: "a",
+  //         initiValue: "F",
+  //       ),
+  //     ),
+  //   ));
+
+  //   expect(widgetTest.find.text("F"), widgetTest.findsOneWidget);
+  // });
 }

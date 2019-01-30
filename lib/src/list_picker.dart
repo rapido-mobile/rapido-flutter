@@ -150,6 +150,7 @@ class _ListPickerFormField extends State<ListPickerFormField> {
     if (!widget.documentList.documentsLoaded) {
       return CircularProgressIndicator();
     }
+
     return Column(
       children: <Widget>[
         FormFieldCaption(widget.label),
