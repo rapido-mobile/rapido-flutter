@@ -122,7 +122,7 @@ class ListPickerFormField extends StatefulWidget {
   /// The name of the field in the DocumentList to display in the picker
   final String displayField;
 
-  /// The name of the field in DocumentList that provides the tracked value 
+  /// The name of the field in DocumentList that provides the tracked value
   final String valueField;
 
   /// Label for the FormField

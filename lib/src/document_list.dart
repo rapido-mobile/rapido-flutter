@@ -29,7 +29,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   List<Document> _documents;
 
   /// FieldOptions permit specifying how to render a field in different
-  /// circumstances, most commonly in a DocumentForm. fieldOptionsMap is 
+  /// circumstances, most commonly in a DocumentForm. fieldOptionsMap is
   /// map of field names to objects that are subclass of FieldOptions.
   Map<String, FieldOptions> fieldOptionsMap;
 

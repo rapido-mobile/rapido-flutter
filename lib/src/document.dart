@@ -91,7 +91,7 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
         }
         _map[key] = newData[key];
       });
-      _map["_id"] = newData["_id"]; 
+      _map["_id"] = newData["_id"];
     } else {
       //TODO: Debug this
       // This only seems to occur during testing, and

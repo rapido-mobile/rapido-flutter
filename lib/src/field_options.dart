@@ -24,5 +24,4 @@ class DateTimeFieldOptions extends FieldOptions {
   final String formatString;
 
   DateTimeFieldOptions(this.formatString);
-
 }
