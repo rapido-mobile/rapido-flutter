@@ -52,12 +52,15 @@ class TypedInputField extends StatelessWidget {
     if (fieldName.toLowerCase().endsWith("count")) {
       return _getIntegerFormField();
     }
+    if (fieldName.toLowerCase().endsWith("amount")) {
+      return _getAmountFormField();
+    }
     if (fieldName.toLowerCase().endsWith("datetime")) {
       String dateTimeFormat;
       if (fieldOptions != null) {
         dateTimeFormat = _getFormatStringFromOptions();
       } else {
-          dateTimeFormat = "EEE, MMM d, y H:mm:s";
+        dateTimeFormat = "EEE, MMM d, y H:mm:s";
       }
       return _getDateTimeFormField(dateTimeFormat, false, context);
     }
@@ -66,7 +69,7 @@ class TypedInputField extends StatelessWidget {
       if (fieldOptions != null) {
         dateFormat = _getFormatStringFromOptions();
       } else {
-          dateFormat = "yMd";
+        dateFormat = "yMd";
       }
       return _getDateTimeFormField(dateFormat, true, context);
     }
@@ -145,7 +148,8 @@ class TypedInputField extends StatelessWidget {
   }
 
   DateTimePickerFormField _getDateTimeFormField(
-      formatString, dateOnly, BuildContext context) {;
+      formatString, dateOnly, BuildContext context) {
+    ;
     DateFormat format = DateFormat(formatString);
     return DateTimePickerFormField(
       format: format,
@@ -195,6 +199,18 @@ class TypedInputField extends StatelessWidget {
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: false, decimal: false),
+    );
+  }
+
+  Widget _getAmountFormField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: label),
+      initialValue: initialValue == null ? "0" : initialValue.toString(),
+      onSaved: (String value) {
+        this.onSaved(double.parse(value));
+      },
+      keyboardType:
+          TextInputType.numberWithOptions(signed: false, decimal: true),
     );
   }
 }

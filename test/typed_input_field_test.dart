@@ -23,6 +23,21 @@ void main() {
     expect(widgetTest.find.text(dateTimeString), widgetTest.findsOneWidget);
   });
 
+  widgetTest.testWidgets("Amount field test",
+      (widgetTest.WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Card(
+          child: TypedInputField("amount",
+              fieldOptions: DateTimeFieldOptions(customDateTimeFormat),
+              label: "amount",
+              initialValue: 55.05,
+              onSaved: () {}),
+        ),
+      ),
+    );
+    expect(widgetTest.find.text("55.05"), widgetTest.findsOneWidget);
+  });
   // widgetTest.testWidgets("Test listInput option",
   //     (widgetTest.WidgetTester tester) {
   //   DocumentList testList = DocumentList(
