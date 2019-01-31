@@ -29,7 +29,6 @@ void main() {
       MaterialApp(
         home: Card(
           child: TypedInputField("amount",
-              fieldOptions: DateTimeFieldOptions(customDateTimeFormat),
               label: "amount",
               initialValue: 55.05,
               onSaved: () {}),

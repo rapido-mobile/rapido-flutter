@@ -203,6 +203,11 @@ class TypedInputField extends StatelessWidget {
   }
 
   Widget _getAmountFormField() {
+    bool signed = false;
+    if(fieldOptions.runtimeType == AmountFieldOptions) {
+      AmountFieldOptions fo = fieldOptions as AmountFieldOptions;
+      signed = fo.allowNegatives;
+    }
     return TextFormField(
       decoration: InputDecoration(labelText: label),
       initialValue: initialValue == null ? "0" : initialValue.toString(),
@@ -210,7 +215,7 @@ class TypedInputField extends StatelessWidget {
         this.onSaved(double.parse(value));
       },
       keyboardType:
-          TextInputType.numberWithOptions(signed: false, decimal: true),
+          TextInputType.numberWithOptions(signed: signed, decimal: true),
     );
   }
 }
