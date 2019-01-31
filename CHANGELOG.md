@@ -1,3 +1,7 @@
+## [0.1.5] - 2019-01-31
+ * Added "amount" TypedInput field. Any field name ending in amount will be assumed to be a double.
+ * Add a character white list to the defuault integer input field, which restricts characters other than digits being entered.
+ 
 ## [0.1.4] - 2019-01-30
  * Changed fieldOptions to a dart class. This is a breaking change.
  * Added ListInput field options for optionally rendering an input field as a spinning picker list.
