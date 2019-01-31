@@ -3,6 +3,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:rapido/rapido.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:flutter/services.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
 /// possibly parented by another widget.
@@ -199,12 +200,13 @@ class TypedInputField extends StatelessWidget {
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: false, decimal: false),
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
     );
   }
 
   Widget _getAmountFormField() {
     bool signed = false;
-    if(fieldOptions.runtimeType == AmountFieldOptions) {
+    if (fieldOptions.runtimeType == AmountFieldOptions) {
       AmountFieldOptions fo = fieldOptions as AmountFieldOptions;
       signed = fo.allowNegatives;
     }
