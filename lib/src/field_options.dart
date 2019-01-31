@@ -11,6 +11,12 @@ class InputListFieldOptions extends FieldOptions {
   InputListFieldOptions(this.documentType, this.displayField, this.valueField);
 }
 
+class AmountFieldOptions extends FieldOptions {
+  final bool allowNegatives;
+
+  AmountFieldOptions(this.allowNegatives);
+}
+
 /// Forces an input field to be rendered as an IntegerPicker.
 class IntegerPickerFieldOptions extends FieldOptions {
   final int minimum;

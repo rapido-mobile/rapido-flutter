@@ -3,12 +3,14 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:rapido/rapido.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:flutter/services.dart';
 
 /// Given a field name, returns an appropriately configured FormField,
 /// possibly parented by another widget.
 /// Types are inferred from fieldNames.
 /// Field name ends in | inferred type
 /// ends in "count" -> integer
+/// ends in "amount" -> double
 /// ends in "date" -> date
 /// ends in "datetime" -> date and time
 /// ends in "latlong" -> latitude and longitude
@@ -21,9 +23,6 @@ import 'package:numberpicker/numberpicker.dart';
 class TypedInputField extends StatelessWidget {
   /// Options for configuring the InputField
   final FieldOptions fieldOptions;
-
-  final String _dateTimeFormat = "EEE, MMM d, y H:mm:s";
-  final String _dateFormat = "yMd";
 
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
@@ -54,13 +53,15 @@ class TypedInputField extends StatelessWidget {
     if (fieldName.toLowerCase().endsWith("count")) {
       return _getIntegerFormField();
     }
+    if (fieldName.toLowerCase().endsWith("amount")) {
+      return _getAmountFormField();
+    }
     if (fieldName.toLowerCase().endsWith("datetime")) {
       String dateTimeFormat;
       if (fieldOptions != null) {
         dateTimeFormat = _getFormatStringFromOptions();
-      }
-      if (dateTimeFormat == null) {
-        dateTimeFormat = _dateTimeFormat;
+      } else {
+        dateTimeFormat = "EEE, MMM d, y H:mm:s";
       }
       return _getDateTimeFormField(dateTimeFormat, false, context);
     }
@@ -68,9 +69,8 @@ class TypedInputField extends StatelessWidget {
       String dateFormat;
       if (fieldOptions != null) {
         dateFormat = _getFormatStringFromOptions();
-      }
-      if (dateFormat == null) {
-        dateFormat = _dateFormat;
+      } else {
+        dateFormat = "yMd";
       }
       return _getDateTimeFormField(dateFormat, true, context);
     }
@@ -150,6 +150,7 @@ class TypedInputField extends StatelessWidget {
 
   DateTimePickerFormField _getDateTimeFormField(
       formatString, dateOnly, BuildContext context) {
+    ;
     DateFormat format = DateFormat(formatString);
     return DateTimePickerFormField(
       format: format,
@@ -199,6 +200,24 @@ class TypedInputField extends StatelessWidget {
       },
       keyboardType:
           TextInputType.numberWithOptions(signed: false, decimal: false),
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+    );
+  }
+
+  Widget _getAmountFormField() {
+    bool signed = false;
+    if (fieldOptions.runtimeType == AmountFieldOptions) {
+      AmountFieldOptions fo = fieldOptions as AmountFieldOptions;
+      signed = fo.allowNegatives;
+    }
+    return TextFormField(
+      decoration: InputDecoration(labelText: label),
+      initialValue: initialValue == null ? "0" : initialValue.toString(),
+      onSaved: (String value) {
+        this.onSaved(double.parse(value));
+      },
+      keyboardType:
+          TextInputType.numberWithOptions(signed: signed, decimal: true),
     );
   }
 }
