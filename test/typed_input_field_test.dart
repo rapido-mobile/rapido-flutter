@@ -4,8 +4,8 @@ import 'package:rapido/rapido.dart';
 import "package:test/test.dart";
 
 void main() {
-  String dateTimeString = "01996.July.10 AD 12:08 PM";
-  String customDateTimeFormat = "yyyyy.MMMM.dd GGG hh:mm aaa";
+  String dateTimeString = "1996.July.10 AD 12:08 PM";
+  String customDateTimeFormat = "yyyy.MMMM.dd GGG hh:mm aaa";
 
   widgetTest.testWidgets("Custom format String test",
       (widgetTest.WidgetTester tester) async {

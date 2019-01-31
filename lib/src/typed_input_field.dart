@@ -9,6 +9,7 @@ import 'package:numberpicker/numberpicker.dart';
 /// Types are inferred from fieldNames.
 /// Field name ends in | inferred type
 /// ends in "count" -> integer
+/// ends in "amount" -> double
 /// ends in "date" -> date
 /// ends in "datetime" -> date and time
 /// ends in "latlong" -> latitude and longitude
@@ -21,9 +22,6 @@ import 'package:numberpicker/numberpicker.dart';
 class TypedInputField extends StatelessWidget {
   /// Options for configuring the InputField
   final FieldOptions fieldOptions;
-
-  final String _dateTimeFormat = "EEE, MMM d, y H:mm:s";
-  final String _dateFormat = "yMd";
 
   /// The name of the field, used to calculate which type of input to return
   final String fieldName;
@@ -58,9 +56,8 @@ class TypedInputField extends StatelessWidget {
       String dateTimeFormat;
       if (fieldOptions != null) {
         dateTimeFormat = _getFormatStringFromOptions();
-      }
-      if (dateTimeFormat == null) {
-        dateTimeFormat = _dateTimeFormat;
+      } else {
+          dateTimeFormat = "EEE, MMM d, y H:mm:s";
       }
       return _getDateTimeFormField(dateTimeFormat, false, context);
     }
@@ -68,9 +65,8 @@ class TypedInputField extends StatelessWidget {
       String dateFormat;
       if (fieldOptions != null) {
         dateFormat = _getFormatStringFromOptions();
-      }
-      if (dateFormat == null) {
-        dateFormat = _dateFormat;
+      } else {
+          dateFormat = "yMd";
       }
       return _getDateTimeFormField(dateFormat, true, context);
     }
@@ -149,7 +145,7 @@ class TypedInputField extends StatelessWidget {
   }
 
   DateTimePickerFormField _getDateTimeFormField(
-      formatString, dateOnly, BuildContext context) {
+      formatString, dateOnly, BuildContext context) {;
     DateFormat format = DateFormat(formatString);
     return DateTimePickerFormField(
       format: format,
