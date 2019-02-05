@@ -11,6 +11,8 @@ class InputListFieldOptions extends FieldOptions {
   InputListFieldOptions(this.documentType, this.displayField, this.valueField);
 }
 
+/// Field options for amount fields, currently ignored by the android
+///  keyboard.
 class AmountFieldOptions extends FieldOptions {
   final bool allowNegatives;
 

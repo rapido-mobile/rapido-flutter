@@ -150,7 +150,6 @@ class TypedInputField extends StatelessWidget {
 
   DateTimePickerFormField _getDateTimeFormField(
       formatString, dateOnly, BuildContext context) {
-    ;
     DateFormat format = DateFormat(formatString);
     return DateTimePickerFormField(
       format: format,

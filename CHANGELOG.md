@@ -1,3 +1,7 @@
+## [0.1.6] - 2019-02-05
+ * Cleaned up empty statement
+ * Added missing API documentation
+
 ## [0.1.5] - 2019-01-31
  * Added "amount" TypedInput field. Any field name ending in amount will be assumed to be a double.
  * Add a character white list to the defuault integer input field, which restricts characters other than digits being entered.
