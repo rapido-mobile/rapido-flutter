@@ -13,7 +13,7 @@ void main() {
       MaterialApp(
         home: Card(
           child: TypedInputField("datetime",
-              fieldOptions: DateTimeFieldOptions(customDateTimeFormat),
+              fieldOptions: DateTimeFieldOptions(formatString: customDateTimeFormat),
               label: "datetime",
               initialValue: dateTimeString,
               onSaved: () {}),
