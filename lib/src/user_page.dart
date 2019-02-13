@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-class LoginPage extends StatefulWidget {
+class UserPage extends StatefulWidget {
   final Function onComplete;
   final bool register;
 
-  const LoginPage({this.onComplete, this.register: false});
+  const UserPage({this.onComplete, this.register: false});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _UserPageState createState() => _UserPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _UserPageState extends State<UserPage> {
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  dynamic user;
+
+  @override
+  void initState() async{
+    user = await ParseUser.currentUser();
+    print(user);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,9 +33,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   List<Widget> _createChildren(bool regsiter) {
     List<Widget> widgets = [];
     widgets.add(TextField(
@@ -67,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
           //   body: json.encode(body),
           // )
           //     .then((http.Response response) {
-                
+
           //   print("$endPoint returned:");
           //   print(response.body);
           //   print("With headers: ${response.headers}");
@@ -95,7 +102,7 @@ class LoginDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: LoginPage(
+      child: UserPage(
         register: register,
         onComplete: (bool success) {
           Navigator.pop(context, success);
