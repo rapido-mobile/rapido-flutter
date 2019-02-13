@@ -15,17 +15,43 @@ class _UserPageState extends State<UserPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  dynamic user;
+  bool initializing = true;
+  ParseUser user;
 
   @override
-  void initState() async{
-    user = await ParseUser.currentUser();
-    print(user);
+  void initState() {
+    Parse().initialize("'app'", "http://10.0.2.2/parse", debug: true);
+    initUser();
     super.initState();
+  }
+
+  initUser() async {
+    user = await ParseUser.currentUser();
+    if (user != null) {
+      ParseResponse response = await ParseUser.getCurrentUserFromServer();
+      if (response.success) user = response.result;
+
+      response = await user.save();
+      if (response.success) user = response.result;
+    }
+    setState(() {
+      initializing = false;
+    });
+    print(user);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (initializing)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    if (user != null) {
+      return UserWidget(
+        userName: user.username,
+        email: user.emailAddress,
+      );
+    }
     return Container(
       child: Column(
         children: _createChildren(widget.register),
@@ -57,30 +83,6 @@ class _UserPageState extends State<UserPage> {
       onPressed: () async {
         bool loginSuccess = false;
         if (regsiter) {
-          // String endPoint = "http://10.0.2.2/parse/classes/_User";
-          // Map<String, String> body = {
-          //   "username": "testUser",
-          //   "password": "password",
-          //   "email": "test@example.com"
-          // };
-          // Map<String, String> headers = {
-          //     "Content-Type": "application/json",
-          //     "X-Parse-Application-Id": "'app'",
-          //   };
-          // http
-          //     .post(
-          //   endPoint,
-          //   headers: headers,
-          //   body: json.encode(body),
-          // )
-          //     .then((http.Response response) {
-
-          //   print("$endPoint returned:");
-          //   print(response.body);
-          //   print("With headers: ${response.headers}");
-          // });
-          Parse().initialize("'app'", "http://10.0.2.2/parse", debug: true);
-
           ParseUser user = ParseUser(usernameController.text,
               passwordController.text, emailController.text);
           ParseResponse response = await user.signUp();
@@ -108,6 +110,42 @@ class LoginDialog extends StatelessWidget {
           Navigator.pop(context, success);
         },
       ),
+    );
+  }
+}
+
+class UserWidget extends StatelessWidget {
+  final String userName;
+  final String email;
+
+  const UserWidget({this.userName, this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(20.0),
+          child: Center(
+            child: Text(userName),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(20.0),
+          child: Center(
+            child: Text(email),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(20.0),
+          child: Center(
+            child: FloatingActionButton(
+              child: Icon(Icons.exit_to_app),
+              onPressed: () {},
+            ),
+          ),
+        )
+      ],
     );
   }
 }
