@@ -3,21 +3,17 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class UserPage extends StatefulWidget {
   final Function onComplete;
-  final bool register;
 
-  const UserPage({this.onComplete, this.register: false});
+  const UserPage({this.onComplete});
 
   @override
   _UserPageState createState() => _UserPageState();
 }
 
 class _UserPageState extends State<UserPage> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  bool initializing = true;
   ParseUser user;
-
+  bool initializing = true;
+  
   @override
   void initState() {
     Parse().initialize("'app'", "http://10.0.2.2/parse", debug: true);
@@ -50,16 +46,63 @@ class _UserPageState extends State<UserPage> {
       return UserWidget(
         userName: user.username,
         email: user.emailAddress,
+        onLogout: () {
+          user.logout();
+          setState(() {
+            user = null;
+          });
+        },
       );
     }
+    return LoginForm(
+      onComplete: (bool success) {
+        if (success) {
+          setState(() {});
+        }
+      },
+    );
+  }
+}
+
+class LoginDialog extends StatelessWidget {
+ const LoginDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: UserPage(
+        onComplete: (bool success) {
+          Navigator.pop(context, success);
+        },
+      ),
+    );
+  }
+}
+
+class LoginForm extends StatefulWidget {
+  final Function onComplete;
+
+  const LoginForm({this.onComplete});
+
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  bool register = false;
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       child: Column(
-        children: _createChildren(widget.register),
+        children: _createChildren(),
       ),
     );
   }
 
-  List<Widget> _createChildren(bool regsiter) {
+  List<Widget> _createChildren() {
     List<Widget> widgets = [];
     widgets.add(TextField(
       decoration: InputDecoration(labelText: "user name"),
@@ -72,17 +115,17 @@ class _UserPageState extends State<UserPage> {
         controller: passwordController,
       ),
     );
-    if (regsiter) {
+    if (register) {
       widgets.add(TextField(
         decoration: InputDecoration(labelText: "email"),
         controller: emailController,
       ));
-    }
+    } 
     widgets.add(FloatingActionButton(
       child: Icon(Icons.check),
       onPressed: () async {
         bool loginSuccess = false;
-        if (regsiter) {
+        if (register) {
           ParseUser user = ParseUser(usernameController.text,
               passwordController.text, emailController.text);
           ParseResponse response = await user.signUp();
@@ -92,33 +135,35 @@ class _UserPageState extends State<UserPage> {
         widget.onComplete(loginSuccess);
       },
     ));
-    return widgets;
-  }
-}
-
-class LoginDialog extends StatelessWidget {
-  final bool register;
-
-  const LoginDialog({this.register: false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: UserPage(
-        register: register,
-        onComplete: (bool success) {
-          Navigator.pop(context, success);
+    if(!register){
+      widgets.add(RaisedButton(
+        child: Text("Register"),
+        onPressed: () {
+          setState(() {
+            register = true;
+          });
         },
-      ),
-    );
+      ));
+    } else {
+            widgets.add(RaisedButton(
+        child: Text("Login"),
+        onPressed: () {
+          setState(() {
+            register = false;
+          });
+        },
+      ));
+    }
+    return widgets;
   }
 }
 
 class UserWidget extends StatelessWidget {
   final String userName;
   final String email;
+  final Function onLogout;
 
-  const UserWidget({this.userName, this.email});
+  const UserWidget({this.userName, this.email, this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +186,9 @@ class UserWidget extends StatelessWidget {
           child: Center(
             child: FloatingActionButton(
               child: Icon(Icons.exit_to_app),
-              onPressed: () {},
+              onPressed: () {
+                onLogout();
+              },
             ),
           ),
         )
