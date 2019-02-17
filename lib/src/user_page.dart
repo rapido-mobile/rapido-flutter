@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'dart:async';
 
 class UserPage extends StatefulWidget {
   final Function onComplete;
@@ -12,8 +13,9 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   ParseUser user;
+  UserState userState;
   bool initializing = true;
-  
+
   @override
   void initState() {
     Parse().initialize("'app'", "http://10.0.2.2/parse", debug: true);
@@ -23,41 +25,46 @@ class _UserPageState extends State<UserPage> {
 
   initUser() async {
     user = await ParseUser.currentUser();
-    if (user != null) {
-      ParseResponse response = await ParseUser.getCurrentUserFromServer();
-      if (response.success) user = response.result;
-
-      response = await user.save();
-      if (response.success) user = response.result;
-    }
+    userState = await getCurrentUserState(user);
     setState(() {
       initializing = false;
     });
+  }
+
+  logoutUser() async {
+    user.logout();
+    user = await ParseUser.currentUser();
+    ParseResponse response = await ParseUser.getCurrentUserFromServer();
+    if (response.success) user = response.result;
+
+    response = await user.save();
+    if (response.success) user = response.result;
+    print("------");
     print(user);
+    setState(() {
+      userState = UserState.UserLoggedOut;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print("******** $userState");
     if (initializing)
       return Center(
         child: CircularProgressIndicator(),
       );
-    if (user != null) {
+    if (userState == UserState.UserLoggedIn)
       return UserWidget(
-        userName: user.username,
-        email: user.emailAddress,
-        onLogout: () {
-          user.logout();
-          setState(() {
-            user = null;
-          });
-        },
-      );
-    }
+          userName: user.username,
+          email: user.emailAddress,
+          onLogout: logoutUser);
     return LoginForm(
+      user: user,
       onComplete: (bool success) {
         if (success) {
-          setState(() {});
+          setState(() {
+            userState = UserState.UserLoggedIn;
+          });
         }
       },
     );
@@ -65,7 +72,7 @@ class _UserPageState extends State<UserPage> {
 }
 
 class LoginDialog extends StatelessWidget {
- const LoginDialog();
+  const LoginDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +88,8 @@ class LoginDialog extends StatelessWidget {
 
 class LoginForm extends StatefulWidget {
   final Function onComplete;
-
-  const LoginForm({this.onComplete});
+  final ParseUser user;
+  const LoginForm({this.onComplete, this.user});
 
   _LoginFormState createState() => _LoginFormState();
 }
@@ -95,6 +102,12 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user != null) {
+      usernameController.text = widget.user.username;
+      passwordController.text = widget.user.password;
+      emailController.text = widget.user.emailAddress;
+    }
+
     return Container(
       child: Column(
         children: _createChildren(),
@@ -120,7 +133,7 @@ class _LoginFormState extends State<LoginForm> {
         decoration: InputDecoration(labelText: "email"),
         controller: emailController,
       ));
-    } 
+    }
     widgets.add(FloatingActionButton(
       child: Icon(Icons.check),
       onPressed: () async {
@@ -131,11 +144,17 @@ class _LoginFormState extends State<LoginForm> {
           ParseResponse response = await user.signUp();
 
           loginSuccess = response.success;
+        } else {
+          ParseUser user = ParseUser(usernameController.text,
+              passwordController.text, emailController.text);
+          ParseResponse response = await user.login();
+
+          loginSuccess = response.success;
         }
         widget.onComplete(loginSuccess);
       },
     ));
-    if(!register){
+    if (!register) {
       widgets.add(RaisedButton(
         child: Text("Register"),
         onPressed: () {
@@ -145,7 +164,7 @@ class _LoginFormState extends State<LoginForm> {
         },
       ));
     } else {
-            widgets.add(RaisedButton(
+      widgets.add(RaisedButton(
         child: Text("Login"),
         onPressed: () {
           setState(() {
@@ -195,4 +214,21 @@ class UserWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+enum UserState { NoUser, UserLoggedOut, UserLoggedIn }
+
+Future<UserState> getCurrentUserState(ParseUser user) async {
+  // user = await ParseUser.currentUser();
+  // check if there is a user stored locally
+  if (user == null) return UserState.NoUser;
+
+  // check if that user's existing token works
+  if (user != null) {
+    ParseResponse response = await ParseUser.getCurrentUserFromServer();
+    if (response.success) {
+      return UserState.UserLoggedIn;
+    }
+  }
+  return UserState.UserLoggedOut;
 }
