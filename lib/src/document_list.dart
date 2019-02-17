@@ -217,9 +217,8 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
         }
       });
       if (_documents.length == 0 && initialDocuments != null) {
-        _loadInitialDocuments().then((int i) {
-          _signalLoadComplete();
-        });
+        addAll(this.initialDocuments);
+        _signalLoadComplete();
       } else {
         _signalLoadComplete();
       }
@@ -230,11 +229,6 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     documentsLoaded = true;
     if (onLoadComplete != null) onLoadComplete(this);
     notifyListeners();
-  }
-
-  Future<int> _loadInitialDocuments() async {
-    addAll(this.initialDocuments);
-    return _documents.length;
   }
 
   Future<File> _localFile(String id) async {
