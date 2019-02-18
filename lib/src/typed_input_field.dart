@@ -137,7 +137,7 @@ class TypedInputField extends StatelessWidget {
   ListPickerFormField _getListPickerFormField(
       InputListFieldOptions fieldOptions) {
     return ListPickerFormField(
-      documentList: DocumentList(fieldOptions.documentType),
+      documentList: fieldOptions.documentList,
       displayField: fieldOptions.displayField,
       valueField: fieldOptions.valueField,
       label: label,

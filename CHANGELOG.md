@@ -1,3 +1,8 @@
+## [0.1.7] - 2019-02-17
+ * Changed all FieldOptions constuctor arguments into name parameters.
+ * Changed InputListFieldOptions to take a DocumentList rather than a string for documentType.
+ * These are both breaking changes.
+
 ## [0.1.6] - 2019-02-05
  * Cleaned up empty statement
  * Added missing API documentation

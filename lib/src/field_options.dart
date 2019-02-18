@@ -1,14 +1,17 @@
+import 'package:rapido/rapido.dart';
+
 /// FieldOptions base class. This class is abstract, so
 /// should not be initialized directly
 abstract class FieldOptions {}
 
 /// Forces any input field to be rendered as a ListPicker
 class InputListFieldOptions extends FieldOptions {
-  final String documentType;
+  final DocumentList documentList;
   final String displayField;
   final String valueField;
 
-  InputListFieldOptions({this.documentType, this.displayField, this.valueField});
+  InputListFieldOptions(
+      {this.documentList, this.displayField, this.valueField});
 }
 
 /// Field options for amount fields, currently ignored by the android

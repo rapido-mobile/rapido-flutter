@@ -44,17 +44,18 @@ class _ListPickerState extends State<ListPicker> {
   @override
   void initState() {
     currentIndex = widget.initialIndex == null ? 0 : widget.initialIndex;
+    widget.documentList.onLoadComplete = (DocumentList list) {
+      setState(() {});
+    };
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.documentList.onLoadComplete = (DocumentList list) {
-      setState(() {});
-    };
-    if (widget.documentList.length == 0) {
-      return Center(child: CircularProgressIndicator());
+    if (!widget.documentList.documentsLoaded) {
+      return Center(child: Text("this is from the picker"));
     }
+
     ScrollController scrollController = ScrollController(
         initialScrollOffset: (_ITEM_EXTENT * currentIndex) + _ITEM_EXTENT);
     ListView listView = ListView(
@@ -152,32 +153,39 @@ class _ListPickerFormField extends State<ListPickerFormField> {
   int initialIndex;
   dynamic currentValue;
 
-  initializeValues(DocumentList list) {
+  @override
+  initState() {
+    if (widget.documentList.documentsLoaded) {
+      initializeValues();
+    }
+    widget.documentList.onLoadComplete = (DocumentList list) {
+      setState(() {
+        initializeValues();
+      });
+    };
+    super.initState();
+  }
+
+  initializeValues() {
     if (widget.initiValue != null) {
-      for (int i = 0; i < list.length; i++) {
-        if (list[i][widget.valueField] == widget.initiValue) {
+      for (int i = 0; i < widget.documentList.length; i++) {
+        if (widget.documentList[i][widget.valueField] == widget.initiValue) {
           currentValue = widget.initiValue;
           initialIndex = i;
           break;
         }
       }
     } else {
-      currentValue = list[0][widget.valueField];
+      currentValue = widget.documentList[0][widget.valueField];
       initialIndex = 0;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.documentList.onLoadComplete = (DocumentList list) {
-      setState(() {
-        initializeValues(list);
-      });
-    };
     if (!widget.documentList.documentsLoaded) {
       return CircularProgressIndicator();
     }
-
     return Column(
       children: <Widget>[
         FormFieldCaption(widget.label),
