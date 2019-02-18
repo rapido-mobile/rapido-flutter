@@ -39,8 +39,6 @@ class _UserPageState extends State<UserPage> {
 
     response = await user.save();
     if (response.success) user = response.result;
-    print("------");
-    print(user);
     setState(() {
       userState = UserState.UserLoggedOut;
     });
@@ -48,31 +46,30 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("******** $userState");
     if (initializing)
       return Center(
         child: CircularProgressIndicator(),
       );
-    if (userState == UserState.UserLoggedIn)
+    if (userState == UserState.UserLoggedIn) {
       return UserWidget(
           userName: user.username,
           email: user.emailAddress,
           onLogout: logoutUser);
+    }
     return LoginForm(
       user: user,
-      onComplete: (bool success) {
-        if (success) {
-          setState(() {
-            userState = UserState.UserLoggedIn;
-          });
-        }
+      onComplete: (ParseUser _user) {
+        setState(() {
+          user = _user;
+          userState = UserState.UserLoggedIn;
+        });
       },
     );
   }
 }
 
-class LoginDialog extends StatelessWidget {
-  const LoginDialog();
+class UserDialog extends StatelessWidget {
+  const UserDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +96,7 @@ class _LoginFormState extends State<LoginForm> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  ParseUser _user;
 
   @override
   Widget build(BuildContext context) {
@@ -139,19 +137,18 @@ class _LoginFormState extends State<LoginForm> {
       onPressed: () async {
         bool loginSuccess = false;
         if (register) {
-          ParseUser user = ParseUser(usernameController.text,
-              passwordController.text, emailController.text);
-          ParseResponse response = await user.signUp();
-
+          _user = ParseUser(usernameController.text, passwordController.text,
+              emailController.text);
+          ParseResponse response = await _user.signUp();
           loginSuccess = response.success;
         } else {
-          ParseUser user = ParseUser(usernameController.text,
-              passwordController.text, emailController.text);
-          ParseResponse response = await user.login();
+          _user = ParseUser(usernameController.text, passwordController.text,
+              emailController.text);
+          ParseResponse response = await _user.login();
 
           loginSuccess = response.success;
         }
-        widget.onComplete(loginSuccess);
+        widget.onComplete(_user);
       },
     ));
     if (!register) {
@@ -219,6 +216,7 @@ class UserWidget extends StatelessWidget {
 enum UserState { NoUser, UserLoggedOut, UserLoggedIn }
 
 Future<UserState> getCurrentUserState(ParseUser user) async {
+  print("1. $user");
   // user = await ParseUser.currentUser();
   // check if there is a user stored locally
   if (user == null) return UserState.NoUser;
@@ -226,6 +224,7 @@ Future<UserState> getCurrentUserState(ParseUser user) async {
   // check if that user's existing token works
   if (user != null) {
     ParseResponse response = await ParseUser.getCurrentUserFromServer();
+    print("2. $response");
     if (response.success) {
       return UserState.UserLoggedIn;
     }
