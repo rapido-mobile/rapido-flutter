@@ -252,9 +252,9 @@ packages:
   parse_server_sdk:
     dependency: "direct main"
     description:
-      name: parse_server_sdk
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../flutter_parse_sdk"
+      relative: true
+    source: path
     version: "1.0.11"
   path:
     dependency: transitive

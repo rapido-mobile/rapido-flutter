@@ -32,13 +32,13 @@ class _UserPageState extends State<UserPage> {
   }
 
   logoutUser() async {
-    user.logout();
-    user = await ParseUser.currentUser();
-    ParseResponse response = await ParseUser.getCurrentUserFromServer();
-    if (response.success) user = response.result;
+    await user.logout(deleteLocalUserData: false);
+    Map<dynamic, dynamic> userData = user.getObjectData();
+    userData.remove("sessionToken");
+    user.setObjectData(userData);
+    user.save();
 
-    response = await user.save();
-    if (response.success) user = response.result;
+    user.save();
     setState(() {
       userState = UserState.UserLoggedOut;
     });
@@ -148,6 +148,7 @@ class _LoginFormState extends State<LoginForm> {
 
           loginSuccess = response.success;
         }
+        if (_user != null) _user.save();
         widget.onComplete(_user);
       },
     ));
@@ -216,17 +217,17 @@ class UserWidget extends StatelessWidget {
 enum UserState { NoUser, UserLoggedOut, UserLoggedIn }
 
 Future<UserState> getCurrentUserState(ParseUser user) async {
-  print("1. $user");
   // user = await ParseUser.currentUser();
   // check if there is a user stored locally
   if (user == null) return UserState.NoUser;
 
-  // check if that user's existing token works
+  // check if the user has a token, and if so, does it work?
   if (user != null) {
-    ParseResponse response = await ParseUser.getCurrentUserFromServer();
-    print("2. $response");
-    if (response.success) {
-      return UserState.UserLoggedIn;
+    if (user.getObjectData().containsKey("sessionToken")) {
+      ParseResponse response = await ParseUser.getCurrentUserFromServer();
+      if (response != null) {
+        return UserState.UserLoggedIn;
+      }
     }
   }
   return UserState.UserLoggedOut;
