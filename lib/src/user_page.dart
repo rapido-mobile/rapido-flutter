@@ -33,12 +33,7 @@ class _UserPageState extends State<UserPage> {
 
   logoutUser() async {
     await user.logout(deleteLocalUserData: false);
-    Map<dynamic, dynamic> userData = user.getObjectData();
-    userData.remove("sessionToken");
-    user.setObjectData(userData);
-    user.save();
 
-    user.save();
     setState(() {
       userState = UserState.UserLoggedOut;
     });
@@ -148,7 +143,6 @@ class _LoginFormState extends State<LoginForm> {
 
           loginSuccess = response.success;
         }
-        if (_user != null) _user.save();
         widget.onComplete(_user);
       },
     ));
@@ -223,11 +217,9 @@ Future<UserState> getCurrentUserState(ParseUser user) async {
 
   // check if the user has a token, and if so, does it work?
   if (user != null) {
-    if (user.getObjectData().containsKey("sessionToken")) {
-      ParseResponse response = await ParseUser.getCurrentUserFromServer();
-      if (response != null) {
-        return UserState.UserLoggedIn;
-      }
+    ParseResponse response = await ParseUser.getCurrentUserFromServer();
+    if (response != null) {
+      return UserState.UserLoggedIn;
     }
   }
   return UserState.UserLoggedOut;
