@@ -17,6 +17,7 @@ export 'src/document_list_page_view.dart';
 export 'src/list_picker.dart';
 export 'src/field_options.dart';
 export 'src/user_page.dart';
+export 'src/persistence.dart';
 
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 

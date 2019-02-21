@@ -1,10 +1,10 @@
 import 'dart:collection';
 import 'dart:async';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
+import 'persistence.dart';
 
 /// A Document is a persisted Map of type <String, dynamic>.
 /// It is used by DocumentList amd all related UI widgets.
@@ -29,8 +29,8 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   ///Optionally save documents on a remote server
   Document({
     Map<String, dynamic> initialValues,
-    this.saveOnline,
-    this.saveLocally,
+    this.saveOnline = false,
+    this.saveLocally = true,
   }) {
     // initial values if provided
     if (initialValues != null) {
@@ -65,25 +65,13 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     return _map.keys.toList();
   }
 
-  Future<File> save() async {
-    final file = await _localFile(_map["_id"]);
-    // Write the file
-    String mapString = json.encode(_map);
-    file.writeAsString('$mapString');
+  Future<bool> save() async {
+    bool result = await LocalFilePersistence().saveDocument(this);
     notifyListeners();
-    return file;
+    return result;
   }
 
-  Future<File> _localFile(String id) async {
-    final path = await _localPath;
-    return File('$path/$id.json');
-  }
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-    return path;
-  }
 
   void loadFromFilePath(FileSystemEntity f) {
     String j = new File(f.path).readAsStringSync();
