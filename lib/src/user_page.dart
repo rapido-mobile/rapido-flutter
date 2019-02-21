@@ -18,7 +18,6 @@ class _UserPageState extends State<UserPage> {
 
   @override
   void initState() {
-    Parse().initialize("'app'", "http://10.0.2.2/parse", debug: true);
     initUser();
     super.initState();
   }
@@ -130,18 +129,14 @@ class _LoginFormState extends State<LoginForm> {
     widgets.add(FloatingActionButton(
       child: Icon(Icons.check),
       onPressed: () async {
-        bool loginSuccess = false;
         if (register) {
           _user = ParseUser(usernameController.text, passwordController.text,
               emailController.text);
-          ParseResponse response = await _user.signUp();
-          loginSuccess = response.success;
+          await _user.signUp();
         } else {
           _user = ParseUser(usernameController.text, passwordController.text,
               emailController.text);
-          ParseResponse response = await _user.login();
-
-          loginSuccess = response.success;
+          await _user.login();
         }
         widget.onComplete(_user);
       },
@@ -214,12 +209,11 @@ Future<UserState> getCurrentUserState(ParseUser user) async {
   // user = await ParseUser.currentUser();
   // check if there is a user stored locally
   if (user == null) return UserState.NoUser;
-
   // check if the user has a token, and if so, does it work?
   if (user != null) {
     ParseResponse response = await ParseUser.getCurrentUserFromServer();
     if (response != null) {
-      return UserState.UserLoggedIn;
+      if (response.result != null) return UserState.UserLoggedIn;
     }
   }
   return UserState.UserLoggedOut;

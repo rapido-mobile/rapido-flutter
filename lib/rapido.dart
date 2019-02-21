@@ -17,3 +17,9 @@ export 'src/document_list_page_view.dart';
 export 'src/list_picker.dart';
 export 'src/field_options.dart';
 export 'src/user_page.dart';
+
+import 'package:parse_server_sdk/parse_server_sdk.dart';
+
+initializeBackend(){
+    Parse().initialize("'app'", "http://10.0.2.2/parse", debug: true);
+}

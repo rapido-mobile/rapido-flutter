@@ -11,6 +11,9 @@ import 'package:flutter/foundation.dart';
 class Document extends MapBase<String, dynamic> with ChangeNotifier {
   Map<String, dynamic> _map = {};
 
+  final bool saveOnline;
+  final bool saveLocally;
+
   /// The Documents type, typically used to organize documents
   /// typically used to organize documents, for example in a DocumentList
   String get documentType => _map["_docType"];
@@ -23,8 +26,11 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
+  ///Optionally save documents on a remote server
   Document({
     Map<String, dynamic> initialValues,
+    this.saveOnline,
+    this.saveLocally,
   }) {
     // initial values if provided
     if (initialValues != null) {
