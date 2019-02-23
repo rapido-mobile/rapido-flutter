@@ -212,6 +212,7 @@ Future<UserState> getCurrentUserState(ParseUser user) async {
   // check if the user has a token, and if so, does it work?
   if (user != null) {
     ParseResponse response = await ParseUser.getCurrentUserFromServer();
+   
     if (response != null) {
       if (response.result != null) return UserState.UserLoggedIn;
     }

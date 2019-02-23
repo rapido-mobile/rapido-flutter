@@ -1,7 +1,5 @@
 import 'dart:collection';
 import 'dart:async';
-import 'dart:io';
-import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'persistence.dart';
@@ -66,34 +64,26 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   }
 
   Future<bool> save() async {
-    bool result = await LocalFilePersistence().saveDocument(this);
-    notifyListeners();
-    return result;
+    if (saveLocally) {
+      bool result = await LocalFilePersistence().saveDocument(this);
+      notifyListeners();
+      return result;
+    }
+    return false;
   }
 
+  Document.fromMap(Map newData,
+      {this.saveLocally = true, this.saveOnline = false}) {
+    if (newData == null) return;
+    newData.keys.forEach((dynamic key) {
+      if (key == "latlong" && newData[key] != null) {
+        // convert latlongs to the correct type
+        newData[key] = Map<String, double>.from(newData[key]);
+      }
+      _map[key] = newData[key];
+    });
+    _map["_id"] = newData["_id"];
 
-
-  void loadFromFilePath(FileSystemEntity f) {
-    String j = new File(f.path).readAsStringSync();
-
-    if (j.length != 0) {
-      Map newData = json.decode(j);
-      newData.keys.forEach((dynamic key) {
-        if (key == "latlong" && newData[key] != null) {
-          // convert latlongs to the correct type
-          newData[key] = Map<String, double>.from(newData[key]);
-        }
-        _map[key] = newData[key];
-      });
-      _map["_id"] = newData["_id"];
-    } else {
-      //TODO: Debug this
-      // This only seems to occur during testing, and
-      // seems to be a race condition I have not tracked down
-      // and it's not clear why the _loadLocalData function is
-      // even called
-      // print("Warning: ${f.path} file was empty.");
-    }
     notifyListeners();
   }
 

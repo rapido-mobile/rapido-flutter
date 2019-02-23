@@ -43,7 +43,6 @@ class _DocumentFormState extends State<DocumentForm> {
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
-
     // creat a form field for each support label
     widget.documentList.labels.keys.forEach((String label) {
       String fieldName = widget.documentList.labels[label];
