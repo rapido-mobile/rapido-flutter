@@ -38,7 +38,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// will be ignored.
   final List<Document> initialDocuments;
 
-  PersistenceSettings persistenceSettings;
+  List<PersistenceProvider> persistenceProviders;
 
   set length(int newLength) {
     _documents.length = newLength;
@@ -66,15 +66,13 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
       this.initialDocuments,
       Map<String, String> labels,
       this.fieldOptionsMap,
-      this.persistenceSettings}) {
-    if (persistenceSettings == null) {
-      persistenceSettings = PersistenceSettings(local: true, cloud: false);
+      this.persistenceProviders}) {
+    if (persistenceProviders == null) {
+      persistenceProviders = [LocalFilePersistence()];
     }
     _labels = labels;
     _documents = [];
-    if (persistenceSettings.local) {
-      _loadLocalData();
-    }
+    _loadPersistedDocuments();
   }
 
   set labels(Map<String, String> labels) {
@@ -106,7 +104,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     doc["_docType"] = documentType;
     doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
 
-    doc.persistenceSettings = persistenceSettings;
+    doc.persistenceProviders = persistenceProviders;
     _documents.add(doc);
     doc.addListener(() {
       notifyListeners();
@@ -198,9 +196,10 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     return new String.fromCharCodes(codeUnits);
   }
 
-  void _loadLocalData() async {
-    LocalFilePersistence persistence = LocalFilePersistence();
-    await persistence.loadDocuments(this);
+  void _loadPersistedDocuments() async {
+    for (PersistenceProvider provider in persistenceProviders) {
+      await provider.loadDocuments(this);
+    }
 
     if (_documents.length == 0 && initialDocuments != null) {
       addAll(this.initialDocuments);

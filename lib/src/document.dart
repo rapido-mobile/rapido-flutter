@@ -19,15 +19,15 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   String get id => _map["_id"];
   set id(String v) => _map["_id"] = v;
 
-  PersistenceSettings persistenceSettings = PersistenceSettings(local: true);
+  List<PersistenceProvider> persistenceProviders;
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
   /// Optionally save documents on a remote server
-  Document({Map<String, dynamic> initialValues, this.persistenceSettings}) {
+  Document({Map<String, dynamic> initialValues, this.persistenceProviders}) {
     // default persistence
-    if (persistenceSettings == null) {
-      persistenceSettings = PersistenceSettings(local: true, cloud: false);
+    if (persistenceProviders == null) {
+      persistenceProviders = [LocalFilePersistence()];
     }
     // initial values if provided
     if (initialValues != null) {
@@ -63,17 +63,18 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   }
 
   Future<bool> save() async {
-    if (persistenceSettings.local) {
-      bool result = await LocalFilePersistence().saveDocument(this);
+    persistenceProviders.forEach((PersistenceProvider provider) async {
+      bool result = await provider.saveDocument(this);
       notifyListeners();
       return result;
-    }
+    });
     return false;
   }
 
-  Document.fromMap(
-    Map newData,
-  ) {
+  Document.fromMap(Map newData, {this.persistenceProviders}) {
+    if (persistenceProviders == null) {
+      persistenceProviders = [LocalFilePersistence()];
+    }
     if (newData == null) return;
     newData.keys.forEach((dynamic key) {
       if (key == "latlong" && newData[key] != null) {
@@ -83,7 +84,6 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
       _map[key] = newData[key];
     });
     _map["_id"] = newData["_id"];
-
     notifyListeners();
   }
 

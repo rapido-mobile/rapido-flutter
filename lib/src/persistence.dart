@@ -4,17 +4,19 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 
-abstract class PersistenceBase {
+abstract class PersistenceProvider {
   Future<bool> saveDocument(Document doc);
 
   Future<Document> retrieveDocument(String docId);
 
   Future loadDocuments(DocumentList documentList, {Function onChangedListener});
 
+  
+
   deleteDocument(Document doc);
 }
 
-class LocalFilePersistence implements PersistenceBase {
+class LocalFilePersistence implements PersistenceProvider {
   Future<bool> saveDocument(Document doc) async {
     final file = await _localFile(doc["_id"]);
     // Write the file
@@ -27,6 +29,7 @@ class LocalFilePersistence implements PersistenceBase {
   Future<Document> retrieveDocument(String docId) async {
     return null;
   }
+
 
   Future loadDocuments(DocumentList documentList,
       {Function onChangedListener}) async {

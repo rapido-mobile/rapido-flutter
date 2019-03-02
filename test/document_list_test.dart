@@ -20,7 +20,7 @@ void main() {
     }));
     expect(documentList.length, 2);
   });
-  test('reads existing PersistedModel from disk', () {
+  test('reads existing Documents from disk', () {
     DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
       expect(model.length, 2);
       String name = model[0]["name"];
@@ -256,8 +256,7 @@ void main() {
     ];
     DocumentList("initializeMe", initialDocuments: docs,
         onLoadComplete: (DocumentList l) {
-      expect(l.length, 4);
-      l.removeAt(0);
+      expect(l.length, docs.length);
     });
   });
 
@@ -270,7 +269,7 @@ void main() {
     ];
     DocumentList("initializeMe", initialDocuments: docs,
         onLoadComplete: (DocumentList l) {
-      expect(l.length, 3);
+      expect(l.length, 4);
     });
   });
 
@@ -281,14 +280,12 @@ void main() {
   });
 
   test('DocumentList created with no local persistence', () {
-    DocumentList dl = DocumentList("no local persistence",
-        persistenceSettings: PersistenceSettings(local: false, cloud: false));
+    DocumentList dl =
+        DocumentList("no local persistence", persistenceProviders: []);
     dl.add(Document(
-        initialValues: {"a": 1},
-        persistenceSettings: PersistenceSettings(
-          local: false,
-          cloud: false,
-        )));
+      initialValues: {"a": 1},
+      persistenceProviders: [],
+    ));
     expect(dl[0]["a"], 1);
   });
 
