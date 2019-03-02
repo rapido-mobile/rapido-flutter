@@ -38,6 +38,8 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// will be ignored.
   final List<Document> initialDocuments;
 
+  PersistenceSettings persistenceSettings;
+
   set length(int newLength) {
     _documents.length = newLength;
   }
@@ -63,10 +65,16 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
       {this.onLoadComplete,
       this.initialDocuments,
       Map<String, String> labels,
-      this.fieldOptionsMap}) {
+      this.fieldOptionsMap,
+      this.persistenceSettings}) {
+    if (persistenceSettings == null) {
+      persistenceSettings = PersistenceSettings(local: true, cloud: false);
+    }
     _labels = labels;
     _documents = [];
-    _loadLocalData();
+    if (persistenceSettings.local) {
+      _loadLocalData();
+    }
   }
 
   set labels(Map<String, String> labels) {
@@ -97,6 +105,8 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   void add(Document doc) {
     doc["_docType"] = documentType;
     doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+
+    doc.persistenceSettings = persistenceSettings;
     _documents.add(doc);
     doc.addListener(() {
       notifyListeners();

@@ -280,6 +280,25 @@ void main() {
     });
   });
 
+  test('DocumentList created with no local persistence', () {
+    DocumentList dl = DocumentList("no local persistence",
+        persistenceSettings: PersistenceSettings(local: false, cloud: false));
+    dl.add(Document(
+        initialValues: {"a": 1},
+        persistenceSettings: PersistenceSettings(
+          local: false,
+          cloud: false,
+        )));
+    expect(dl[0]["a"], 1);
+  });
+
+  test('Documents not saved if local persistence is off', () {
+    DocumentList dl =
+        DocumentList("no local persistence", onLoadComplete: (list) {
+      expect(list.length, 0);
+    });
+  });
+
   setUpAll(() async {
     // Create a temporary directory to work with
     final directory = await Directory.systemTemp.createTemp();

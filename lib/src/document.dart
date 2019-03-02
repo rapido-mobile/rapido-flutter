@@ -9,7 +9,6 @@ import 'persistence.dart';
 class Document extends MapBase<String, dynamic> with ChangeNotifier {
   Map<String, dynamic> _map = {};
 
-
   /// The Documents type, typically used to organize documents
   /// typically used to organize documents, for example in a DocumentList
   String get documentType => _map["_docType"];
@@ -20,15 +19,16 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   String get id => _map["_id"];
   set id(String v) => _map["_id"] = v;
 
+  PersistenceSettings persistenceSettings = PersistenceSettings(local: true);
 
-  PersistenceSettings persistenceSettings =PersistenceSettings(local: true);
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
-  ///Optionally save documents on a remote server
-  Document({
-    Map<String, dynamic> initialValues,
- 
-  }) {
+  /// Optionally save documents on a remote server
+  Document({Map<String, dynamic> initialValues, this.persistenceSettings}) {
+    // default persistence
+    if (persistenceSettings == null) {
+      persistenceSettings = PersistenceSettings(local: true, cloud: false);
+    }
     // initial values if provided
     if (initialValues != null) {
       initialValues.keys.forEach((String key) {
@@ -71,7 +71,9 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     return false;
   }
 
-  Document.fromMap(Map newData,) {
+  Document.fromMap(
+    Map newData,
+  ) {
     if (newData == null) return;
     newData.keys.forEach((dynamic key) {
       if (key == "latlong" && newData[key] != null) {
