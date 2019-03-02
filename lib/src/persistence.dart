@@ -88,3 +88,9 @@ class LocalFilePersistence implements PersistenceBase {
     return path;
   }
 }
+
+class PersistenceSettings {
+  bool local;
+  bool cloud;
+  PersistenceSettings({this.local = false, this.cloud = false});
+}
