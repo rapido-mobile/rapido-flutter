@@ -20,8 +20,3 @@ export 'src/user_page.dart';
 export 'src/persistence.dart';
 export 'src/parse_persistence.dart';
 
-import 'package:parse_server_sdk/parse_server_sdk.dart';
-
-initializeBackend(){
-    Parse().initialize("'app'", "http://10.0.2.2/parse", debug: true);
-}
