@@ -42,7 +42,7 @@ class LocalFilePersistence implements PersistenceProvider {
       if (f.path.endsWith('.json')) {
         Document doc = _readDocumentFromFile(
             f, documentList.documentType, documentList.notifyListeners);
-        if (doc != null) documentList.add(doc);
+        if (doc != null) documentList.add(doc, saveOnAdd: false);
       }
     });
   }

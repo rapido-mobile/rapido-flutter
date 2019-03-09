@@ -38,14 +38,14 @@ class ParsePersistence implements PersistenceProvider {
             latlongMap["latitude"] = savedData[key]["latitude"];
             latlongMap["longitude"] = savedData[key]["longitude"];
             newData[key] = latlongMap;
-
-          } else {
+          }
+          else {
             newData[key] = savedData[key];
           }
         }
         Document doc = Document.fromMap(newData,
             persistenceProviders: documentList.persistenceProviders);
-        documentList.add(doc);
+        documentList.add(doc, saveOnAdd: false);
       }
     }
   }
@@ -57,17 +57,31 @@ class ParsePersistence implements PersistenceProvider {
 
   @override
   Future<bool> saveDocument(Document doc) {
+    print("~~~~~~~~~~~~");
+    print(doc);
+    ParseObject obj = _parseObjectFromDocument(doc);
+    if (doc["objectId"] == null) {
+      obj.create().then((ParseResponse responts){
+        ParseObject newObj =responts.result;
+        doc["objectId"] = newObj.objectId;
+      });
+    } else {
+      print(obj);
+      obj.save();
+    }
+    return null;
+  }
+
+  ParseObject _parseObjectFromDocument(Document doc) {
     ParseObject obj = ParseObject(doc.documentType, debug: true);
     for (String key in doc.keys) {
       String parseKey = key;
       if (key.startsWith("_")) {
         parseKey = "rapido" + parseKey;
       }
-
       obj.set(parseKey, doc[key]);
     }
-    obj.create();
-    return null;
+    return obj;
   }
 
   _initializeParse(String parseApp, String parseUrl) {

@@ -100,16 +100,19 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   @override
-  void add(Document doc) {
-    doc["_docType"] = documentType;
-    doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
-
+  void add(Document doc, {saveOnAdd = true}) {
+    if (saveOnAdd) {
+      doc["_docType"] = documentType;
+      doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+    }
     doc.persistenceProviders = persistenceProviders;
     _documents.add(doc);
     doc.addListener(() {
       notifyListeners();
     });
-    doc.save();
+    if (saveOnAdd) {
+      doc.save();
+    }
     notifyListeners();
   }
 

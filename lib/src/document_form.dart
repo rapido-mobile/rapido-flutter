@@ -29,17 +29,7 @@ class _DocumentFormState extends State<DocumentForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   // A document to get updated by the form
-  Document _document;
-
-  @override
-  void initState() {
-    // create a new document if one was not supplied
-    if (widget.document == null)
-      _document = Document();
-    else
-      _document = widget.document;
-    super.initState();
-  }
+  Map<String, dynamic> _documentValues = Map<String, dynamic>();
 
   List<Widget> _buildFormFields(BuildContext context) {
     List<Widget> fields = [];
@@ -50,7 +40,7 @@ class _DocumentFormState extends State<DocumentForm> {
       // where the form is editing an existig document
       dynamic initialValue;
       if (widget.document != null) {
-        initialValue = _document[fieldName];
+        initialValue = widget.document[fieldName];
       }
       FieldOptions fieldOptions;
       if (widget.documentList.fieldOptionsMap != null) {
@@ -65,9 +55,9 @@ class _DocumentFormState extends State<DocumentForm> {
               label: label,
               fieldOptions: fieldOptions,
               initialValue: initialValue, onSaved: (dynamic value) {
-            // update the field with whatever data was in the input field
-            // this will cause the Document to autosave
-            _document[widget.documentList.labels[label]] = value;
+                print("********");
+                print(value);
+            _documentValues[widget.documentList.labels[label]] = value;
           }),
           margin: EdgeInsets.all(10.0),
         ),
@@ -81,15 +71,22 @@ class _DocumentFormState extends State<DocumentForm> {
           onPressed: () {
             // this will caused onSaved to be called for each input field
             // which will cause the document to autosave
-            formKey.currentState.save();
-            // add a new form to the documentList
-            if (widget.document == null) {
-              widget.documentList.add(_document);
-            }
-            Navigator.pop(context);
+            _saveDocument(context);
           }),
     ));
     return fields;
+  }
+
+  void _saveDocument(BuildContext context) {
+     formKey.currentState.save();
+    if (widget.document == null) {
+      Document doc = Document.fromMap(_documentValues);
+      widget.documentList.add(doc);
+    } else {
+      widget.document.updateValues(_documentValues);
+      print(widget.document);
+    }
+    Navigator.pop(context); 
   }
 
   @override
@@ -102,11 +99,7 @@ class _DocumentFormState extends State<DocumentForm> {
           IconButton(
               icon: Icon(Icons.check),
               onPressed: () {
-                formKey.currentState.save();
-                if (widget.document == null) {
-                  widget.documentList.add(_document);
-                }
-                Navigator.pop(context);
+                _saveDocument(context);
               }),
         ],
       ),

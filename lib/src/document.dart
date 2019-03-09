@@ -62,6 +62,13 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     return _map.keys.toList();
   }
 
+  updateValues(Map<String, dynamic> values){
+    for(String key in values.keys){
+      _map[key] = values[key];
+    }
+    save();
+  }
+
   Future<bool> save() async {
     persistenceProviders.forEach((PersistenceProvider provider) async {
       bool result = await provider.saveDocument(this);
