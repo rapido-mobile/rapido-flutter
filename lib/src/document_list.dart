@@ -56,7 +56,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     _documents[index]["_docType"] = documentType;
 
     _documents[index].save();
-    LocalFilePersistence().deleteDocument(oldDoc);
+    oldDoc.delete();
     notifyListeners();
   }
 
@@ -141,7 +141,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   @override
   clear() {
     _documents.forEach((Document doc) {
-      LocalFilePersistence().deleteDocument(doc);
+      doc.delete();
     });
     super.clear();
   }
@@ -149,8 +149,8 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   @override
   Document removeAt(int index) {
     Document doc = _documents[index];
-    LocalFilePersistence().deleteDocument(_documents[index]);
     _documents.removeAt(index);
+    doc.delete();
     notifyListeners();
     return doc;
   }

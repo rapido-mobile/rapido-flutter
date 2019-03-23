@@ -55,8 +55,6 @@ class _DocumentFormState extends State<DocumentForm> {
               label: label,
               fieldOptions: fieldOptions,
               initialValue: initialValue, onSaved: (dynamic value) {
-                print("********");
-                print(value);
             _documentValues[widget.documentList.labels[label]] = value;
           }),
           margin: EdgeInsets.all(10.0),
@@ -84,7 +82,6 @@ class _DocumentFormState extends State<DocumentForm> {
       widget.documentList.add(doc);
     } else {
       widget.document.updateValues(_documentValues);
-      print(widget.document);
     }
     Navigator.pop(context); 
   }

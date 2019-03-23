@@ -78,6 +78,12 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     return false;
   }
 
+  delete() {
+    persistenceProviders.forEach((PersistenceProvider provider){
+      provider.deleteDocument(this);
+    });
+  }
+
   Document.fromMap(Map newData, {this.persistenceProviders}) {
     if (persistenceProviders == null) {
       persistenceProviders = [LocalFilePersistence()];

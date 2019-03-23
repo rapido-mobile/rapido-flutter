@@ -6,14 +6,8 @@ import 'dart:convert';
 
 abstract class PersistenceProvider {
   Future<bool> saveDocument(Document doc);
-
-  Future<Document> retrieveDocument(String docId);
-
   Future loadDocuments(DocumentList documentList, {Function onChangedListener});
-
-  
-
-  deleteDocument(Document doc);
+  Future deleteDocument(Document doc);
 }
 
 class LocalFilePersistence implements PersistenceProvider {
@@ -26,9 +20,7 @@ class LocalFilePersistence implements PersistenceProvider {
     return true;
   }
 
-  Future<Document> retrieveDocument(String docId) async {
-    return null;
-  }
+  
 
 
   Future loadDocuments(DocumentList documentList,
@@ -80,9 +72,10 @@ class LocalFilePersistence implements PersistenceProvider {
     return File('$path/$id.json');
   }
 
-  deleteDocument(Document doc) async {
+  Future deleteDocument(Document doc) async {
     final file = await _localFile(doc.id);
     file.delete();
+    return null;
   }
 
   Future<String> get _localPath async {

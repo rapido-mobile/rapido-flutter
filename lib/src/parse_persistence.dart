@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:rapido/rapido.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'dart:async';
@@ -11,7 +13,11 @@ class ParsePersistence implements PersistenceProvider {
   }
 
   @override
-  deleteDocument(Document doc) {
+  Future deleteDocument(Document doc) {
+    if (doc["objectId"] == null) return null;
+    ParseObject obj = _parseObjectFromDocument(doc);
+    String path = "${doc.documentType}/${doc.id}";
+    obj.delete(path, doc["objectId"]);
     return null;
   }
 
@@ -38,8 +44,7 @@ class ParsePersistence implements PersistenceProvider {
             latlongMap["latitude"] = savedData[key]["latitude"];
             latlongMap["longitude"] = savedData[key]["longitude"];
             newData[key] = latlongMap;
-          }
-          else {
+          } else {
             newData[key] = savedData[key];
           }
         }
@@ -51,22 +56,14 @@ class ParsePersistence implements PersistenceProvider {
   }
 
   @override
-  Future<Document> retrieveDocument(String docId) {
-    return null;
-  }
-
-  @override
   Future<bool> saveDocument(Document doc) {
-    print("~~~~~~~~~~~~");
-    print(doc);
     ParseObject obj = _parseObjectFromDocument(doc);
     if (doc["objectId"] == null) {
-      obj.create().then((ParseResponse responts){
-        ParseObject newObj =responts.result;
+      obj.create().then((ParseResponse responts) {
+        ParseObject newObj = responts.result;
         doc["objectId"] = newObj.objectId;
       });
     } else {
-      print(obj);
       obj.save();
     }
     return null;
@@ -84,7 +81,21 @@ class ParsePersistence implements PersistenceProvider {
     return obj;
   }
 
-  _initializeParse(String parseApp, String parseUrl) {
-    Parse().initialize(parseApp, parseUrl, debug: true);
+  _initializeParse(String parseApp, String parseUrl,
+      {bool debug = false,
+      String appName = "",
+      String liveQueryUrl,
+      String clientKey,
+      String sessionId,
+      bool autoSendSessionId,
+      SecurityContext securityContext}) {
+    Parse().initialize(parseApp, parseUrl,
+        debug: debug,
+        appName: appName,
+        liveQueryUrl: liveQueryUrl,
+        clientKey: clientKey,
+        sessionId: sessionId,
+        autoSendSessionId: autoSendSessionId,
+        securityContext: securityContext);
   }
 }
