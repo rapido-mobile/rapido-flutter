@@ -19,6 +19,10 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   String get id => _map["_id"];
   set id(String v) => _map["_id"] = v;
 
+  /// How to provide persistence. Defaults to LocalFileProvider
+  /// which will save the documents as files on the device.
+  /// Use ParseProvider to persist to a Parse server.
+  /// Set to null if no persistence is desired.
   PersistenceProvider persistenceProvider;
 
   /// Create a Document. Optionally include a map of type

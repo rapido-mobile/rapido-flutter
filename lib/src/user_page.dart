@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'dart:async';
 
-class UserPage extends StatefulWidget {
+/// UI for managing Parse Server logins.
+/// Currently incomplete and under heavy development.
+class ParseUserPage extends StatefulWidget {
   final Function onComplete;
 
-  const UserPage({this.onComplete});
+  const ParseUserPage({this.onComplete});
 
   @override
-  _UserPageState createState() => _UserPageState();
+  _ParseUserPageState createState() => _ParseUserPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _ParseUserPageState extends State<ParseUserPage> {
   ParseUser user;
-  UserState userState;
+  ParseLoggInState userState;
   bool initializing = true;
 
   @override
@@ -24,7 +26,7 @@ class _UserPageState extends State<UserPage> {
 
   initUser() async {
     user = await ParseUser.currentUser();
-    userState = await getCurrentUserState(user);
+    userState = await getCurrentParseUserState(user);
     setState(() {
       initializing = false;
     });
@@ -34,7 +36,7 @@ class _UserPageState extends State<UserPage> {
     await user.logout(deleteLocalUserData: false);
 
     setState(() {
-      userState = UserState.UserLoggedOut;
+      userState = ParseLoggInState.UserLoggedOut;
     });
   }
 
@@ -44,31 +46,33 @@ class _UserPageState extends State<UserPage> {
       return Center(
         child: CircularProgressIndicator(),
       );
-    if (userState == UserState.UserLoggedIn) {
-      return UserWidget(
+    if (userState == ParseLoggInState.UserLoggedIn) {
+      return ParseUserWidget(
           userName: user.username,
           email: user.emailAddress,
           onLogout: logoutUser);
     }
-    return LoginForm(
+    return ParseLoginForm(
       user: user,
       onComplete: (ParseUser _user) {
         setState(() {
           user = _user;
-          userState = UserState.UserLoggedIn;
+          userState = ParseLoggInState.UserLoggedIn;
         });
       },
     );
   }
 }
 
-class UserDialog extends StatelessWidget {
-  const UserDialog();
+/// Dialog to handle Parse Server logins.
+/// Currently incomplete and under heavy development.
+class ParseUserDialog extends StatelessWidget {
+  const ParseUserDialog();
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: UserPage(
+      child: ParseUserPage(
         onComplete: (bool success) {
           Navigator.pop(context, success);
         },
@@ -77,15 +81,17 @@ class UserDialog extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
+/// Form to handle Parse Server logins.
+/// Currently incomplete and under heavy development.
+class ParseLoginForm extends StatefulWidget {
   final Function onComplete;
   final ParseUser user;
-  const LoginForm({this.onComplete, this.user});
+  const ParseLoginForm({this.onComplete, this.user});
 
-  _LoginFormState createState() => _LoginFormState();
+  _ParseLoginFormState createState() => _ParseLoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _ParseLoginFormState extends State<ParseLoginForm> {
   bool register = false;
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -164,12 +170,14 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
-class UserWidget extends StatelessWidget {
+/// Widget allowing Parse Server logins and registration.
+/// Currently incomplete and under heavy development.
+class ParseUserWidget extends StatelessWidget {
   final String userName;
   final String email;
   final Function onLogout;
 
-  const UserWidget({this.userName, this.email, this.onLogout});
+  const ParseUserWidget({this.userName, this.email, this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -203,19 +211,21 @@ class UserWidget extends StatelessWidget {
   }
 }
 
-enum UserState { NoUser, UserLoggedOut, UserLoggedIn }
+/// Enumeration of possible states for a Parse Server user.
+enum ParseLoggInState { NoUser, UserLoggedOut, UserLoggedIn }
 
-Future<UserState> getCurrentUserState(ParseUser user) async {
+/// Check if the user is logged into a Parse Server
+Future<ParseLoggInState> getCurrentParseUserState(ParseUser user) async {
   // user = await ParseUser.currentUser();
   // check if there is a user stored locally
-  if (user == null) return UserState.NoUser;
+  if (user == null) return ParseLoggInState.NoUser;
   // check if the user has a token, and if so, does it work?
   if (user != null) {
     ParseResponse response = await ParseUser.getCurrentUserFromServer();
-   
+
     if (response != null) {
-      if (response.result != null) return UserState.UserLoggedIn;
+      if (response.result != null) return ParseLoggInState.UserLoggedIn;
     }
   }
-  return UserState.UserLoggedOut;
+  return ParseLoggInState.UserLoggedOut;
 }

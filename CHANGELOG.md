@@ -1,3 +1,8 @@
+## [0.1.8] - 2019-03-24
+ * Added PersistenceProvider class to the API
+ * Support Document and DocumentList without persistence by including a null PersistenceProvicder
+ * Experimental support for Parse Server
+ 
 ## [0.1.7] - 2019-02-17
  * Changed all FieldOptions constuctor arguments into name parameters.
  * Changed InputListFieldOptions to take a DocumentList rather than a string for documentType.

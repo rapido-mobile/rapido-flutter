@@ -11,9 +11,8 @@ abstract class PersistenceProvider {
 }
 
 class LocalFilePersistence implements PersistenceProvider {
-
   const LocalFilePersistence();
-  
+
   Future<bool> saveDocument(Document doc) async {
     final file = await _localFile(doc["_id"]);
     // Write the file
@@ -41,7 +40,6 @@ class LocalFilePersistence implements PersistenceProvider {
 
   Document _readDocumentFromFile(
       FileSystemEntity f, String documentType, Function notifyListeners) {
-    
     Map m = _loadMapFromFilePath(f);
     Document loadedDoc = Document.fromMap(m);
     if (loadedDoc["_docType"] == documentType) {

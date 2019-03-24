@@ -19,4 +19,3 @@ export 'src/field_options.dart';
 export 'src/user_page.dart';
 export 'src/persistence.dart';
 export 'src/parse_persistence.dart';
-
