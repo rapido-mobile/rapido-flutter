@@ -17,7 +17,7 @@ class ParsePersistence implements PersistenceProvider {
     if (doc["objectId"] == null) return null;
     ParseObject obj = _parseObjectFromDocument(doc);
     String path = "${doc.documentType}/${doc.id}";
-    obj.delete(path, doc["objectId"]);
+    obj.delete(path:path);
     return null;
   }
 
