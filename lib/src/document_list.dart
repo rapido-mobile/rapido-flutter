@@ -1,9 +1,6 @@
 library rapido;
 
 import 'dart:collection';
-import 'dart:async';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 import 'dart:math';
 import 'package:rapido/rapido.dart';
 import 'package:flutter/foundation.dart';
@@ -41,6 +38,12 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// will be ignored.
   final List<Document> initialDocuments;
 
+  /// How to provide persistence. Defaults to LocalFileProvider
+  /// which will save the documents as files on the device.
+  /// Use ParseProvider to persist to a Parse server.
+  /// Set to null if no persistence is desired.
+  PersistenceProvider persistenceProvider;
+
   set length(int newLength) {
     _documents.length = newLength;
   }
@@ -57,7 +60,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     _documents[index]["_docType"] = documentType;
 
     _documents[index].save();
-    _deleteMapLocal(oldDoc["_id"]);
+    oldDoc.delete();
     notifyListeners();
   }
 
@@ -66,10 +69,11 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
       {this.onLoadComplete,
       this.initialDocuments,
       Map<String, String> labels,
-      this.fieldOptionsMap}) {
+      this.fieldOptionsMap,
+      this.persistenceProvider = const LocalFilePersistence()}) {
     _labels = labels;
     _documents = [];
-    _loadLocalData();
+    _loadPersistedDocuments();
   }
 
   set labels(Map<String, String> labels) {
@@ -97,14 +101,20 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   @override
-  void add(Document doc) {
-    doc["_docType"] = documentType;
-    doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+  void add(Document doc, {saveOnAdd = true}) {
+    doc.persistenceProvider = persistenceProvider;
+    if (saveOnAdd) {
+      doc["_docType"] = documentType;
+      doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
+    }
+
     _documents.add(doc);
     doc.addListener(() {
       notifyListeners();
     });
-    doc.save();
+    if (saveOnAdd) {
+      doc.save();
+    }
     notifyListeners();
   }
 
@@ -133,7 +143,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   @override
   clear() {
     _documents.forEach((Document doc) {
-      _deleteMapLocal(doc["_id"]);
+      doc.delete();
     });
     super.clear();
   }
@@ -141,8 +151,8 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   @override
   Document removeAt(int index) {
     Document doc = _documents[index];
-    _deleteMapLocal(_documents[index]["_id"]);
     _documents.removeAt(index);
+    doc.delete();
     notifyListeners();
     return doc;
   }
@@ -191,55 +201,23 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     return new String.fromCharCodes(codeUnits);
   }
 
-  // Current persistence implementation is below. It simply persists documents
-  // as json files on disk. Depending on requirements and usage this can/will
-  // be changed to a more scalable method. Such changes should be invisible
-  // to existing users.
-  void _deleteMapLocal(String id) async {
-    final file = await _localFile(id);
-    file.delete();
-  }
+  void _loadPersistedDocuments() async {
+    if (persistenceProvider != null) {
+      await persistenceProvider.loadDocuments(this);
+    }
 
-  void _loadLocalData() async {
-    getApplicationDocumentsDirectory().then((Directory appDir) {
-      appDir
-          .listSync(recursive: true, followLinks: true)
-          .forEach((FileSystemEntity f) {
-        if (f.path.endsWith('.json')) {
-          Document loadedDoc = Document();
-          loadedDoc.loadFromFilePath(f);
-          if (loadedDoc["_docType"] == documentType) {
-            _documents.add(loadedDoc);
-            loadedDoc.addListener(() {
-              notifyListeners();
-            });
-          }
-        }
-      });
-      if (_documents.length == 0 && initialDocuments != null) {
-        addAll(this.initialDocuments);
-        _signalLoadComplete();
-      } else {
-        _signalLoadComplete();
-      }
-    });
+    if (_documents.length == 0 && initialDocuments != null) {
+      addAll(this.initialDocuments);
+      _signalLoadComplete();
+    } else {
+      _signalLoadComplete();
+    }
   }
 
   void _signalLoadComplete() {
     documentsLoaded = true;
     if (onLoadComplete != null) onLoadComplete(this);
     notifyListeners();
-  }
-
-  Future<File> _localFile(String id) async {
-    final path = await _localPath;
-    return File('$path/$id.json');
-  }
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-    return path;
   }
 }
 

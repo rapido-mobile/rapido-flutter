@@ -14,6 +14,7 @@ void main() {
     doc["datetime"] = dateTimeString;
     doc["date"] = dateString;
     testList.addAll([doc]);
+    
     await tester.pumpWidget(
       MaterialApp(
         home: DocumentForm(testList, document: testList[0]),

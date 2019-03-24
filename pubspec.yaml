@@ -1,6 +1,6 @@
 name: rapido
 description: Rapid Application Development for Flutter. Automatically persisting user data, and creates default CRUD UI.
-version: 0.1.7
+version: 0.1.8
 author: Rick Spencer <richard.linger.spencer.3@gmail.com>
 homepage: https://github.com/rapido-mobile/rapido-flutter
 
@@ -17,7 +17,9 @@ dependencies:
   image_picker: ^0.4.10
   validators: ^1.0.0+1
   numberpicker: ^1.0.0
-  
+  parse_server_sdk:
+    path: ../flutter_parse_sdk
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

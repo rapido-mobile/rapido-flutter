@@ -1,10 +1,8 @@
 import 'dart:collection';
 import 'dart:async';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
+import 'persistence.dart';
 
 /// A Document is a persisted Map of type <String, dynamic>.
 /// It is used by DocumentList amd all related UI widgets.
@@ -21,11 +19,20 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   String get id => _map["_id"];
   set id(String v) => _map["_id"] = v;
 
+  /// How to provide persistence. Defaults to LocalFileProvider
+  /// which will save the documents as files on the device.
+  /// Use ParseProvider to persist to a Parse server.
+  /// Set to null if no persistence is desired.
+  PersistenceProvider persistenceProvider;
+
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
-  Document({
-    Map<String, dynamic> initialValues,
-  }) {
+  /// Optionally save documents on a remote server
+  Document({Map<String, dynamic> initialValues, this.persistenceProvider}) {
+    // default persistence
+    if (persistenceProvider == null) {
+      persistenceProvider = LocalFilePersistence();
+    }
     // initial values if provided
     if (initialValues != null) {
       initialValues.keys.forEach((String key) {
@@ -59,47 +66,39 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     return _map.keys.toList();
   }
 
-  Future<File> save() async {
-    final file = await _localFile(_map["_id"]);
-    // Write the file
-    String mapString = json.encode(_map);
-    file.writeAsString('$mapString');
-    notifyListeners();
-    return file;
-  }
-
-  Future<File> _localFile(String id) async {
-    final path = await _localPath;
-    return File('$path/$id.json');
-  }
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    String path = directory.path;
-    return path;
-  }
-
-  void loadFromFilePath(FileSystemEntity f) {
-    String j = new File(f.path).readAsStringSync();
-
-    if (j.length != 0) {
-      Map newData = json.decode(j);
-      newData.keys.forEach((dynamic key) {
-        if (key == "latlong" && newData[key] != null) {
-          // convert latlongs to the correct type
-          newData[key] = Map<String, double>.from(newData[key]);
-        }
-        _map[key] = newData[key];
-      });
-      _map["_id"] = newData["_id"];
-    } else {
-      //TODO: Debug this
-      // This only seems to occur during testing, and
-      // seems to be a race condition I have not tracked down
-      // and it's not clear why the _loadLocalData function is
-      // even called
-      // print("Warning: ${f.path} file was empty.");
+  updateValues(Map<String, dynamic> values) {
+    for (String key in values.keys) {
+      _map[key] = values[key];
     }
+    save();
+  }
+
+  Future<bool> save() async {
+    if (persistenceProvider != null) {
+      bool result = await persistenceProvider.saveDocument(this);
+      notifyListeners();
+      return result;
+    }
+    return false;
+  }
+
+  delete() {
+    if (persistenceProvider != null) {
+      persistenceProvider.deleteDocument(this);
+    }
+  }
+
+  Document.fromMap(Map newData,
+      {this.persistenceProvider = const LocalFilePersistence()}) {
+    if (newData == null) return;
+    newData.keys.forEach((dynamic key) {
+      if (key == "latlong" && newData[key] != null) {
+        // convert latlongs to the correct type
+        newData[key] = Map<String, double>.from(newData[key]);
+      }
+      _map[key] = newData[key];
+    });
+    _map["_id"] = newData["_id"];
     notifyListeners();
   }
 
