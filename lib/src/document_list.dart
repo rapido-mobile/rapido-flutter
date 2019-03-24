@@ -38,7 +38,11 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// will be ignored.
   final List<Document> initialDocuments;
 
-  List<PersistenceProvider> persistenceProviders;
+  /// How to provide persistence. Defaults to LocalFileProvider
+  /// which will save the documents as files on the device.
+  /// Use ParseProvider to persist to a Parse server.
+  /// Set to null if no persistence is desired.
+  PersistenceProvider persistenceProvider;
 
   set length(int newLength) {
     _documents.length = newLength;
@@ -66,10 +70,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
       this.initialDocuments,
       Map<String, String> labels,
       this.fieldOptionsMap,
-      this.persistenceProviders}) {
-    if (persistenceProviders == null) {
-      persistenceProviders = [LocalFilePersistence()];
-    }
+      this.persistenceProvider = const LocalFilePersistence()}) {
     _labels = labels;
     _documents = [];
     _loadPersistedDocuments();
@@ -101,11 +102,12 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
 
   @override
   void add(Document doc, {saveOnAdd = true}) {
+    doc.persistenceProvider = persistenceProvider;
     if (saveOnAdd) {
       doc["_docType"] = documentType;
       doc["_time_stamp"] = new DateTime.now().millisecondsSinceEpoch.toInt();
     }
-    doc.persistenceProviders = persistenceProviders;
+
     _documents.add(doc);
     doc.addListener(() {
       notifyListeners();
@@ -200,8 +202,8 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   void _loadPersistedDocuments() async {
-    for (PersistenceProvider provider in persistenceProviders) {
-      await provider.loadDocuments(this);
+    if (persistenceProvider != null) {
+      await persistenceProvider.loadDocuments(this);
     }
 
     if (_documents.length == 0 && initialDocuments != null) {

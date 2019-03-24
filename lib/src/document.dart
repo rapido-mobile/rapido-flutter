@@ -19,15 +19,15 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
   String get id => _map["_id"];
   set id(String v) => _map["_id"] = v;
 
-  List<PersistenceProvider> persistenceProviders;
+  PersistenceProvider persistenceProvider;
 
   /// Create a Document. Optionally include a map of type
   /// Map<String, dynamic> to initially populate the Document with data.
   /// Optionally save documents on a remote server
-  Document({Map<String, dynamic> initialValues, this.persistenceProviders}) {
+  Document({Map<String, dynamic> initialValues, this.persistenceProvider}) {
     // default persistence
-    if (persistenceProviders == null) {
-      persistenceProviders = [LocalFilePersistence()];
+    if (persistenceProvider == null) {
+      persistenceProvider = LocalFilePersistence();
     }
     // initial values if provided
     if (initialValues != null) {
@@ -62,32 +62,30 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     return _map.keys.toList();
   }
 
-  updateValues(Map<String, dynamic> values){
-    for(String key in values.keys){
+  updateValues(Map<String, dynamic> values) {
+    for (String key in values.keys) {
       _map[key] = values[key];
     }
     save();
   }
 
   Future<bool> save() async {
-    persistenceProviders.forEach((PersistenceProvider provider) async {
-      bool result = await provider.saveDocument(this);
+    if (persistenceProvider != null) {
+      bool result = await persistenceProvider.saveDocument(this);
       notifyListeners();
       return result;
-    });
+    }
     return false;
   }
 
   delete() {
-    persistenceProviders.forEach((PersistenceProvider provider){
-      provider.deleteDocument(this);
-    });
+    if (persistenceProvider != null) {
+      persistenceProvider.deleteDocument(this);
+    }
   }
 
-  Document.fromMap(Map newData, {this.persistenceProviders}) {
-    if (persistenceProviders == null) {
-      persistenceProviders = [LocalFilePersistence()];
-    }
+  Document.fromMap(Map newData,
+      {this.persistenceProvider = const LocalFilePersistence()}) {
     if (newData == null) return;
     newData.keys.forEach((dynamic key) {
       if (key == "latlong" && newData[key] != null) {

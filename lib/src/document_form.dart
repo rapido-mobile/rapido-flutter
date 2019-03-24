@@ -78,7 +78,7 @@ class _DocumentFormState extends State<DocumentForm> {
   void _saveDocument(BuildContext context) {
      formKey.currentState.save();
     if (widget.document == null) {
-      Document doc = Document.fromMap(_documentValues);
+      Document doc = Document.fromMap(_documentValues, persistenceProvider: widget.documentList.persistenceProvider);
       widget.documentList.add(doc);
     } else {
       widget.document.updateValues(_documentValues);

@@ -49,7 +49,7 @@ class ParsePersistence implements PersistenceProvider {
           }
         }
         Document doc = Document.fromMap(newData,
-            persistenceProviders: documentList.persistenceProviders);
+            persistenceProvider: documentList.persistenceProvider);
         documentList.add(doc, saveOnAdd: false);
       }
     }

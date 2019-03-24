@@ -11,6 +11,9 @@ abstract class PersistenceProvider {
 }
 
 class LocalFilePersistence implements PersistenceProvider {
+
+  const LocalFilePersistence();
+  
   Future<bool> saveDocument(Document doc) async {
     final file = await _localFile(doc["_id"]);
     // Write the file
@@ -19,9 +22,6 @@ class LocalFilePersistence implements PersistenceProvider {
 
     return true;
   }
-
-  
-
 
   Future loadDocuments(DocumentList documentList,
       {Function onChangedListener}) async {
@@ -83,10 +83,4 @@ class LocalFilePersistence implements PersistenceProvider {
     String path = directory.path;
     return path;
   }
-}
-
-class PersistenceSettings {
-  bool local;
-  bool cloud;
-  PersistenceSettings({this.local = false, this.cloud = false});
 }

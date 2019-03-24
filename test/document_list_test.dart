@@ -281,10 +281,9 @@ void main() {
 
   test('DocumentList created with no local persistence', () {
     DocumentList dl =
-        DocumentList("no local persistence", persistenceProviders: []);
+        DocumentList("no local persistence", persistenceProvider: null);
     dl.add(Document(
       initialValues: {"a": 1},
-      persistenceProviders: [],
     ));
     expect(dl[0]["a"], 1);
   });
