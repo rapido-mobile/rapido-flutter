@@ -9,7 +9,7 @@ Rapido makes it simple to build document centric applications by:
 
 ## Show Me
 Create a DocumentList and defining labels for fields, and then create a DocumentListScaffold like this:
-```
+```dart
 class _MyHomePageState extends State<MyHomePage> {
   DocumentList taskList = DocumentList("Tarea",
       labels: {"Date": "date", "Task": "task", "Priority": "pri count"});
@@ -45,7 +45,7 @@ DocumentList lies at the core of the R.A.D. experience. By simply using a list, 
 ## Importing
 Everything you need is in rapido.dart:
 
-```
+```dart
 import 'package:rapido/rapido.dart';
 ```
 
@@ -54,7 +54,7 @@ This import includes DocumentList itself, and all of the UI elements that work o
 ### DocumentList
 To create a DocumentList, all that is required is to include a "documentType" string. This string is used by DocumentList to organize its documents. Then you can add documents to it by simply passing in maps of type Map<String, dynamic>.
 
-```
+```dart
 DocumentList taskList = DocumentList("tasks");
 taskList.add(Document(initialValues: {"name":"grocery shopping", "priority": 1, "done": false}));
 ```
@@ -63,13 +63,13 @@ Notice that the maps use a string of a key, but the values are dynamic. You can 
 
 You can modify and delete documents using normal list functionality. 
 
-```
+```dart
 taskList[0]  = Document(initialValues: {"name":"grocery shopping", "priority": 1, "done": true});
 ```
 
 You can delete them:
 
-```
+```dart
 taskList.removeAt[0];
 ```
 
@@ -80,18 +80,18 @@ After creating a DocumentList, you can use it in a variety of UI elements suppli
 
 For exampe, if you want to easily create an application that supports adding, removing, and editing documents, you can use the DocumentListScaffold class.
 
-```
+```dart
 DocumentListScaffold(taskList, title:"Task List");
 ```
 
 DocumentListView will create a ListView to display and edit the items in the list. It also offers several custimazation options, but the defautls "just work."
 
-```
+```dart
 DocumentListView(taskList);
 ```
 
 DocumentListMapView will display any documents with a field called "latlong" on a map:
-```
+```dart
 DocumentListMapView(taskList);
 ```
 
@@ -99,13 +99,13 @@ DocumentForm allows easy creation of new documents, or editing of existing ones.
 
 To create a new document:
 
-```
+```dart
 DocumentForm(taskList);
 ```
 
 To edit an existing one:
 
-```
+```dart
 DocumentForm(taskList, index: 0);
 ```
 

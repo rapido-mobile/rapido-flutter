@@ -107,7 +107,7 @@ class _ParseLoginFormState extends State<ParseLoginForm> {
     }
 
     return Container(
-      child: Column(
+      child: Stack(
         children: _createChildren(),
       ),
     );
@@ -142,20 +142,28 @@ class _ParseLoginFormState extends State<ParseLoginForm> {
         } else {
           _user = ParseUser(usernameController.text, passwordController.text,
               emailController.text);
-          await _user.login();
+          //ParseResponse loginResponse = await _user.login();
+
         }
         widget.onComplete(_user);
       },
     ));
     if (!register) {
-      widgets.add(RaisedButton(
-        child: Text("Register"),
-        onPressed: () {
-          setState(() {
-            register = true;
-          });
-        },
-      ));
+      widgets.add(
+        Positioned(
+          child: Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: RaisedButton(
+              child: Text("Register"),
+              onPressed: () {
+                setState(() {
+                  register = true;
+                });
+              },
+            ),
+          ),
+        ),
+      );
     } else {
       widgets.add(RaisedButton(
         child: Text("Login"),
