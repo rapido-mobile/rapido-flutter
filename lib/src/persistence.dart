@@ -24,7 +24,6 @@ class LocalFilePersistence implements PersistenceProvider {
 
   Future loadDocuments(DocumentList documentList,
       {Function onChangedListener}) async {
-    // final List<Document> _documents = [];
     Directory appDir = await getApplicationDocumentsDirectory();
 
     appDir

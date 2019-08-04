@@ -17,18 +17,20 @@ class ParsePersistence implements PersistenceProvider {
     if (doc["objectId"] == null) return null;
     ParseObject obj = _parseObjectFromDocument(doc);
     String path = "${doc.documentType}/${doc.id}";
-    obj.delete(path:path);
+    obj.delete(path: path);
     return null;
   }
 
   @override
   Future loadDocuments(DocumentList documentList,
       {Function onChangedListener}) async {
+
     ParseResponse apiResponse =
         await ParseObject(documentList.documentType).getAll();
 
     if (apiResponse.success && apiResponse.result != null) {
       for (ParseObject obj in apiResponse.result) {
+
         Map<String, dynamic> savedData =
             Map<String, dynamic>.from(obj.getObjectData());
         Map<String, dynamic> newData = {};
@@ -51,6 +53,7 @@ class ParsePersistence implements PersistenceProvider {
         Document doc = Document.fromMap(newData,
             persistenceProvider: documentList.persistenceProvider);
         documentList.add(doc, saveOnAdd: false);
+        documentList.notifyListeners();
       }
     }
   }

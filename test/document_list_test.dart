@@ -4,8 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:rapido/rapido.dart';
 
 void main() {
+  PersistenceProvider persistenceProvider;
+
   test('creates a DocumentList', () {
-    DocumentList documentList = DocumentList("testDocumentType");
+    DocumentList documentList = DocumentList("testDocumentType",
+        persistenceProvider: persistenceProvider);
     documentList.add(Document(initialValues: {
       "count": 0,
       "rating": 5,
@@ -21,7 +24,8 @@ void main() {
     expect(documentList.length, 2);
   });
   test('reads existing Documents from disk', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
+    DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
+        onLoadComplete: (DocumentList model) {
       expect(model.length, 2);
       String name = model[0]["name"];
       expect(name.contains("Rick"), true);
@@ -32,14 +36,16 @@ void main() {
   });
 
   test('onChanged works', () {
-    DocumentList list = DocumentList("onchange");
+    DocumentList list =
+        DocumentList("onchange", persistenceProvider: persistenceProvider);
     list.addListener(() {
       expect(list.length, 1);
     });
     list.add(Document(initialValues: {"a": 1}));
   });
   test('tests that any() works', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
+    DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
+        onLoadComplete: (DocumentList model) {
       bool c = model.any((Map<String, dynamic> map) {
         return map.containsValue("Rick Sanchez");
       });
@@ -74,7 +80,7 @@ void main() {
   });
 
   test('test []= operator, document is completely replaced', () {
-    DocumentList("testDocumentType",
+    DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
         onLoadComplete: (DocumentList documentList) {
       Document updatedDoc = Document(
           initialValues: {"count": 1, "price": 2.5, "name": "Edited Name"});
@@ -91,7 +97,8 @@ void main() {
   });
 
   test('checks that operator []=  persist on disk', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
+    DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
+        onLoadComplete: (DocumentList dl) {
       bool testMapFound = false;
       dl.forEach((Document doc) {
         if (doc["name"] == "Edited Name") {
@@ -107,12 +114,13 @@ void main() {
 
   test('tests removeAt removes documents and returns the removed doc',
       () async {
-    DocumentList("testDocumentType",
+    DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
         onLoadComplete: (DocumentList documentList) {
       Document zeroDoc = documentList[0];
       Document removedDoc = documentList.removeAt(0);
       expect(zeroDoc == removedDoc, true);
-      DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
+      DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
+          onLoadComplete: (DocumentList dl) {
         dl.forEach((Document doc) {
           expect(doc["_id"] != zeroDoc["_id"], true);
         });
@@ -296,6 +304,15 @@ void main() {
   });
 
   setUpAll(() async {
+    String providerEnvar = Platform.environment['PERSITENCE'];
+
+    if (providerEnvar == "parse") {
+      persistenceProvider =
+          ParsePersistence(parseApp: "app", parseUrl: "http://127.0.0.1/parse");
+    } else {
+      persistenceProvider = LocalFilePersistence();
+    }
+
     // Create a temporary directory to work with
     final directory = await Directory.systemTemp.createTemp();
 
