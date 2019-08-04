@@ -6,7 +6,7 @@ import 'package:rapido/rapido.dart';
 void main() {
   PersistenceProvider persistenceProvider;
 
-  test('creates a DocumentList', () {
+  test('creates a DocumentList', () async {
     DocumentList documentList = DocumentList("testDocumentType",
         persistenceProvider: persistenceProvider);
     documentList.add(Document(initialValues: {
@@ -25,32 +25,40 @@ void main() {
   });
   test('reads existing Documents from disk', () {
     DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
-        onLoadComplete: (DocumentList model) {
+        onLoadComplete: expectAsync1((DocumentList model) {
       expect(model.length, 2);
       String name = model[0]["name"];
       expect(name.contains("Rick"), true);
       name = model[1]["name"];
       expect(name.contains("Rick"), true);
       expect(model[0]["price"], 1.5);
-    });
+    }));
   });
 
   test('onChanged works', () {
     DocumentList list =
         DocumentList("onchange", persistenceProvider: persistenceProvider);
-    list.addListener(() {
-      expect(list.length, 1);
-    });
+    list.addListener(
+      expectAsync0(() {
+        expect(1, 1);
+      }, max: -1),
+    );
     list.add(Document(initialValues: {"a": 1}));
   });
+
   test('tests that any() works', () {
-    DocumentList("testDocumentType", persistenceProvider: persistenceProvider,
-        onLoadComplete: (DocumentList model) {
-      bool c = model.any((Map<String, dynamic> map) {
-        return map.containsValue("Rick Sanchez");
-      });
-      expect(c, true);
-    });
+    DocumentList(
+      "testDocumentType",
+      persistenceProvider: persistenceProvider,
+      onLoadComplete: expectAsync1(
+        (DocumentList model) {
+          bool c = model.any((Map<String, dynamic> map) {
+            return map.containsValue("Rick Sanchez");
+          });
+          expect(c, true);
+        },
+      ),
+    );
   });
 
   test('foreach()', () {
@@ -62,7 +70,7 @@ void main() {
   });
 
   test('set labels', () {
-    DocumentList list = DocumentList("onchange");
+    DocumentList list = DocumentList("labelstest");
     list.labels = {"A": "a"};
     list.add(Document(initialValues: {"a": 1}));
     expect(list.labels.length, 1);
@@ -178,22 +186,37 @@ void main() {
   });
 
   test('checks that using addAll persists data', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
-      expect(model.length, 2);
-    });
+    DocumentList(
+      "addAllTest",
+      onLoadComplete: expectAsync1(
+        (DocumentList model) {
+          expect(model.length, 2);
+        },
+      ),
+    );
   });
 
   test('clear()', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) async {
-      model.clear();
-      expect(model.length, 0);
-    });
+    DocumentList(
+      "addAllTest",
+      onLoadComplete: expectAsync1(
+        (DocumentList model) async {
+          model.clear();
+          expect(model.length, 0);
+        },
+      ),
+    );
   });
 
   test('test that clear() works across persistence', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) async {
-      expect(model.length, 0);
-    });
+    DocumentList(
+      "addAllTest",
+      onLoadComplete: expectAsync1(
+        (DocumentList model) async {
+          expect(model.length, 0);
+        },
+      ),
+    );
   });
 
   test('remove object', () {
@@ -262,10 +285,15 @@ void main() {
       Document(initialValues: {"c": 3}),
       Document(initialValues: {"d": 4}),
     ];
-    DocumentList("initializeMe", initialDocuments: docs,
-        onLoadComplete: (DocumentList l) {
-      expect(l.length, docs.length);
-    });
+    DocumentList(
+      "initializeMe",
+      initialDocuments: docs,
+      onLoadComplete: expectAsync1(
+        (DocumentList l) {
+          expect(l.length, docs.length);
+        },
+      ),
+    );
   });
 
   test('initialDocuments skipped', () {
@@ -275,16 +303,26 @@ void main() {
       Document(initialValues: {"c": 3}),
       Document(initialValues: {"d": 4}),
     ];
-    DocumentList("initializeMe", initialDocuments: docs,
-        onLoadComplete: (DocumentList l) {
-      expect(l.length, 4);
-    });
+    DocumentList(
+      "initializeMe",
+      initialDocuments: docs,
+      onLoadComplete: expectAsync1(
+        (DocumentList l) {
+          expect(l.length, 4);
+        },
+      ),
+    );
   });
 
   test('empty DocumentList documentsLoaded property', () {
-    DocumentList("empty", onLoadComplete: (DocumentList l) {
-      expect(l.documentsLoaded, true);
-    });
+    DocumentList(
+      "empty",
+      onLoadComplete: expectAsync1(
+        (DocumentList l) {
+          expect(l.documentsLoaded, true);
+        },
+      ),
+    );
   });
 
   test('DocumentList created with no local persistence', () {
@@ -297,14 +335,18 @@ void main() {
   });
 
   test('Documents not saved if local persistence is off', () {
-    DocumentList dl =
-        DocumentList("no local persistence", onLoadComplete: (list) {
-      expect(list.length, 0);
-    });
+    DocumentList(
+      "no local persistence",
+      onLoadComplete: expectAsync1(
+        (list) {
+          expect(list.length, 0);
+        },
+      ),
+    );
   });
 
   setUpAll(() async {
-    String providerEnvar = Platform.environment['PERSITENCE'];
+    String providerEnvar = Platform.environment['PERSISTENCE'];
 
     if (providerEnvar == "parse") {
       persistenceProvider =
