@@ -1,9 +1,12 @@
+import 'package:flutter_test/flutter_test.dart' as flutterTest;
 import 'package:test/test.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:rapido/rapido.dart';
 
 void main() {
+  flutterTest.TestWidgetsFlutterBinding.ensureInitialized();
+  
   String newName = "xxx";
   test('Setup DocumentList', () {
     DocumentList documentList = DocumentList("operator test type");

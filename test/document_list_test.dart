@@ -1,9 +1,11 @@
+import 'package:flutter_test/flutter_test.dart' as flutterTest;
 import 'package:test/test.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:rapido/rapido.dart';
 
 void main() {
+  flutterTest.TestWidgetsFlutterBinding.ensureInitialized();
   test('creates a DocumentList', () {
     DocumentList documentList = DocumentList("testDocumentType");
     documentList.add(Document(initialValues: {
