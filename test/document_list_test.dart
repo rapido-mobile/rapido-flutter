@@ -6,54 +6,51 @@ import 'package:rapido/rapido.dart';
 
 void main() {
   flutterTest.TestWidgetsFlutterBinding.ensureInitialized();
-  test('creates a DocumentList', () {
-    DocumentList documentList = DocumentList("testDocumentType");
-    documentList.add(Document(initialValues: {
-      "count": 0,
-      "rating": 5,
-      "price": 1.5,
-      "name": "Pickle Rick"
-    }));
-    documentList.add(Document(initialValues: {
-      "count": 1,
-      "rating": 4,
-      "price": 1.5,
-      "name": "Rick Sanchez"
-    }));
+  test('create and read a DocumentList sync', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("testDocumentType");
+    documentList.add(
+      Document(initialValues: {
+        "count": 0,
+        "rating": 5,
+        "price": 1.5,
+        "name": "Pickle Rick"
+      }),
+    );
+    documentList.add(
+      Document(initialValues: {
+        "count": 1,
+        "rating": 4,
+        "price": 1.5,
+        "name": "Rick Sanchez"
+      }),
+    );
     expect(documentList.length, 2);
-  });
-  test('reads existing Documents from disk', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      expect(model.length, 2);
-      String name = model[0]["name"];
-      expect(name.contains("Rick"), true);
-      name = model[1]["name"];
-      expect(name.contains("Rick"), true);
-      expect(model[0]["price"], 1.5);
-    });
+
+    DocumentList loadedDocumentList =
+        await DocumentList.createDocumentList("testDocumentType");
+    expect(loadedDocumentList.length, 2);
+    String name = loadedDocumentList[0]["name"];
+    expect(name.contains("Rick"), true);
+    name = loadedDocumentList[1]["name"];
+    expect(name.contains("Rick"), true);
+    expect(loadedDocumentList[0]["price"], 1.5);
   });
 
-  test('onChanged works', () {
-    DocumentList list = DocumentList("onchange");
-    list.addListener(() {
-      expect(list.length, 1);
+  test('tests that any() works', () async {
+    DocumentList loadedDocumentList =
+        await DocumentList.createDocumentList("testDocumentType");
+    bool c = loadedDocumentList.any((Map<String, dynamic> map) {
+      return map.containsValue("Rick Sanchez");
     });
-    list.add(Document(initialValues: {"a": 1}));
-  });
-  test('tests that any() works', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      bool c = model.any((Map<String, dynamic> map) {
-        return map.containsValue("Rick Sanchez");
-      });
-      expect(c, true);
-    });
+    expect(c, true);
   });
 
-  test('foreach()', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
-      model.forEach((Map<String, dynamic> map) {
-        expect(map["name"].toString().contains("Rick"), true);
-      });
+  test('foreach()', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("addAllTest");
+    documentList.forEach((Map<String, dynamic> map) {
+      expect(map["name"].toString().contains("Rick"), true);
     });
   });
 
@@ -75,50 +72,48 @@ void main() {
     expect(list[2]["a"], 3);
   });
 
-  test('test []= operator, document is completely replaced', () {
-    DocumentList("testDocumentType",
-        onLoadComplete: (DocumentList documentList) {
-      Document updatedDoc = Document(
-          initialValues: {"count": 1, "price": 2.5, "name": "Edited Name"});
-      int oldTimeStamp = documentList[0]["_time_stamp"];
-      String oldId = documentList[0]["_id"];
-      documentList[0] = updatedDoc;
-      expect(documentList[0]["count"], 1);
-      expect(documentList[0]["rating"], null);
-      expect(documentList[0]["price"], 2.5);
-      expect(documentList[0]["name"], "Edited Name");
-      expect(documentList[0]["_time_stamp"], greaterThan(oldTimeStamp));
-      expect(oldId == documentList[0]["_id"], false);
-    });
+  test('test []= operator, document is completely replaced', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("testDocumentType");
+    Document updatedDoc = Document(
+        initialValues: {"count": 1, "price": 2.5, "name": "Edited Name"});
+    int oldTimeStamp = documentList[0]["_time_stamp"];
+    String oldId = documentList[0]["_id"];
+    documentList[0] = updatedDoc;
+    expect(documentList[0]["count"], 1);
+    expect(documentList[0]["rating"], null);
+    expect(documentList[0]["price"], 2.5);
+    expect(documentList[0]["name"], "Edited Name");
+    expect(documentList[0]["_time_stamp"], greaterThan(oldTimeStamp));
+    expect(oldId == documentList[0]["_id"], false);
   });
 
-  test('checks that operator []=  persist on disk', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
-      bool testMapFound = false;
-      dl.forEach((Document doc) {
-        if (doc["name"] == "Edited Name") {
-          expect(doc["count"], 1);
-          expect(doc["rating"], null);
-          expect(doc["price"], 2.5);
-          testMapFound = true;
-        }
-      });
-      expect(testMapFound, true);
+  test('checks that operator []=  persist on disk', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("testDocumentType");
+    bool testMapFound = false;
+    documentList.forEach((Document doc) {
+      if (doc["name"] == "Edited Name") {
+        expect(doc["count"], 1);
+        expect(doc["rating"], null);
+        expect(doc["price"], 2.5);
+        testMapFound = true;
+      }
     });
+    expect(testMapFound, true);
   });
 
   test('tests removeAt removes documents and returns the removed doc',
       () async {
-    DocumentList("testDocumentType",
-        onLoadComplete: (DocumentList documentList) {
-      Document zeroDoc = documentList[0];
-      Document removedDoc = documentList.removeAt(0);
-      expect(zeroDoc == removedDoc, true);
-      DocumentList("testDocumentType", onLoadComplete: (DocumentList dl) {
-        dl.forEach((Document doc) {
-          expect(doc["_id"] != zeroDoc["_id"], true);
-        });
-      });
+    DocumentList documentList =
+        await DocumentList.createDocumentList("testDocumentType");
+
+    Document zeroDoc = documentList[0];
+    Document removedDoc = documentList.removeAt(0);
+    expect(zeroDoc == removedDoc, true);
+    DocumentList dl = await DocumentList.createDocumentList("testDocumentType");
+    dl.forEach((Document doc) {
+      expect(doc["_id"] != zeroDoc["_id"], true);
     });
   });
 
@@ -141,10 +136,10 @@ void main() {
     expect(list.first["a"], 1);
   });
 
-  test('removeAt() survives persistence', () {
-    DocumentList("removeAtTeest", onLoadComplete: (DocumentList list) {
-      expect(list.length, 9);
-    });
+  test('removeAt() survives persistence', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("removeAtTeest");
+    expect(documentList.length, 9);
   });
 
   test('infer ui labels', () {
@@ -171,23 +166,23 @@ void main() {
     expect(dl.length, 2);
   });
 
-  test('checks that using addAll persists data', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) {
-      expect(model.length, 2);
-    });
+  test('checks that using addAll persists data', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("addAllTest");
+    expect(documentList.length, 2);
   });
 
-  test('clear()', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) async {
-      model.clear();
-      expect(model.length, 0);
-    });
+  test('clear()', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("addAllTest");
+    documentList.clear();
+    expect(documentList.length, 0);
   });
 
-  test('test that clear() works across persistence', () {
-    DocumentList("addAllTest", onLoadComplete: (DocumentList model) async {
-      expect(model.length, 0);
-    });
+  test('test that clear() works across persistence', () async {
+    DocumentList documentList =
+        await DocumentList.createDocumentList("addAllTest");
+    expect(documentList.length, 0);
   });
 
   test('remove object', () {
@@ -199,7 +194,6 @@ void main() {
     expect(list.length, 0);
   });
   test('sortByField', () {
-    // TODO: add tests for other field types (date)
     DocumentList list = DocumentList("sortByField");
     List<String> strings = [
       "abcd",
@@ -249,36 +243,12 @@ void main() {
     expect(brokenList[1]["b"] == 1, true);
   });
 
-  test('initialDocuments test', () {
-    List<Document> docs = [
-      Document(initialValues: {"a": 1}),
-      Document(initialValues: {"b": 2}),
-      Document(initialValues: {"c": 3}),
-      Document(initialValues: {"d": 4}),
-    ];
-    DocumentList("initializeMe", initialDocuments: docs,
-        onLoadComplete: (DocumentList l) {
-      expect(l.length, docs.length);
-    });
-  });
+  test('empty DocumentList documentsLoaded property', () async {
+    DocumentList documentList = DocumentList("empty");
+    expect(documentList.documentsLoaded, false);
+    await documentList.loadPersistedDocuments();
+    expect(documentList.documentsLoaded, true);
 
-  test('initialDocuments skipped', () {
-    List<Document> docs = [
-      Document(initialValues: {"a": 1}),
-      Document(initialValues: {"b": 2}),
-      Document(initialValues: {"c": 3}),
-      Document(initialValues: {"d": 4}),
-    ];
-    DocumentList("initializeMe", initialDocuments: docs,
-        onLoadComplete: (DocumentList l) {
-      expect(l.length, 4);
-    });
-  });
-
-  test('empty DocumentList documentsLoaded property', () {
-    DocumentList("empty", onLoadComplete: (DocumentList l) {
-      expect(l.documentsLoaded, true);
-    });
   });
 
   test('DocumentList created with no local persistence', () {
@@ -290,11 +260,9 @@ void main() {
     expect(dl[0]["a"], 1);
   });
 
-  test('Documents not saved if local persistence is off', () {
-    DocumentList dl =
-        DocumentList("no local persistence", onLoadComplete: (list) {
-      expect(list.length, 0);
-    });
+  test('Documents not saved if local persistence is off', () async {
+    DocumentList documentList = await DocumentList.createDocumentList("no local persistence");
+      expect(documentList.length, 0);
   });
 
   setUpAll(() async {
