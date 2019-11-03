@@ -148,13 +148,30 @@ class TypedInputField extends StatelessWidget {
     );
   }
 
-  DateTimePickerFormField _getDateTimeFormField(
+  DateTimeField _getDateTimeFormField(
       formatString, dateOnly, BuildContext context) {
     DateFormat format = DateFormat(formatString);
-    return DateTimePickerFormField(
+    return DateTimeField(
+      onShowPicker: (context, currentValue) async {
+        DateTime inputValue;
+        DateTime date = await showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: currentValue ?? DateTime.now(),
+            lastDate: DateTime(2100));
+        inputValue = date;
+        if(!dateOnly) {
+              final time = await showTimePicker(
+              context: context,
+              initialTime:
+                  TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+            );
+            inputValue = DateTimeField.combine(date, time);
+        }
+        return inputValue;
+      },
       format: format,
       decoration: InputDecoration(labelText: label),
-      dateOnly: dateOnly,
       onSaved: (DateTime value) {
         String v = format.format(value);
         this.onSaved(v);

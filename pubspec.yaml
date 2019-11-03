@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^0.5.0+1
-  datetime_picker_formfield: ^0.1.4
+  datetime_picker_formfield: ^0.4.3
   location: ^1.4.1 
   google_maps_flutter: ^0.0.3+3
   image_picker: ^0.4.10
