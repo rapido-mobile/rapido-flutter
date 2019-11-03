@@ -199,7 +199,6 @@ void main() {
     expect(list.length, 0);
   });
   test('sortByField', () {
-    // TODO: add tests for other field types (date)
     DocumentList list = DocumentList("sortByField");
     List<String> strings = [
       "abcd",
