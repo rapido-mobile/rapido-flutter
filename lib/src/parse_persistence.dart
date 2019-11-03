@@ -56,7 +56,7 @@ class ParsePersistence implements PersistenceProvider {
   }
 
   @override
-  Future saveDocument(Document doc) async {
+  saveDocument(Document doc) async {
     ParseObject obj = _parseObjectFromDocument(doc);
     if (doc["objectId"] == null) {
       ParseResponse response = await obj.create();
