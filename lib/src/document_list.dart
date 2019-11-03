@@ -11,8 +11,12 @@ import 'package:flutter/foundation.dart';
 /// contains. The document_widgets library can render useful UI elements
 /// for a DocumentList.
 class DocumentList extends ListBase<Document> with ChangeNotifier {
+
+  /// Create a DocumentList for a given docType string. Useful for
+  /// loading data syncronously. For example:
+  /// DocumentList documentList = await DocumentList.createDocumentList("myDocType");
   static Future<DocumentList> createDocumentList(String docType) async {
-    DocumentList documentList = DocumentList(docType);
+    DocumentList documentList = DocumentList(docType, autoLoad: false);
     await documentList.loadPersistedDocuments();
     return documentList;
   }
@@ -36,13 +40,6 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// circumstances, most commonly in a DocumentForm. fieldOptionsMap is
   /// map of field names to objects that are subclass of FieldOptions.
   Map<String, FieldOptions> fieldOptionsMap;
-
-  /// Optional list of Documents to initialize the DocumentList.
-  /// Whenever the DocumentList first initializes, if there are no
-  /// existing Documents already persisted, the DocumentList will
-  /// initialize itself with this list of Documents. If there are
-  /// are one for more Documents already persisted, this property
-  /// will be ignored.
 
   /// How to provide persistence. Defaults to LocalFileProvider
   /// which will save the documents as files on the device.
@@ -73,14 +70,14 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// The documentType parameter should be unique.
   DocumentList(this.documentType,
       {this.onLoadComplete,
-      List<Document> initialDocuments,
       Map<String, String> labels,
       this.fieldOptionsMap,
+      bool autoLoad = true,
       this.persistenceProvider = const LocalFilePersistence()}) {
     _labels = labels;
     _documents = [];
-    if (initialDocuments != null) {
-      addAll(initialDocuments);
+    if(autoLoad){
+      this.loadPersistedDocuments();
     }
   }
 

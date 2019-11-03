@@ -243,19 +243,6 @@ void main() {
     expect(brokenList[1]["b"] == 1, true);
   });
 
-  test('initialDocuments test', () {
-    List<Document> docs = [
-      Document(initialValues: {"a": 1}),
-      Document(initialValues: {"b": 2}),
-      Document(initialValues: {"c": 3}),
-      Document(initialValues: {"d": 4}),
-    ];
-    DocumentList documentList =
-        DocumentList("initializeMe", initialDocuments: docs);
-
-    expect(documentList.length, docs.length);
-  });
-
   test('empty DocumentList documentsLoaded property', () async {
     DocumentList documentList = DocumentList("empty");
     expect(documentList.documentsLoaded, false);
