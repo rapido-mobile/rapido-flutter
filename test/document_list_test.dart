@@ -6,31 +6,34 @@ import 'package:rapido/rapido.dart';
 
 void main() {
   flutterTest.TestWidgetsFlutterBinding.ensureInitialized();
-  test('creates a DocumentList', () {
+  test('create and read a DocumentList sync', () async {
     DocumentList documentList = DocumentList("testDocumentType");
-    documentList.add(Document(initialValues: {
-      "count": 0,
-      "rating": 5,
-      "price": 1.5,
-      "name": "Pickle Rick"
-    }));
-    documentList.add(Document(initialValues: {
-      "count": 1,
-      "rating": 4,
-      "price": 1.5,
-      "name": "Rick Sanchez"
-    }));
+    documentList.add(
+      Document(initialValues: {
+        "count": 0,
+        "rating": 5,
+        "price": 1.5,
+        "name": "Pickle Rick"
+      }),
+    );
+    documentList.add(
+      Document(initialValues: {
+        "count": 1,
+        "rating": 4,
+        "price": 1.5,
+        "name": "Rick Sanchez"
+      }),
+    );
     expect(documentList.length, 2);
-  });
-  test('reads existing Documents from disk', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      expect(model.length, 2);
-      String name = model[0]["name"];
-      expect(name.contains("Rick"), true);
-      name = model[1]["name"];
-      expect(name.contains("Rick"), true);
-      expect(model[0]["price"], 1.5);
-    });
+
+    DocumentList loadedDocumentList =
+        await DocumentList.getPersistedDocumentList("testDocumentType");
+    expect(loadedDocumentList.length, 2);
+    String name = loadedDocumentList[0]["name"];
+    expect(name.contains("Rick"), true);
+    name = loadedDocumentList[1]["name"];
+    expect(name.contains("Rick"), true);
+    expect(loadedDocumentList[0]["price"], 1.5);
   });
 
   test('onChanged works', () {
@@ -40,13 +43,13 @@ void main() {
     });
     list.add(Document(initialValues: {"a": 1}));
   });
-  test('tests that any() works', () {
-    DocumentList("testDocumentType", onLoadComplete: (DocumentList model) {
-      bool c = model.any((Map<String, dynamic> map) {
-        return map.containsValue("Rick Sanchez");
-      });
-      expect(c, true);
+  test('tests that any() works', () async {
+    DocumentList loadedDocumentList =
+        await DocumentList.getPersistedDocumentList("testDocumentType");
+    bool c = loadedDocumentList.any((Map<String, dynamic> map) {
+      return map.containsValue("Rick Sanchez");
     });
+    expect(c, true);
   });
 
   test('foreach()', () {
@@ -291,8 +294,7 @@ void main() {
   });
 
   test('Documents not saved if local persistence is off', () {
-    DocumentList dl =
-        DocumentList("no local persistence", onLoadComplete: (list) {
+    DocumentList("no local persistence", onLoadComplete: (list) {
       expect(list.length, 0);
     });
   });

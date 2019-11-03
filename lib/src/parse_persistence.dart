@@ -17,7 +17,7 @@ class ParsePersistence implements PersistenceProvider {
     if (doc["objectId"] == null) return null;
     ParseObject obj = _parseObjectFromDocument(doc);
     String path = "${doc.documentType}/${doc.id}";
-    obj.delete(path:path);
+    obj.delete(path: path);
     return null;
   }
 
@@ -56,17 +56,15 @@ class ParsePersistence implements PersistenceProvider {
   }
 
   @override
-  Future<bool> saveDocument(Document doc) {
+  Future saveDocument(Document doc) async {
     ParseObject obj = _parseObjectFromDocument(doc);
     if (doc["objectId"] == null) {
-      obj.create().then((ParseResponse responts) {
-        ParseObject newObj = responts.result;
-        doc["objectId"] = newObj.objectId;
-      });
+      ParseResponse response = await obj.create();
+      ParseObject newObj = response.result;
+      doc["objectId"] = newObj.objectId;
     } else {
-      obj.save();
+      await obj.save();
     }
-    return null;
   }
 
   ParseObject _parseObjectFromDocument(Document doc) {

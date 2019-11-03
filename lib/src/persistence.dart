@@ -5,7 +5,7 @@ import 'dart:io';
 import 'dart:convert';
 
 abstract class PersistenceProvider {
-  Future<bool> saveDocument(Document doc);
+  Future saveDocument(Document doc);
   Future loadDocuments(DocumentList documentList, {Function onChangedListener});
   Future deleteDocument(Document doc);
 }
@@ -13,13 +13,10 @@ abstract class PersistenceProvider {
 class LocalFilePersistence implements PersistenceProvider {
   const LocalFilePersistence();
 
-  Future<bool> saveDocument(Document doc) async {
+  Future saveDocument(Document doc) async {
     final file = await _localFile(doc["_id"]);
-    // Write the file
     String mapString = json.encode(doc);
-    file.writeAsString('$mapString');
-
-    return true;
+    file.writeAsStringSync('$mapString');
   }
 
   Future loadDocuments(DocumentList documentList,
