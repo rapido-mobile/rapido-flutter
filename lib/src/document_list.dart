@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 /// contains. The document_widgets library can render useful UI elements
 /// for a DocumentList.
 class DocumentList extends ListBase<Document> with ChangeNotifier {
-  static Future<DocumentList> getPersistedDocumentList(String docType) async {
+  static Future<DocumentList> createDocumentList(String docType) async {
     DocumentList documentList = DocumentList(docType);
     await documentList.loadPersistedDocuments();
     return documentList;
@@ -43,7 +43,6 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// initialize itself with this list of Documents. If there are
   /// are one for more Documents already persisted, this property
   /// will be ignored.
-  final List<Document> initialDocuments;
 
   /// How to provide persistence. Defaults to LocalFileProvider
   /// which will save the documents as files on the device.
@@ -74,12 +73,15 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// The documentType parameter should be unique.
   DocumentList(this.documentType,
       {this.onLoadComplete,
-      this.initialDocuments,
+      List<Document> initialDocuments,
       Map<String, String> labels,
       this.fieldOptionsMap,
       this.persistenceProvider = const LocalFilePersistence()}) {
     _labels = labels;
     _documents = [];
+    if (initialDocuments != null) {
+      addAll(initialDocuments);
+    }
   }
 
   set labels(Map<String, String> labels) {
@@ -210,10 +212,6 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   Future loadPersistedDocuments() async {
     if (persistenceProvider != null) {
       await persistenceProvider.loadDocuments(this);
-    }
-
-    if (_documents.length == 0 && initialDocuments != null) {
-      addAll(this.initialDocuments);
     }
     _signalLoadComplete();
   }
