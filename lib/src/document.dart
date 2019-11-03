@@ -73,13 +73,11 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
     save();
   }
 
-  Future<bool> save() async {
+  Future save() async {
     if (persistenceProvider != null) {
-      bool result = await persistenceProvider.saveDocument(this);
+      await persistenceProvider.saveDocument(this);
       notifyListeners();
-      return result;
     }
-    return false;
   }
 
   delete() {

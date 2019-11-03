@@ -29,13 +29,12 @@ class _TaskerHomePageState extends State<TaskerHomePage> {
   initState() {
     DocumentList inputList = DocumentList(
       "task types",
-      initialDocuments: [
-        Document(initialValues: {"name": "Shopping"}),
-        Document(initialValues: {"name": "House Work"}),
-        Document(initialValues: {"name": "Errands"}),
-        Document(initialValues: {"name": "School"}),
-      ],
     );
+
+    List<String> categories = ["Shopping", "House Work", "Errands", "Shool"];
+    categories.forEach((String cat) {
+      inputList.add(Document(initialValues: {"name": cat}));
+    });
 
     documentList = DocumentList(
       "tasker",

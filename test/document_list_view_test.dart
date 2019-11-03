@@ -62,42 +62,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(widgetTest.find.text("1"), widgetTest.findsOneWidget);
   });
-  widgetTest.testWidgets('subtitle is used automatically',
-      (widgetTest.WidgetTester tester) async {
-    DocumentList dl = DocumentList("subtitle test");
-    dl.add(Document(initialValues: {"title": "a", "subtitle": "xxxx"}));
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: DocumentListView(
-            dl,
-            titleKeys: ["title"],
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(widgetTest.find.text("xxxx"), widgetTest.findsOneWidget);
-  });
-
-  widgetTest.testWidgets('subtitle is not used in title',
-      (widgetTest.WidgetTester tester) async {
-    DocumentList dl = DocumentList("subtitle test");
-    dl.add(Document(initialValues: {"title": "a", "subtitle": "xxxx"}));
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: DocumentListView(
-            dl,
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(widgetTest.find.text("xxxx"), widgetTest.findsOneWidget);
-  });
   widgetTest.testWidgets('test DocumentList.sort and cutomItemBuilder',
       (widgetTest.WidgetTester tester) async {
     DocumentList dl = DocumentList("sortListTest");

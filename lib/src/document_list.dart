@@ -1,5 +1,6 @@
 library rapido;
 
+import 'dart:async';
 import 'dart:collection';
 import 'dart:math';
 import 'package:rapido/rapido.dart';
@@ -10,6 +11,16 @@ import 'package:flutter/foundation.dart';
 /// contains. The document_widgets library can render useful UI elements
 /// for a DocumentList.
 class DocumentList extends ListBase<Document> with ChangeNotifier {
+
+  /// Create a DocumentList for a given docType string. Useful for
+  /// loading data syncronously. For example:
+  /// DocumentList documentList = await DocumentList.createDocumentList("myDocType");
+  static Future<DocumentList> createDocumentList(String docType) async {
+    DocumentList documentList = DocumentList(docType, autoLoad: false);
+    await documentList.loadPersistedDocuments();
+    return documentList;
+  }
+
   /// A unique string identifying the documents organized by the list.
   final String documentType;
 
@@ -29,14 +40,6 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// circumstances, most commonly in a DocumentForm. fieldOptionsMap is
   /// map of field names to objects that are subclass of FieldOptions.
   Map<String, FieldOptions> fieldOptionsMap;
-
-  /// Optional list of Documents to initialize the DocumentList.
-  /// Whenever the DocumentList first initializes, if there are no
-  /// existing Documents already persisted, the DocumentList will
-  /// initialize itself with this list of Documents. If there are
-  /// are one for more Documents already persisted, this property
-  /// will be ignored.
-  final List<Document> initialDocuments;
 
   /// How to provide persistence. Defaults to LocalFileProvider
   /// which will save the documents as files on the device.
@@ -67,13 +70,15 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   /// The documentType parameter should be unique.
   DocumentList(this.documentType,
       {this.onLoadComplete,
-      this.initialDocuments,
       Map<String, String> labels,
       this.fieldOptionsMap,
+      bool autoLoad = true,
       this.persistenceProvider = const LocalFilePersistence()}) {
     _labels = labels;
     _documents = [];
-    _loadPersistedDocuments();
+    if(autoLoad){
+      this.loadPersistedDocuments();
+    }
   }
 
   set labels(Map<String, String> labels) {
@@ -101,7 +106,7 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
   }
 
   @override
-  void add(Document doc, {saveOnAdd = true}) {
+  add(Document doc, {bool saveOnAdd = true}) async {
     doc.persistenceProvider = persistenceProvider;
     if (saveOnAdd) {
       doc["_docType"] = documentType;
@@ -201,17 +206,11 @@ class DocumentList extends ListBase<Document> with ChangeNotifier {
     return new String.fromCharCodes(codeUnits);
   }
 
-  void _loadPersistedDocuments() async {
+  Future loadPersistedDocuments() async {
     if (persistenceProvider != null) {
       await persistenceProvider.loadDocuments(this);
     }
-
-    if (_documents.length == 0 && initialDocuments != null) {
-      addAll(this.initialDocuments);
-      _signalLoadComplete();
-    } else {
-      _signalLoadComplete();
-    }
+    _signalLoadComplete();
   }
 
   void _signalLoadComplete() {

@@ -113,6 +113,7 @@ customItemBuilder to the DocumentListView.
         // if the user hasn't defined a subtitle key
         // then assume they want a field call "subtitle"
         // to be in the subtitle, and not in the title
+
         if (widget.subtitleKey == null) {
           if (key == "subtitle") {
             skip = true;
