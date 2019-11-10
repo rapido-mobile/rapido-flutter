@@ -97,15 +97,16 @@ class MapPointPicker extends StatefulWidget {
 class _MapPointPickerState extends State<MapPointPicker> {
   Map<String, double> _startingMapPoint;
   Widget awaitingWidget = Center(child: CircularProgressIndicator());
-  GoogleMapController mapController;
+  double _currentLatitude;
+  double _currentLongitude;
 
   Map<String, double> get location {
-    if (mapController == null) {
+    if (_currentLatitude == null || _currentLongitude == null) {
       return _startingMapPoint;
     }
     Map<String, double> mp = {
-      "latitude": mapController.cameraPosition.target.latitude,
-      "longitude": mapController.cameraPosition.target.longitude,
+      "latitude": _currentLatitude,
+      "longitude": _currentLongitude,
     };
     return mp;
   }
@@ -139,38 +140,32 @@ class _MapPointPickerState extends State<MapPointPicker> {
             width: 300.0,
             height: 300.0,
             child: Overlay(initialEntries: [
-              OverlayEntry(builder: (BuildContext context) {
-                return GoogleMap(
-                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                    new Factory<OneSequenceGestureRecognizer>(
-                      () => new EagerGestureRecognizer(),
-                    ),
-                  ].toSet(),
-                  options: new GoogleMapOptions(
-                    trackCameraPosition: true,
+              OverlayEntry(
+                builder: (BuildContext context) {
+                  return GoogleMap(
+                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                      new Factory<OneSequenceGestureRecognizer>(
+                        () => new EagerGestureRecognizer(),
+                      ),
+                    ].toSet(),
                     scrollGesturesEnabled: true,
                     myLocationEnabled: true,
-                    cameraPosition: new CameraPosition(
+                    initialCameraPosition: new CameraPosition(
                         target: new LatLng(_startingMapPoint["latitude"],
                             _startingMapPoint["longitude"]),
                         zoom: 15.0),
-                  ),
-                  onMapCreated: (GoogleMapController controller) {
-                    mapController = controller;
-                    mapController.addListener(() {
-                      if (widget.onLocationChanged != null) {
-                        Map<String, double> mp = {
-                          "latitude":
-                              mapController.cameraPosition.target.latitude,
-                          "longitude":
-                              mapController.cameraPosition.target.longitude,
-                        };
-                        widget.onLocationChanged(mp);
-                      }
-                    });
-                  },
-                );
-              }),
+                    onCameraMove: (CameraPosition newPosition) {
+                      _currentLatitude = newPosition.target.latitude;
+                      _currentLongitude = newPosition.target.longitude;
+                      Map<String, double> mp = {
+                        "latitude": _currentLatitude,
+                        "longitude": _currentLongitude,
+                      };
+                      widget.onLocationChanged(mp);
+                    },
+                  );
+                },
+              ),
               OverlayEntry(builder: (BuildContext context) {
                 return Icon(Icons.flag, color: Theme.of(context).accentColor);
               })
