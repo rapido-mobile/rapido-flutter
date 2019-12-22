@@ -122,12 +122,16 @@ class _MapPointPickerState extends State<MapPointPicker> {
   }
 
   void _setCurrentLocation() async {
-    Location().getLocation().then((Map<String, double> location) {
+    Location().getLocation().then((LocationData locationData) {
+      Map<String, double> loc = Map<String, double>();
+      loc["latitude"] = locationData.latitude;
+      loc["longitude"] = locationData.longitude;
+
       setState(() {
-        _startingMapPoint = location;
+        _startingMapPoint = loc;
       });
       if (widget.onLocationChanged != null) {
-        widget.onLocationChanged(location);
+        widget.onLocationChanged(loc);
       }
     });
   }

@@ -147,10 +147,10 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   }
 
   void _setCurrentLocation() async {
-    Location().getLocation().then((Map<String, double> location) {
+    Location().getLocation().then((LocationData location) {
       setState(() {
-        _startingLatitude = location["latitude"];
-        _startingLongitude = location["longitude"];
+        _startingLatitude = location.latitude;
+        _startingLongitude = location.longitude;
       });
     });
   }
@@ -189,8 +189,13 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     _markers.clear();
     data.forEach((Document doc) {
       if (_docHasValidLocation(doc)) {
+        InfoWindow info;
+        if(doc["title"] != null) {
+          info = InfoWindow(title: doc["title"], snippet: doc["subtitle"]);
+        }
         Marker marker = Marker(
           markerId: MarkerId(doc.id),
+          infoWindow: info != null ? info : InfoWindow.noText,
           onTap: () {
             if (widget.onItemTap != null) {
               widget.onItemTap(doc);

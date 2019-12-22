@@ -96,7 +96,11 @@ class Document extends MapBase<String, dynamic> with ChangeNotifier {
       }
       _map[key] = newData[key];
     });
-    _map["_id"] = newData["_id"];
+    if (newData["_id"] == null) {
+      _map["_id"] = randomFileSafeId(24);
+    } else {
+      _map["_id"] = newData["_id"];
+    }
     notifyListeners();
   }
 
