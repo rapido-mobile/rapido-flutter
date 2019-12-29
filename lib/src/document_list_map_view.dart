@@ -12,7 +12,8 @@ import 'package:flutter/foundation.dart';
 /// It further assumes there is a "title" and "subtitle" field that will be used
 /// for the info window on the GoogleMap.
 /// Clicking on the info window will display a DocumentPage for the selected
-/// Document.
+/// Document, unless showDocumentPageOnTap is set to false, or an onItemTap callback
+/// is supplied.
 class DocumentListMapView extends StatefulWidget {
   /// The DocumentList that is the source of data to display on the map
   final DocumentList documentList;
@@ -48,13 +49,11 @@ class DocumentListMapView extends StatefulWidget {
 
 class _DocumentListMapViewState extends State<DocumentListMapView> {
   DocumentList data;
-  GoogleMapController mapController;
   double _startingZoom;
   double _startingLatitude;
   double _startingLongitude;
   LatLngBounds _cameraBounds;
-
-  Map<Marker, Document> markerHash = {};
+  List<Marker> _markers = List<Marker>();
 
   @override
   initState() {
@@ -149,10 +148,10 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   }
 
   void _setCurrentLocation() async {
-    Location().getLocation().then((Map<String, double> location) {
+    Location().getLocation().then((LocationData location) {
       setState(() {
-        _startingLatitude = location["latitude"];
-        _startingLongitude = location["longitude"];
+        _startingLatitude = location.latitude;
+        _startingLongitude = location.longitude;
       });
     });
   }
@@ -161,11 +160,9 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
   Widget build(BuildContext context) {
     widget.documentList.addListener(() {
       setState(() {});
-      if (mapController != null) {
-        mapController.clearMarkers();
-        _addMarkers();
-      }
     });
+
+    _createMarkers();
 
     // the data is not done loading
     if ((_startingLatitude == null || _startingLongitude == null) &&
@@ -175,80 +172,58 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
       );
     }
 
-    GoogleMapOptions options;
-    // if (_cameraBounds != null) {
-    //   // CameraTargetBounds is not working according to:
-    //   // https://github.com/flutter/flutter/issues/25298
-    //   // resurrect this code when it is working again
-    //   options = GoogleMapOptions(
-    //     myLocationEnabled: true,
-    //     cameraTargetBounds: CameraTargetBounds(_cameraBounds),
-    //   );
-    // } else {
-    options = GoogleMapOptions(
+    return GoogleMap(
       myLocationEnabled: true,
-      cameraPosition: CameraPosition(
+      initialCameraPosition: CameraPosition(
           target: LatLng(_startingLatitude, _startingLongitude),
           zoom: _startingZoom),
-    );
-    // }
-
-    return GoogleMap(
-      options: options,
-      onMapCreated: _onMapCreated,
       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
         new Factory<OneSequenceGestureRecognizer>(
           () => new EagerGestureRecognizer(),
         ),
       ].toSet(),
+      markers: _markers.toSet(),
     );
   }
 
-  _onMarkerTapped(Marker marker) {
-    Document doc = markerHash[marker];
-
-    // If the user has passed in an onTap callback then use that.
-    // Otherwise, if the user has not disabled shwoing the DocumentPage
-    // then push a DocumentPage.
-    if (widget.onItemTap != null) {
-      widget.onItemTap(doc);
-    } else if (widget.showDocumentPageOnTap) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        return DocumentPage(labels: widget.documentList.labels, document: doc);
-      }));
-    }
-  }
-
-  // called each time the map is rebuilt
-  // the main job is to add the mapp markers from the DocumentList
-  _onMapCreated(GoogleMapController controller) {
-    markerHash.clear();
-
-    mapController = controller;
-    controller.onInfoWindowTapped.add(_onMarkerTapped);
-
-    // see if there is any data to display on the map
-    _addMarkers();
-  }
-
-  void _addMarkers() {
+  void _createMarkers() {
+    _markers.clear();
     data.forEach((Document doc) {
-      // don't try add a marker if the location is going to fail
-      if (doc["latlong"] != null &&
-          doc["latlong"]["latitude"] != null &&
-          doc["latlong"]["longitude"] != null) {
-        MarkerOptions mo = MarkerOptions(
+      if (_docHasValidLocation(doc)) {
+        InfoWindow info;
+        if (doc["title"] != null) {
+          info = InfoWindow(
+            title: doc["title"],
+            snippet: doc["subtitle"],
+            onTap: () {
+              if (widget.onItemTap != null) {
+                widget.onItemTap(doc);
+              } else if (widget.showDocumentPageOnTap) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return DocumentPage(
+                        labels: widget.documentList.labels, document: doc);
+                  }),
+                );
+              }
+            },
+          );
+        }
+        Marker marker = Marker(
+          markerId: MarkerId(doc.id),
+          infoWindow: info != null ? info : InfoWindow.noText,
           position:
               LatLng(doc["latlong"]["latitude"], doc["latlong"]["longitude"]),
-          infoWindowText: InfoWindowText(doc["title"], doc["subtitle"]),
-          icon: BitmapDescriptor.defaultMarker,
         );
-
-        mapController.addMarker(mo).then((Marker m) {
-          markerHash[m] = doc;
-        });
+        _markers.add(marker);
       }
     });
+  }
+
+  bool _docHasValidLocation(Document doc) {
+    return (doc["latlong"] != null &&
+        doc["latlong"]["latitude"] != null &&
+        doc["latlong"]["longitude"] != null);
   }
 }
