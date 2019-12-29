@@ -13,7 +13,7 @@ dependencies:
   path_provider: ^1.5.1
   datetime_picker_formfield: ^0.4.3
   location: ^2.3.5
-  google_maps_flutter: ^0.5.21+8
+  google_maps_flutter: ^0.5.21+15
   image_picker: ^0.6.2+3
   validators: ^2.0.0
   numberpicker: ^1.1.0
