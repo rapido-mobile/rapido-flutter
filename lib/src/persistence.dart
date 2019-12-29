@@ -48,7 +48,6 @@ class LocalFilePersistence implements PersistenceProvider {
 
   Map _loadMapFromFilePath(FileSystemEntity f) {
     String j = new File(f.path).readAsStringSync();
-
     if (j.length != 0) {
       Map newData = json.decode(j);
       newData.keys.forEach((dynamic key) {

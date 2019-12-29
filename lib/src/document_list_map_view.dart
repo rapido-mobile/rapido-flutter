@@ -12,7 +12,8 @@ import 'package:flutter/foundation.dart';
 /// It further assumes there is a "title" and "subtitle" field that will be used
 /// for the info window on the GoogleMap.
 /// Clicking on the info window will display a DocumentPage for the selected
-/// Document.
+/// Document, unless showDocumentPageOnTap is set to false, or an onItemTap callback
+/// is supplied.
 class DocumentListMapView extends StatefulWidget {
   /// The DocumentList that is the source of data to display on the map
   final DocumentList documentList;
@@ -190,23 +191,28 @@ class _DocumentListMapViewState extends State<DocumentListMapView> {
     data.forEach((Document doc) {
       if (_docHasValidLocation(doc)) {
         InfoWindow info;
-        if(doc["title"] != null) {
-          info = InfoWindow(title: doc["title"], snippet: doc["subtitle"]);
+        if (doc["title"] != null) {
+          info = InfoWindow(
+            title: doc["title"],
+            snippet: doc["subtitle"],
+            onTap: () {
+              if (widget.onItemTap != null) {
+                widget.onItemTap(doc);
+              } else if (widget.showDocumentPageOnTap) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return DocumentPage(
+                        labels: widget.documentList.labels, document: doc);
+                  }),
+                );
+              }
+            },
+          );
         }
         Marker marker = Marker(
           markerId: MarkerId(doc.id),
           infoWindow: info != null ? info : InfoWindow.noText,
-          onTap: () {
-            if (widget.onItemTap != null) {
-              widget.onItemTap(doc);
-            } else if (widget.showDocumentPageOnTap) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return DocumentPage(
-                    labels: widget.documentList.labels, document: doc);
-              }));
-            }
-          },
           position:
               LatLng(doc["latlong"]["latitude"], doc["latlong"]["longitude"]),
         );
