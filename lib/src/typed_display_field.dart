@@ -24,7 +24,7 @@ class TypedDisplayField extends StatelessWidget {
   /// The label to display in the UI for the specified fieldName
   final String label;
 
-  /// The document's whose data shoud be displayed
+  /// The document's whose data should be displayed
   final Document document;
 
   /// Size, used for fields that are displayed in a SizedBox, such as
@@ -130,7 +130,7 @@ class ImageDisplayField extends StatelessWidget {
   /// File path or URL to an image to display
   final String imageString;
 
-  /// The height and widgth of the box in which the map will display
+  /// The height and width of the box in which the map will display
   final double boxSize;
 
   ImageDisplayField({@required this.imageString, this.boxSize});

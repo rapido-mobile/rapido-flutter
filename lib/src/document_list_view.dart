@@ -11,7 +11,7 @@ class DocumentListView extends StatefulWidget {
   /// The DocumentList rendered by the DocumentListView
   final DocumentList documentList;
 
-  /// A list of keys for spefifying which values to use in the title of the
+  /// A list of keys for specifying which values to use in the title of the
   /// default ListTile in the DocumentListView, and the order in which to
   /// show them. Ignored when customItemBuilder is used.
   final List<String> titleKeys;

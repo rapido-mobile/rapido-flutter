@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart';
 class DocumentList extends ListBase<Document> with ChangeNotifier {
 
   /// Create a DocumentList for a given docType string. Useful for
-  /// loading data syncronously. For example:
+  /// loading data synchronously. For example:
   /// DocumentList documentList = await DocumentList.createDocumentList("myDocType");
   static Future<DocumentList> createDocumentList(String docType) async {
     DocumentList documentList = DocumentList(docType, autoLoad: false);
