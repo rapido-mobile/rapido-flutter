@@ -3,7 +3,7 @@ import 'package:rapido/rapido.dart';
 
 /// Experimental support for auto-generated view of the contents of
 /// a Document. This is meant to be a read only view, and returns a
-/// Scaffold, so is mostly meant to be used in page nagivation.
+/// Scaffold, so is mostly meant to be used in page navigation.
 class DocumentPage extends StatelessWidget {
   /// Map the UI labels to include in the DocumentPage to fields
   /// in the document.

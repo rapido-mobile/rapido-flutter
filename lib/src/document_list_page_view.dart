@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rapido/rapido.dart';
 
-/// Experimental PageView for a DocumnetList
+/// Experimental PageView for a DocumentList
 class DocumentListPageView extends StatefulWidget {
   /// The DocumentList to display in the PageView
   final DocumentList documentList;
