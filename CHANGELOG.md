@@ -1,3 +1,10 @@
+## [0.2.1] - 2020-02-25
+ * Removed unused UserPage code
+ 
+## [0.2.0] - 2020-02-25
+ * Removed package dependency warnings by explcitly declaring dependencies
+ * Removed experimental code for Parse Server support
+
 ## [0.1.9] - 2019-03-24
  * Fix depencencies
  
