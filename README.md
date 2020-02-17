@@ -1,3 +1,9 @@
+# ACTIVE DEVELOPMENT HAS MOVED TO [GITLAB](https://gitlab.com/rickspencer3/rapido-flutter)
+I am trying Gitlab for a while, and have moved development there. This repo is now out of date.
+
+https://gitlab.com/rickspencer3/rapido-flutter
+
+
 # rapido
 Rapido brings Rapid Application Development principles to mobile development, currently available for Flutter.
 
